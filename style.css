@@ -696,6 +696,132 @@ body {
   font-weight: 700;
 }
 
+/* ========== WATER BADGE ========== */
+.water-badge {
+  background: #E3F2FD;
+  color: #1565C0;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.water-badge.big { font-size: 16px; padding: 8px 16px; }
+
+/* ========== SUGAR COUNTER ========== */
+.sugar-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+}
+.sugar-item:last-child { border-bottom: none; }
+
+.sugar-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.sugar-btn {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--primary-light);
+  background: var(--surface2);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--primary-dark);
+  font-family: var(--font);
+  line-height: 1;
+  transition: all 0.15s;
+}
+.sugar-btn:active { transform: scale(0.9); background: var(--primary-light); }
+
+.sugar-count {
+  font-size: 22px;
+  font-weight: 700;
+  min-width: 28px;
+  text-align: center;
+  color: var(--text-muted);
+}
+.sugar-count.zero { color: var(--success-text); }
+.sugar-count.high { color: #C62828; }
+
+/* ========== TIME TRACKING ========== */
+.time-track-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0 12px 39px;
+  border-bottom: 1px solid var(--border);
+}
+.time-track-label { font-size: 13px; color: var(--text-muted); flex: 1; }
+.time-track-input {
+  width: 64px;
+  padding: 6px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-xs);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--surface);
+  outline: none;
+}
+.time-track-input:focus { border-color: var(--primary); }
+.time-track-unit { font-size: 13px; color: var(--text-muted); }
+
+/* ========== GARDEN ========== */
+.garden-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.plant-pot {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 10px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.plant-emoji { font-size: 36px; line-height: 1; margin-bottom: 6px; }
+.plant-name  { font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.plant-streak { font-size: 11px; color: var(--primary-dark); font-weight: 600; margin-bottom: 2px; }
+.plant-stage  { font-size: 10px; color: var(--text-muted); }
+.plant-time   { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+/* ========== ACHIEVEMENTS ========== */
+.achievements-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.achievement-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  opacity: 0.45;
+  transition: opacity 0.2s;
+}
+.achievement-item:last-child { border-bottom: none; }
+.achievement-item.done { opacity: 1; }
+
+.achievement-icon { font-size: 26px; flex-shrink: 0; width: 36px; text-align: center; }
+.achievement-title { font-size: 14px; font-weight: 600; }
+.achievement-desc  { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
 /* ========== UTILS ========== */
 .danger-text  { color: #C62828; }
 .success-text { color: var(--success-text); }

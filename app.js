@@ -4,61 +4,84 @@
 // CONSTANTS
 // ============================================================
 
-const STORAGE_KEY = 'disciplina_v1';
+const STORAGE_KEY = 'disciplina_v2';
 
 const DAYS = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
 const MONTHS = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 const MONTH_NAMES = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 
 const CATEGORIES = [
-  { id: 'food',      name: 'Еда',          icon: '🍔' },
-  { id: 'transport', name: 'Транспорт',    icon: '🚌' },
-  { id: 'clothes',   name: 'Одежда',       icon: '👗' },
-  { id: 'fun',       name: 'Развлечения',  icon: '🎉' },
-  { id: 'health',    name: 'Здоровье',     icon: '💊' },
-  { id: 'home',      name: 'Дом',          icon: '🏠' },
-  { id: 'beauty',    name: 'Красота',      icon: '💅' },
-  { id: 'other',     name: 'Другое',       icon: '📦' },
+  { id: 'food',      name: 'Еда',         icon: '🍔' },
+  { id: 'transport', name: 'Транспорт',   icon: '🚌' },
+  { id: 'clothes',   name: 'Одежда',      icon: '👗' },
+  { id: 'fun',       name: 'Развлечения', icon: '🎉' },
+  { id: 'health',    name: 'Здоровье',    icon: '💊' },
+  { id: 'home',      name: 'Дом',         icon: '🏠' },
+  { id: 'beauty',    name: 'Красота',     icon: '💅' },
+  { id: 'other',     name: 'Другое',      icon: '📦' },
 ];
 
 const COOKING_PLAN = [
-  {
-    id: 'level1', emoji: '🌱', title: 'Уровень 1 — Основы',
-    recipes: [
-      { id: 'l1_1', name: 'Яичница-болтунья' },
-      { id: 'l1_2', name: 'Омлет' },
-      { id: 'l1_3', name: 'Паста с томатным соусом' },
-      { id: 'l1_4', name: 'Греческий салат' },
-      { id: 'l1_5', name: 'Варёная курица' },
-      { id: 'l1_6', name: 'Отварной рис' },
-      { id: 'l1_7', name: 'Картошка по-деревенски' },
-    ]
-  },
-  {
-    id: 'level2', emoji: '🌿', title: 'Уровень 2 — Готовлю сама',
-    recipes: [
-      { id: 'l2_1', name: 'Куриный суп' },
-      { id: 'l2_2', name: 'Жареная куриная грудка' },
-      { id: 'l2_3', name: 'Картофельное пюре' },
-      { id: 'l2_4', name: 'Салат Цезарь' },
-      { id: 'l2_5', name: 'Тушёные овощи' },
-      { id: 'l2_6', name: 'Яичница с помидорами' },
-      { id: 'l2_7', name: 'Паста карбонара' },
-    ]
-  },
-  {
-    id: 'level3', emoji: '🌸', title: 'Уровень 3 — Уверенный повар',
-    recipes: [
-      { id: 'l3_1', name: 'Борщ' },
-      { id: 'l3_2', name: 'Ризотто' },
-      { id: 'l3_3', name: 'Запечённая рыба с овощами' },
-      { id: 'l3_4', name: 'Куриное карри' },
-      { id: 'l3_5', name: 'Домашняя пицца' },
-      { id: 'l3_6', name: 'Блины' },
-      { id: 'l3_7', name: 'Запечённая курица целиком' },
-    ]
-  },
+  { id: 'level1', emoji: '🌱', title: 'Уровень 1 — Основы', recipes: [
+    { id: 'l1_1', name: 'Яичница-болтунья' }, { id: 'l1_2', name: 'Омлет' },
+    { id: 'l1_3', name: 'Паста с томатным соусом' }, { id: 'l1_4', name: 'Греческий салат' },
+    { id: 'l1_5', name: 'Варёная курица' }, { id: 'l1_6', name: 'Отварной рис' },
+    { id: 'l1_7', name: 'Картошка по-деревенски' },
+  ]},
+  { id: 'level2', emoji: '🌿', title: 'Уровень 2 — Готовлю сама', recipes: [
+    { id: 'l2_1', name: 'Куриный суп' }, { id: 'l2_2', name: 'Жареная куриная грудка' },
+    { id: 'l2_3', name: 'Картофельное пюре' }, { id: 'l2_4', name: 'Салат Цезарь' },
+    { id: 'l2_5', name: 'Тушёные овощи' }, { id: 'l2_6', name: 'Яичница с помидорами' },
+    { id: 'l2_7', name: 'Паста карбонара' },
+  ]},
+  { id: 'level3', emoji: '🌸', title: 'Уровень 3 — Уверенный повар', recipes: [
+    { id: 'l3_1', name: 'Борщ' }, { id: 'l3_2', name: 'Ризотто' },
+    { id: 'l3_3', name: 'Запечённая рыба с овощами' }, { id: 'l3_4', name: 'Куриное карри' },
+    { id: 'l3_5', name: 'Домашняя пицца' }, { id: 'l3_6', name: 'Блины' },
+    { id: 'l3_7', name: 'Запечённая курица целиком' },
+  ]},
 ];
+
+const SONG_STEPS = [
+  'Выучить аккорды / ноты',
+  'Запомнить текст',
+  'Сыграть куплет',
+  'Сыграть припев',
+  'Полная песня медленно',
+  'Полная песня в темпе',
+  'Записать видео',
+];
+
+const INSTRUMENT_ICON = { guitar: '🎸', piano: '🎹', voice: '🎤', other: '🎵' };
+
+const PLANT_STAGES = [
+  { min: 0,  emoji: '🪴', label: 'Пустой горшок' },
+  { min: 1,  emoji: '🌱', label: 'Семечко' },
+  { min: 3,  emoji: '🌿', label: 'Росток' },
+  { min: 7,  emoji: '🌸', label: 'Бутон' },
+  { min: 14, emoji: '🌺', label: 'Цветок' },
+  { min: 21, emoji: '🌳', label: 'Дерево' },
+];
+
+const ACHIEVEMENTS = [
+  { id: 'first_habit',   icon: '🌱', title: 'Первый росток',       desc: 'Выполни любую привычку впервые' },
+  { id: 'week_streak',   icon: '🔥', title: 'Неделя силы',         desc: '7 дней стрик на любой привычке' },
+  { id: 'early_bird',    icon: '🌅', title: 'Ранняя пташка',       desc: 'Встань до 5:30 три раза' },
+  { id: 'sport_10',      icon: '💪', title: 'Спортсменка',         desc: 'Спорт 10 раз' },
+  { id: 'music_5h',      icon: '🎵', title: 'Музыкант',            desc: '5 часов практики (гитара + пианино)' },
+  { id: 'no_sugar_7',    icon: '🍫', title: 'Железная воля',       desc: '7 дней без сладкого (0 штук)' },
+  { id: 'savings',       icon: '💰', title: 'Копилка',             desc: 'Пополни накопления первый раз' },
+  { id: 'doctors_3',     icon: '🌿', title: 'Забочусь о себе',     desc: 'Сходи к 3 врачам' },
+  { id: 'cooking_7',     icon: '🍳', title: 'Шеф-повар',           desc: 'Освой 7 рецептов' },
+  { id: 'song_done',     icon: '🎤', title: 'Звезда сцены',        desc: 'Доведи песню до конца' },
+  { id: 'full_day',      icon: '🌟', title: 'Идеальный день',      desc: 'Выполни все привычки за день' },
+  { id: 'garden_bloom',  icon: '🌸', title: 'Цветущий сад',        desc: 'Все растения на стадии 🌸 и выше' },
+];
+
+// habits that track time in minutes
+const TIME_HABITS = ['guitar', 'piano'];
+// habit that is a counter
+const COUNTER_HABIT = 'sugar';
 
 // ============================================================
 // STATE
@@ -66,6 +89,7 @@ const COOKING_PLAN = [
 
 let state = { page: 'today', data: null, modal: null };
 let tempCat = 'food';
+let tempInstrument = 'guitar';
 
 // ============================================================
 // DATA
@@ -75,48 +99,53 @@ function defaultData() {
   return {
     habits: {
       active: [
-        { id: 'wake',   name: 'Встала в 5:00',       icon: '🌅' },
-        { id: 'sport',  name: 'Спорт',                icon: '💪' },
-        { id: 'guitar', name: 'Гитара',               icon: '🎸' },
-        { id: 'piano',  name: 'Пианино',              icon: '🎹' },
-        { id: 'sugar',  name: 'Меньше сладкого',      icon: '🍫' },
+        { id: 'wake',   name: 'Встала в 5:00',  icon: '🌅' },
+        { id: 'sport',  name: 'Спорт',           icon: '💪' },
+        { id: 'guitar', name: 'Гитара',          icon: '🎸' },
+        { id: 'piano',  name: 'Пианино',         icon: '🎹' },
+        { id: 'sugar',  name: 'Меньше сладкого', icon: '🍫' },
       ],
       queue: [
-        { id: 'english',  name: 'Английский',   icon: '🇬🇧' },
-        { id: 'solfege',  name: 'Сольфеджио',   icon: '🎵' },
-        { id: 'singing',  name: 'Пение',         icon: '🎤' },
-        { id: 'reading',  name: 'Чтение',        icon: '📚' },
+        { id: 'english', name: 'Английский', icon: '🇬🇧' },
+        { id: 'solfege', name: 'Сольфеджио', icon: '🎵' },
+        { id: 'singing', name: 'Пение',       icon: '🎤' },
+        { id: 'reading', name: 'Чтение',      icon: '📚' },
       ]
     },
     daily: {},
     finance: {
-      monthlyBudget: 0,
-      savingsGoal: 0,
-      savingsCurrent: 0,
-      expenses: [],
+      monthlyBudget: 0, savingsGoal: 0, savingsCurrent: 0, expenses: [],
     },
     health: {
       doctors: [
-        { id: 'd1', name: 'Терапевт',     specialty: 'Общая практика',   icon: '🩺', status: 'needed' },
-        { id: 'd2', name: 'Стоматолог',   specialty: 'Зубы',             icon: '🦷', status: 'needed' },
-        { id: 'd3', name: 'Гинеколог',    specialty: 'Женское здоровье', icon: '🌸', status: 'needed' },
-        { id: 'd4', name: 'Дерматолог',   specialty: 'Кожа',             icon: '✨', status: 'needed' },
-        { id: 'd5', name: 'Офтальмолог',  specialty: 'Зрение',           icon: '👁', status: 'needed' },
+        { id: 'd1', name: 'Терапевт',    specialty: 'Общая практика',   icon: '🩺', status: 'needed' },
+        { id: 'd2', name: 'Стоматолог',  specialty: 'Зубы',             icon: '🦷', status: 'needed' },
+        { id: 'd3', name: 'Гинеколог',   specialty: 'Женское здоровье', icon: '🌸', status: 'needed' },
+        { id: 'd4', name: 'Дерматолог',  specialty: 'Кожа',             icon: '✨', status: 'needed' },
+        { id: 'd5', name: 'Офтальмолог', specialty: 'Зрение',           icon: '👁', status: 'needed' },
       ]
     },
-    cooking: { learned: [] }
+    cooking: { learned: [] },
+    goals: [],
+    garden: { unlockedAchievements: [] },
   };
 }
 
 function loadData() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const d = JSON.parse(raw);
+      if (!d.goals)  d.goals = [];
+      if (!d.garden) d.garden = { unlockedAchievements: [] };
+      return d;
+    }
   } catch(e) {}
   return defaultData();
 }
 
 function save() {
+  checkAchievements();
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data)); } catch(e) {}
 }
 
@@ -132,9 +161,10 @@ function todayKey() {
 function getTodayData() {
   const k = todayKey();
   if (!state.data.daily[k]) {
-    state.data.daily[k] = { habits: {}, wakeTime: null };
-    save();
+    state.data.daily[k] = { habits: {}, times: {}, sweets: 0, wakeTime: null, bedTime: null };
   }
+  if (!state.data.daily[k].times)  state.data.daily[k].times = {};
+  if (state.data.daily[k].sweets === undefined) state.data.daily[k].sweets = 0;
   return state.data.daily[k];
 }
 
@@ -143,18 +173,13 @@ function fullDateStr() {
   return `${DAYS[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]}`;
 }
 
-function formatDate(dateStr) {
-  const d = new Date(dateStr + 'T12:00:00');
+function formatDate(s) {
+  const d = new Date(s + 'T12:00:00');
   return `${d.getDate()} ${MONTHS[d.getMonth()]}`;
 }
 
-function formatMoney(n) {
-  return Math.round(n).toLocaleString('ru-RU');
-}
-
-function uid() {
-  return Math.random().toString(36).slice(2, 10);
-}
+function formatMoney(n) { return Math.round(n).toLocaleString('ru-RU'); }
+function uid() { return Math.random().toString(36).slice(2, 10); }
 
 function parseToMin(t) {
   if (!t) return null;
@@ -163,18 +188,15 @@ function parseToMin(t) {
 }
 
 function calcSleepMin(bedTime, wakeTime) {
-  const b = parseToMin(bedTime);
-  const w = parseToMin(wakeTime);
+  const b = parseToMin(bedTime), w = parseToMin(wakeTime);
   if (b === null || w === null) return null;
-  // bed before midnight, wake after
   return b > w ? (w + 1440) - b : w - b;
 }
 
-function formatSleep(minutes) {
-  if (minutes === null) return null;
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return m > 0 ? `${h}ч ${m}м` : `${h}ч`;
+function formatSleep(m) {
+  if (m === null) return null;
+  const h = Math.floor(m / 60), min = m % 60;
+  return min > 0 ? `${h}ч ${min}м` : `${h}ч`;
 }
 
 function calcStreak(habitId) {
@@ -182,14 +204,12 @@ function calcStreak(habitId) {
   const d = new Date();
   for (let i = 0; i < 365; i++) {
     const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    const done = state.data.daily[key]?.habits?.[habitId];
-    if (done) {
-      streak++;
-    } else if (i === 0) {
-      // today not yet done — don't break, just skip
-    } else {
-      break;
-    }
+    const day = state.data.daily[key];
+    const done = habitId === COUNTER_HABIT
+      ? (day?.sweets === 0 && day?.habits?.[habitId])
+      : day?.habits?.[habitId];
+    if (done) { streak++; }
+    else if (i > 0) break;
     d.setDate(d.getDate() - 1);
   }
   return streak;
@@ -199,72 +219,11 @@ function getLast7Days() {
   const days = [];
   const d = new Date();
   for (let i = 6; i >= 0; i--) {
-    const dd = new Date(d);
-    dd.setDate(dd.getDate() - i);
+    const dd = new Date(d); dd.setDate(dd.getDate() - i);
     const key = `${dd.getFullYear()}-${String(dd.getMonth()+1).padStart(2,'0')}-${String(dd.getDate()).padStart(2,'0')}`;
     days.push({ key, label: DAYS[dd.getDay()], data: state.data.daily[key] || null });
   }
   return days;
-}
-
-function renderMonthCalendar() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const habits = state.data.habits.active;
-
-  // Monday-first: 0=Пн..6=Вс
-  const firstDow = (new Date(year, month, 1).getDay() + 6) % 7;
-
-  const dayLabels = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
-
-  let cells = '';
-  // Empty cells before first day
-  for (let i = 0; i < firstDow; i++) {
-    cells += `<div class="mcell mcell-empty"></div>`;
-  }
-
-  for (let d = 1; d <= daysInMonth; d++) {
-    const key = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const dayData = state.data.daily[key];
-    const isToday = d === now.getDate();
-    const isFuture = new Date(year, month, d) > now;
-
-    let level = 'empty';
-    let title = '';
-
-    if (!isFuture && dayData) {
-      const done = habits.filter(h => dayData.habits?.[h.id]).length;
-      const pct = habits.length ? done / habits.length : 0;
-      if (pct === 0)       level = 'l0';
-      else if (pct < 0.5)  level = 'l1';
-      else if (pct < 1)    level = 'l2';
-      else                 level = 'l3';
-      title = `${done}/${habits.length} привычек`;
-    } else if (!isFuture) {
-      level = 'l0';
-    }
-
-    cells += `<div class="mcell mcell-${level} ${isToday ? 'mcell-today' : ''}" title="${title}">${d}</div>`;
-  }
-
-  return `
-    <div class="card">
-      <div class="card-title">${MONTH_NAMES[month]} ${year}</div>
-      <div class="month-dow">
-        ${dayLabels.map(l => `<div class="dow-label">${l}</div>`).join('')}
-      </div>
-      <div class="month-grid">${cells}</div>
-      <div class="chart-legend" style="margin-top:12px">
-        <div class="legend-dot" style="background:var(--border)"></div> Нет данных
-        <div class="legend-dot" style="background:var(--surface2);border:1px solid var(--border);margin-left:8px"></div> 0%
-        <div class="legend-dot" style="background:var(--primary-light);margin-left:8px"></div> &lt;50%
-        <div class="legend-dot" style="background:var(--primary);margin-left:8px"></div> &lt;100%
-        <div class="legend-dot" style="background:var(--primary-dark);margin-left:8px"></div> 100%
-      </div>
-    </div>
-  `;
 }
 
 function getMonthExpenses() {
@@ -273,12 +232,85 @@ function getMonthExpenses() {
   return state.data.finance.expenses.filter(e => e.date.startsWith(prefix));
 }
 
-function totalSpent() {
-  return getMonthExpenses().reduce((s, e) => s + e.amount, 0);
+function totalSpent() { return getMonthExpenses().reduce((s, e) => s + e.amount, 0); }
+
+function getCat(id) { return CATEGORIES.find(c => c.id === id) || CATEGORIES[CATEGORIES.length - 1]; }
+
+function getPlantStage(streak) {
+  let stage = PLANT_STAGES[0];
+  for (const s of PLANT_STAGES) { if (streak >= s.min) stage = s; }
+  return stage;
 }
 
-function getCat(id) {
-  return CATEGORIES.find(c => c.id === id) || CATEGORIES[CATEGORIES.length - 1];
+function totalWaterDrops() {
+  let drops = 0;
+  for (const key in state.data.daily) {
+    const day = state.data.daily[key];
+    const habits = state.data.habits.active;
+    drops += habits.filter(h => day.habits?.[h.id]).length;
+  }
+  return drops;
+}
+
+function totalHobbyMinutes(habitId) {
+  let total = 0;
+  for (const key in state.data.daily) {
+    total += state.data.daily[key].times?.[habitId] || 0;
+  }
+  return total;
+}
+
+function daysUntil(dateStr) {
+  const target = new Date(dateStr + 'T00:00:00');
+  const now = new Date(); now.setHours(0,0,0,0);
+  return Math.ceil((target - now) / 86400000);
+}
+
+function checkAchievements() {
+  const unlocked = state.data.garden.unlockedAchievements;
+  const unlock = (id) => { if (!unlocked.includes(id)) unlocked.push(id); };
+  const all = state.data.daily;
+  const habits = state.data.habits.active;
+
+  // first_habit
+  if (Object.values(all).some(d => Object.values(d.habits || {}).some(Boolean))) unlock('first_habit');
+
+  // week_streak
+  if (habits.some(h => calcStreak(h.id) >= 7)) unlock('week_streak');
+
+  // early_bird: wake <= 05:30 at least 3 days
+  const earlyDays = Object.values(all).filter(d => d.wakeTime && d.wakeTime <= '05:30').length;
+  if (earlyDays >= 3) unlock('early_bird');
+
+  // sport_10
+  const sportDays = Object.values(all).filter(d => d.habits?.sport).length;
+  if (sportDays >= 10) unlock('sport_10');
+
+  // music_5h: 300 minutes total guitar + piano
+  if ((totalHobbyMinutes('guitar') + totalHobbyMinutes('piano')) >= 300) unlock('music_5h');
+
+  // no_sugar_7: 7 days with sweets === 0
+  const noSugarDays = Object.values(all).filter(d => d.sweets === 0 && d.habits?.sugar).length;
+  if (noSugarDays >= 7) unlock('no_sugar_7');
+
+  // savings
+  if (state.data.finance.savingsCurrent > 0) unlock('savings');
+
+  // doctors_3
+  const doneDoctors = state.data.health.doctors.filter(d => d.status === 'done').length;
+  if (doneDoctors >= 3) unlock('doctors_3');
+
+  // cooking_7
+  if (state.data.cooking.learned.length >= 7) unlock('cooking_7');
+
+  // song_done
+  if (state.data.goals.some(g => g.steps.every(s => s.done))) unlock('song_done');
+
+  // full_day
+  if (Object.values(all).some(d => habits.every(h => d.habits?.[h.id]))) unlock('full_day');
+
+  // garden_bloom: all habits streak >= 7
+  if (habits.every(h => calcStreak(h.id) >= 7)) unlock('garden_bloom');
 }
 
 // ============================================================
@@ -287,14 +319,14 @@ function getCat(id) {
 
 function render() {
   document.getElementById('app').innerHTML = renderPage();
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.page === state.page);
-  });
+  document.querySelectorAll('.nav-btn').forEach(btn =>
+    btn.classList.toggle('active', btn.dataset.page === state.page)
+  );
   bindEvents();
 }
 
 function renderPage() {
-  const pages = { today: renderToday, sleep: renderSleep, finance: renderFinance, health: renderHealth, cooking: renderCooking };
+  const pages = { today: renderToday, sleep: renderSleep, finance: renderFinance, health: renderHealth, goals: renderGoals, garden: renderGarden };
   return (pages[state.page] || renderToday)();
 }
 
@@ -302,41 +334,78 @@ function renderPage() {
 // PAGE: TODAY
 // ============================================================
 
+function renderMonthCalendar() {
+  const now = new Date();
+  const year = now.getFullYear(), month = now.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const habits = state.data.habits.active;
+  const firstDow = (new Date(year, month, 1).getDay() + 6) % 7;
+
+  let cells = '';
+  for (let i = 0; i < firstDow; i++) cells += `<div class="mcell mcell-empty"></div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayData = state.data.daily[key];
+    const isToday = d === now.getDate();
+    const isFuture = new Date(year, month, d) > now;
+    let level = 'empty';
+    if (!isFuture && dayData) {
+      const done = habits.filter(h => dayData.habits?.[h.id]).length;
+      const pct = habits.length ? done / habits.length : 0;
+      level = pct === 0 ? 'l0' : pct < 0.5 ? 'l1' : pct < 1 ? 'l2' : 'l3';
+    } else if (!isFuture) level = 'l0';
+    cells += `<div class="mcell mcell-${level} ${isToday ? 'mcell-today' : ''}">${d}</div>`;
+  }
+
+  return `
+    <div class="card">
+      <div class="card-title">${MONTH_NAMES[month]} ${now.getFullYear()}</div>
+      <div class="month-dow">${['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(l=>`<div class="dow-label">${l}</div>`).join('')}</div>
+      <div class="month-grid">${cells}</div>
+      <div class="chart-legend" style="margin-top:10px">
+        <div class="legend-dot" style="background:var(--border)"></div> Нет данных
+        <div class="legend-dot" style="background:var(--primary-light);margin-left:8px"></div> &lt;50%
+        <div class="legend-dot" style="background:var(--primary);margin-left:8px"></div> &lt;100%
+        <div class="legend-dot" style="background:var(--primary-dark);margin-left:8px"></div> 100% 🌟
+      </div>
+    </div>
+  `;
+}
+
 function renderToday() {
   const td = getTodayData();
   const habits = state.data.habits.active;
   const queue  = state.data.habits.queue;
   const doneCount = habits.filter(h => td.habits[h.id]).length;
   const pct = habits.length ? Math.round(doneCount / habits.length * 100) : 0;
-
   const greetings = ['Привет!', 'Доброе утро!', 'Привет, солнышко!', 'Привет, красотка!'];
   const greeting = greetings[new Date().getDay() % greetings.length];
+  const drops = totalWaterDrops();
 
   return `
     <div class="page">
       <div class="page-header">
-        <h1>${greeting} 🌸</h1>
-        <div class="subtitle">${fullDateStr()}</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <h1>${greeting} 🌸</h1>
+            <div class="subtitle">${fullDateStr()}</div>
+          </div>
+          <div class="water-badge">💧 ${drops}</div>
+        </div>
       </div>
 
       <div class="card wake-card">
         ${td.wakeTime ? (() => {
-          const sleptMin = calcSleepMin(td.bedTime, td.wakeTime);
-          const sleptStr = formatSleep(sleptMin);
-          const sleptOk  = sleptMin !== null && sleptMin >= 360;
+          const slMin = calcSleepMin(td.bedTime, td.wakeTime);
+          const slStr = formatSleep(slMin);
+          const slOk  = slMin !== null && slMin >= 360;
           return `
             <div class="card-title">Подъём сегодня</div>
             <div class="wake-time-display">${td.wakeTime}</div>
             <div class="wake-status ${td.wakeTime <= '05:30' ? 'good' : 'late'}">
-              ${td.wakeTime <= '05:30' ? '✓ Молодец, встала вовремя!' : td.wakeTime <= '07:00' ? '⚡ Почти! Завтра раньше' : '😴 Завтра обязательно встанем'}
+              ${td.wakeTime <= '05:30' ? '✓ Встала вовремя!' : td.wakeTime <= '07:00' ? '⚡ Почти! Завтра раньше' : '😴 Завтра встанем раньше'}
             </div>
-            ${sleptStr ? `
-              <div class="sleep-duration-badge ${sleptOk ? 'good' : 'bad'}" style="margin-top:10px">
-                🌙 ${sleptStr} сна ${sleptOk ? '— отлично!' : '— маловато, цель 6ч+'}
-              </div>
-            ` : `
-              <button class="btn btn-secondary btn-sm" style="margin-top:12px" id="open-bed-modal">+ Добавить время отбоя</button>
-            `}
+            ${slStr ? `<div class="sleep-duration-badge ${slOk ? 'good' : 'bad'}" style="margin-top:10px">🌙 ${slStr} сна ${slOk ? '— отлично!' : '— цель 6ч+'}</div>` : `<button class="btn btn-secondary btn-sm" style="margin-top:10px" id="open-bed-modal">+ Время отбоя</button>`}
             <button class="btn btn-secondary btn-sm" style="margin-top:8px" id="change-wake">Изменить подъём</button>
           `;
         })() : `
@@ -360,6 +429,24 @@ function renderToday() {
         ${habits.map(h => {
           const done = !!td.habits[h.id];
           const streak = calcStreak(h.id);
+          const isCounter = h.id === COUNTER_HABIT;
+          const isTime    = TIME_HABITS.includes(h.id);
+          const mins      = td.times?.[h.id] || 0;
+          const sweets    = td.sweets || 0;
+
+          if (isCounter) return `
+            <div class="habit-item sugar-item">
+              <span class="habit-icon">${h.icon}</span>
+              <span class="habit-name">${h.name}</span>
+              <div class="sugar-counter">
+                <button class="sugar-btn" data-action="dec">−</button>
+                <span class="sugar-count ${sweets === 0 ? 'zero' : sweets >= 3 ? 'high' : ''}">${sweets}</span>
+                <button class="sugar-btn" data-action="inc">+</button>
+              </div>
+              ${streak > 0 ? `<span class="habit-streak ${streak >= 7 ? 'hot' : ''}">🔥 ${streak}</span>` : ''}
+            </div>
+          `;
+
           return `
             <div class="habit-item ${done ? 'done' : ''}" data-habit="${h.id}">
               <div class="habit-checkbox"></div>
@@ -367,6 +454,13 @@ function renderToday() {
               <span class="habit-name">${h.name}</span>
               ${streak > 0 ? `<span class="habit-streak ${streak >= 7 ? 'hot' : ''}">🔥 ${streak}</span>` : ''}
             </div>
+            ${isTime && done ? `
+              <div class="time-track-row">
+                <span class="time-track-label">⏱ Сколько минут?</span>
+                <input type="number" class="time-track-input" data-habit="${h.id}" value="${mins}" min="0" max="300" inputmode="numeric" placeholder="0">
+                <span class="time-track-unit">мин</span>
+              </div>
+            ` : ''}
           `;
         }).join('')}
       </div>
@@ -396,17 +490,13 @@ function renderToday() {
 function renderSleep() {
   const td = getTodayData();
   const days = getLast7Days();
-
-  const withTime = days.filter(d => d.data?.wakeTime);
+  const withTime  = days.filter(d => d.data?.wakeTime);
   const withSleep = days.filter(d => d.data?.wakeTime && d.data?.bedTime);
 
   const avgWakeMin = withTime.length
-    ? Math.round(withTime.reduce((s, d) => s + parseToMin(d.data.wakeTime), 0) / withTime.length)
-    : null;
-
+    ? Math.round(withTime.reduce((s, d) => s + parseToMin(d.data.wakeTime), 0) / withTime.length) : null;
   const avgSleepMin = withSleep.length
-    ? Math.round(withSleep.reduce((s, d) => s + calcSleepMin(d.data.bedTime, d.data.wakeTime), 0) / withSleep.length)
-    : null;
+    ? Math.round(withSleep.reduce((s, d) => s + calcSleepMin(d.data.bedTime, d.data.wakeTime), 0) / withSleep.length) : null;
 
   let streak = 0;
   for (let i = days.length - 1; i >= 0; i--) {
@@ -415,37 +505,20 @@ function renderSleep() {
     else if (days[i].key !== todayKey()) break;
   }
 
-  const times = days.map(d => d.data?.wakeTime ? parseToMin(d.data.wakeTime) : null);
-  const validTimes = times.filter(Boolean);
-  const maxT = validTimes.length ? Math.max(...validTimes, 420) : 420;
-  const minT = validTimes.length ? Math.min(...validTimes, 280) : 280;
-
-  function minToStr(m) {
-    return `${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
-  }
-
+  function minToStr(m) { return `${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`; }
   const todaySleepMin = calcSleepMin(td.bedTime, td.wakeTime);
 
   return `
     <div class="page">
       <div class="page-header">
         <h1>Сон 🌙</h1>
-        <div class="subtitle">Цель: вставать в 5:00, спать 6ч+</div>
+        <div class="subtitle">Цель: встать в 5:00, спать 6ч+</div>
       </div>
 
       <div class="stats-row">
-        <div class="stat-box">
-          <div class="stat-value">${streak}</div>
-          <div class="stat-label">🔥 Стрик</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value" style="font-size:18px">${avgWakeMin !== null ? minToStr(avgWakeMin) : '—'}</div>
-          <div class="stat-label">Ср. подъём</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value" style="font-size:16px">${avgSleepMin !== null ? formatSleep(avgSleepMin) : '—'}</div>
-          <div class="stat-label">Ср. сон</div>
-        </div>
+        <div class="stat-box"><div class="stat-value">${streak}</div><div class="stat-label">🔥 Стрик</div></div>
+        <div class="stat-box"><div class="stat-value" style="font-size:18px">${avgWakeMin !== null ? minToStr(avgWakeMin) : '—'}</div><div class="stat-label">Ср. подъём</div></div>
+        <div class="stat-box"><div class="stat-value" style="font-size:16px">${avgSleepMin !== null ? formatSleep(avgSleepMin) : '—'}</div><div class="stat-label">Ср. сон</div></div>
       </div>
 
       <div class="card">
@@ -453,55 +526,28 @@ function renderSleep() {
         <div class="sleep-today-grid">
           <div class="sleep-col">
             <div class="sleep-col-label">🌙 Отбой</div>
-            ${td.bedTime ? `
-              <div class="sleep-col-time">${td.bedTime}</div>
-              <button class="btn btn-secondary btn-sm" style="margin-top:8px" id="change-bed-sleep">Изменить</button>
-            ` : `
-              <input type="time" class="sleep-col-input" id="bed-input-sleep" value="23:00">
-              <button class="btn btn-primary btn-sm" style="margin-top:8px" id="save-bed-sleep">Сохранить</button>
-            `}
+            ${td.bedTime ? `<div class="sleep-col-time">${td.bedTime}</div><button class="btn btn-secondary btn-sm" style="margin-top:8px" id="change-bed-sleep">Изменить</button>` : `<input type="time" class="sleep-col-input" id="bed-input-sleep" value="23:00"><button class="btn btn-primary btn-sm" style="margin-top:8px" id="save-bed-sleep">Сохранить</button>`}
           </div>
           <div class="sleep-divider">
-            ${todaySleepMin !== null ? `
-              <div class="sleep-hours-badge ${todaySleepMin >= 360 ? 'good' : 'bad'}">
-                ${formatSleep(todaySleepMin)}
-              </div>
-            ` : `<div class="sleep-hours-badge neutral">?</div>`}
+            <div class="sleep-hours-badge ${todaySleepMin === null ? 'neutral' : todaySleepMin >= 360 ? 'good' : 'bad'}">
+              ${todaySleepMin !== null ? formatSleep(todaySleepMin) : '?'}
+            </div>
           </div>
           <div class="sleep-col">
             <div class="sleep-col-label">☀️ Подъём</div>
-            ${td.wakeTime ? `
-              <div class="sleep-col-time">${td.wakeTime}</div>
-              <button class="btn btn-secondary btn-sm" style="margin-top:8px" id="change-wake-sleep">Изменить</button>
-            ` : `
-              <input type="time" class="sleep-col-input" id="wake-input-sleep" value="${new Date().toTimeString().slice(0,5)}">
-              <button class="btn btn-primary btn-sm" style="margin-top:8px" id="save-wake-sleep">Сохранить</button>
-            `}
+            ${td.wakeTime ? `<div class="sleep-col-time">${td.wakeTime}</div><button class="btn btn-secondary btn-sm" style="margin-top:8px" id="change-wake-sleep">Изменить</button>` : `<input type="time" class="sleep-col-input" id="wake-input-sleep" value="${new Date().toTimeString().slice(0,5)}"><button class="btn btn-primary btn-sm" style="margin-top:8px" id="save-wake-sleep">Сохранить</button>`}
           </div>
         </div>
-        ${todaySleepMin !== null ? `
-          <div style="text-align:center;margin-top:12px;font-size:13px;color:${todaySleepMin >= 360 ? 'var(--success-text)' : '#BF360C'}">
-            ${todaySleepMin >= 360 ? '✓ Норма выполнена!' : `Не хватает ${formatSleep(360 - todaySleepMin)} до нормы`}
-          </div>
-        ` : ''}
+        ${todaySleepMin !== null ? `<div style="text-align:center;margin-top:12px;font-size:13px;color:${todaySleepMin>=360?'var(--success-text)':'#BF360C'}">${todaySleepMin>=360?'✓ Норма выполнена!':'Не хватает '+formatSleep(360-todaySleepMin)+' до нормы'}</div>` : ''}
       </div>
 
       <div class="card">
-        <div class="card-title">Последние 7 дней — часы сна</div>
+        <div class="card-title">Часы сна — 7 дней</div>
         <div class="sleep-chart">
           ${days.map(d => {
             const slMin = d.data?.wakeTime && d.data?.bedTime ? calcSleepMin(d.data.bedTime, d.data.wakeTime) : null;
-            const maxSl = 600; const minSl = 240;
-            const pct = slMin ? Math.max(8, Math.min(100, (slMin - minSl) / (maxSl - minSl) * 100)) : 0;
-            const good = slMin && slMin >= 360;
-            return `
-              <div class="chart-col">
-                <div class="chart-bar-wrap">
-                  <div class="chart-bar ${slMin ? (good ? 'good' : '') : 'empty'}" style="height:${pct}%"></div>
-                </div>
-                <div class="chart-day">${d.label}</div>
-              </div>
-            `;
+            const pct = slMin ? Math.max(8, Math.min(100, (slMin - 240) / 360 * 100)) : 0;
+            return `<div class="chart-col"><div class="chart-bar-wrap"><div class="chart-bar ${slMin?(slMin>=360?'good':''):' empty'}" style="height:${pct}%"></div></div><div class="chart-day">${d.label}</div></div>`;
           }).join('')}
         </div>
         <div class="chart-legend">
@@ -520,40 +566,27 @@ function renderSleep() {
 
 function renderFinance() {
   const { finance } = state.data;
-  const spent = totalSpent();
-  const budget = finance.monthlyBudget || 0;
+  const spent = totalSpent(), budget = finance.monthlyBudget || 0;
   const pct = budget ? Math.min(100, Math.round(spent / budget * 100)) : 0;
   const remaining = budget - spent;
   const savPct = finance.savingsGoal ? Math.min(100, Math.round(finance.savingsCurrent / finance.savingsGoal * 100)) : 0;
   const now = new Date();
-  const monthName = MONTH_NAMES[now.getMonth()];
 
-  const recent = getMonthExpenses()
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, 10);
+  const recent = getMonthExpenses().sort((a,b) => b.date.localeCompare(a.date)).slice(0, 10);
 
   return `
     <div class="page">
-      <div class="page-header">
-        <h1>Финансы 💸</h1>
-        <div class="subtitle">${monthName} ${now.getFullYear()}</div>
-      </div>
+      <div class="page-header"><h1>Финансы 💸</h1><div class="subtitle">${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}</div></div>
 
       <div class="card">
         <div class="card-title">Бюджет месяца</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:24px;font-weight:700;${pct > 90 ? 'color:#C62828' : ''}">
-            ${formatMoney(spent)} ₸
-          </span>
+          <span style="font-size:24px;font-weight:700;${pct>90?'color:#C62828':''}">${formatMoney(spent)} ₸</span>
           <span class="muted" style="font-size:13px">из ${formatMoney(budget)} ₸</span>
         </div>
-        <div class="progress-wrap" style="margin-bottom:10px">
-          <div class="progress-bar ${pct > 90 ? 'danger' : ''}" style="width:${pct}%"></div>
-        </div>
-        <div style="font-size:13px;${remaining < 0 ? 'color:#C62828;font-weight:600' : 'color:var(--text-muted)'}">
-          ${remaining >= 0
-            ? `Осталось: ${formatMoney(remaining)} ₸`
-            : `Превышение на ${formatMoney(-remaining)} ₸ 😱`}
+        <div class="progress-wrap" style="margin-bottom:10px"><div class="progress-bar ${pct>90?'danger':''}" style="width:${pct}%"></div></div>
+        <div style="font-size:13px;${remaining<0?'color:#C62828;font-weight:600':'color:var(--text-muted)'}">
+          ${remaining>=0?`Осталось: ${formatMoney(remaining)} ₸`:`Превышение на ${formatMoney(-remaining)} ₸ 😱`}
         </div>
         <button class="btn btn-secondary btn-sm" style="margin-top:12px" id="open-budget-settings">⚙️ Настроить бюджет</button>
       </div>
@@ -564,9 +597,7 @@ function renderFinance() {
           <span style="font-size:24px;font-weight:700;color:var(--success-text)">${formatMoney(finance.savingsCurrent)} ₸</span>
           <span class="muted" style="font-size:13px">цель: ${formatMoney(finance.savingsGoal)} ₸</span>
         </div>
-        <div class="progress-wrap" style="margin-bottom:10px">
-          <div class="progress-bar success" style="width:${savPct}%"></div>
-        </div>
+        <div class="progress-wrap" style="margin-bottom:10px"><div class="progress-bar success" style="width:${savPct}%"></div></div>
         <div style="font-size:13px;color:var(--text-muted)">${savPct}% от цели</div>
         <button class="btn btn-secondary btn-sm" style="margin-top:12px" id="open-savings">+ Пополнить</button>
       </div>
@@ -576,26 +607,15 @@ function renderFinance() {
       ${recent.length > 0 ? `
         <div class="card" style="margin-top:14px">
           <div class="card-title">Последние траты</div>
-          ${recent.map(e => {
-            const cat = getCat(e.category);
-            return `
-              <div class="expense-item">
-                <div class="expense-icon">${cat.icon}</div>
-                <div class="expense-info">
-                  <div class="expense-note">${e.note || cat.name}</div>
-                  <div class="expense-meta">${cat.name} · ${formatDate(e.date)}</div>
-                </div>
-                <div class="expense-amount">−${formatMoney(e.amount)} ₸</div>
-              </div>
-            `;
-          }).join('')}
+          ${recent.map(e => { const cat = getCat(e.category); return `
+            <div class="expense-item">
+              <div class="expense-icon">${cat.icon}</div>
+              <div class="expense-info"><div class="expense-note">${e.note||cat.name}</div><div class="expense-meta">${cat.name} · ${formatDate(e.date)}</div></div>
+              <div class="expense-amount">−${formatMoney(e.amount)} ₸</div>
+            </div>
+          `; }).join('')}
         </div>
-      ` : `
-        <div class="empty-state" style="margin-top:16px">
-          <div class="empty-icon">💸</div>
-          <p>Трат ещё нет.<br>Добавь первую!</p>
-        </div>
-      `}
+      ` : `<div class="empty-state" style="margin-top:16px"><div class="empty-icon">💸</div><p>Трат ещё нет.<br>Добавь первую!</p></div>`}
     </div>
   `;
 }
@@ -606,110 +626,192 @@ function renderFinance() {
 
 function renderHealth() {
   const { doctors } = state.data.health;
-  const needed    = doctors.filter(d => d.status === 'needed').length;
-  const scheduled = doctors.filter(d => d.status === 'scheduled').length;
-  const done      = doctors.filter(d => d.status === 'done').length;
+  const needed = doctors.filter(d=>d.status==='needed').length;
+  const scheduled = doctors.filter(d=>d.status==='scheduled').length;
+  const done = doctors.filter(d=>d.status==='done').length;
 
   return `
     <div class="page">
-      <div class="page-header">
-        <h1>Здоровье 🌿</h1>
-        <div class="subtitle">Твои врачи</div>
-      </div>
-
+      <div class="page-header"><h1>Здоровье 🌿</h1><div class="subtitle">Твои врачи</div></div>
       <div class="stats-row">
-        <div class="stat-box">
-          <div class="stat-value danger-text">${needed}</div>
-          <div class="stat-label">Нужно</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value" style="color:#BF360C">${scheduled}</div>
-          <div class="stat-label">Записана</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value success-text">${done}</div>
-          <div class="stat-label">Сходила ✓</div>
-        </div>
+        <div class="stat-box"><div class="stat-value danger-text">${needed}</div><div class="stat-label">Нужно</div></div>
+        <div class="stat-box"><div class="stat-value" style="color:#BF360C">${scheduled}</div><div class="stat-label">Записана</div></div>
+        <div class="stat-box"><div class="stat-value success-text">${done}</div><div class="stat-label">Сходила ✓</div></div>
       </div>
-
       <div class="card">
-        <div class="card-title">Врачи — нажми, чтобы изменить статус</div>
+        <div class="card-title">Врачи — нажми чтобы изменить статус</div>
         ${doctors.map(d => `
           <div class="doctor-item">
             <div class="doctor-icon">${d.icon}</div>
-            <div class="doctor-info">
-              <div class="doctor-name">${d.name}</div>
-              <div class="doctor-specialty">${d.specialty}</div>
-            </div>
+            <div class="doctor-info"><div class="doctor-name">${d.name}</div><div class="doctor-specialty">${d.specialty}</div></div>
             <div class="doctor-status">
-              <span class="status-badge ${d.status}">
-                ${d.status === 'needed' ? 'Нужно' : d.status === 'scheduled' ? 'Записана' : '✓ Сходила'}
-              </span>
+              <span class="status-badge ${d.status}">${d.status==='needed'?'Нужно':d.status==='scheduled'?'Записана':'✓ Сходила'}</span>
               <button class="status-cycle-btn" data-doctor="${d.id}">изменить →</button>
             </div>
           </div>
         `).join('')}
       </div>
-
       <button class="btn btn-secondary btn-full" id="add-doctor">+ Добавить врача</button>
     </div>
   `;
 }
 
 // ============================================================
-// PAGE: COOKING
+// PAGE: GOALS (песни + кулинария)
 // ============================================================
 
-function renderCooking() {
-  const { learned } = state.data.cooking;
-  const totalAll     = COOKING_PLAN.reduce((s, l) => s + l.recipes.length, 0);
-  const totalLearned = learned.length;
-
-  const l1Done = COOKING_PLAN[0].recipes.filter(r => learned.includes(r.id)).length;
-  const l2Done = COOKING_PLAN[1].recipes.filter(r => learned.includes(r.id)).length;
-  const l1Half = Math.ceil(COOKING_PLAN[0].recipes.length / 2);
-  const l2Half = Math.ceil(COOKING_PLAN[1].recipes.length / 2);
+function renderGoals() {
+  const { goals, cooking } = state.data;
+  const { learned } = cooking;
+  const totalRecipes = COOKING_PLAN.reduce((s,l) => s+l.recipes.length, 0);
+  const l1Done = COOKING_PLAN[0].recipes.filter(r=>learned.includes(r.id)).length;
+  const l2Done = COOKING_PLAN[1].recipes.filter(r=>learned.includes(r.id)).length;
+  const l1Half = Math.ceil(COOKING_PLAN[0].recipes.length/2);
+  const l2Half = Math.ceil(COOKING_PLAN[1].recipes.length/2);
 
   return `
     <div class="page">
-      <div class="page-header">
-        <h1>Кулинария 🍳</h1>
-        <div class="subtitle">${totalLearned} из ${totalAll} рецептов освоено</div>
+      <div class="page-header"><h1>Цели 🎯</h1><div class="subtitle">Песни и кулинария</div></div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-size:17px;font-weight:700">🎵 Мои песни</div>
+        <button class="btn btn-primary btn-sm" id="add-goal">+ Добавить</button>
       </div>
 
-      <div class="progress-wrap" style="margin-bottom:20px">
-        <div class="progress-bar" style="width:${Math.round(totalLearned/totalAll*100)}%"></div>
-      </div>
+      ${goals.length === 0 ? `
+        <div class="card">
+          <div class="empty-state">
+            <div class="empty-icon">🎸</div>
+            <p>Добавь первую песню,<br>которую хочешь выучить!</p>
+          </div>
+        </div>
+      ` : goals.map(g => {
+        const doneSt = g.steps.filter(s=>s.done).length;
+        const pct = Math.round(doneSt/g.steps.length*100);
+        const dLeft = daysUntil(g.targetDate);
+        return `
+          <div class="card">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
+              <div>
+                <div style="font-size:17px;font-weight:700">${INSTRUMENT_ICON[g.instrument]||'🎵'} ${g.title}</div>
+                <div class="muted" style="font-size:12px;margin-top:3px">
+                  к ${formatDate(g.targetDate)} · ${dLeft>0?dLeft+' дней осталось':dLeft===0?'сегодня!':'просрочено на '+(-dLeft)+' дн.'}
+                </div>
+              </div>
+              <span style="font-size:20px;font-weight:700;color:var(--primary-dark)">${pct}%</span>
+            </div>
+            <div class="progress-wrap" style="margin-bottom:14px"><div class="progress-bar" style="width:${pct}%"></div></div>
+            ${g.steps.map(s => `
+              <div class="recipe-item ${s.done?'learned':''}" data-goal="${g.id}" data-step="${s.id}">
+                <div class="recipe-checkbox"></div>
+                <span class="recipe-name">${s.name}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }).join('')}
+
+      <div style="font-size:17px;font-weight:700;margin:20px 0 14px">🍳 Кулинария</div>
+      <div class="muted" style="font-size:13px;margin-bottom:14px">${learned.length} из ${totalRecipes} рецептов освоено</div>
+      <div class="progress-wrap" style="margin-bottom:16px"><div class="progress-bar" style="width:${Math.round(learned.length/totalRecipes*100)}%"></div></div>
 
       ${COOKING_PLAN.map((level, idx) => {
-        const lvlLearned = level.recipes.filter(r => learned.includes(r.id)).length;
-        const lvlPct = Math.round(lvlLearned / level.recipes.length * 100);
-        const locked = (idx === 1 && l1Done < l1Half) || (idx === 2 && l2Done < l2Half);
-
+        const lvlLearned = level.recipes.filter(r=>learned.includes(r.id)).length;
+        const locked = (idx===1&&l1Done<l1Half)||(idx===2&&l2Done<l2Half);
         return `
-          <div class="card ${locked ? 'locked-level' : ''}">
+          <div class="card ${locked?'locked-level':''}">
             <div class="level-header">
               <div class="level-title">${level.emoji} ${level.title}</div>
               <div class="level-progress-text">${lvlLearned}/${level.recipes.length}</div>
             </div>
-            <div class="progress-wrap" style="margin-bottom:${locked ? 8 : 14}px">
-              <div class="progress-bar" style="width:${lvlPct}%"></div>
-            </div>
-            ${locked ? `
-              <div class="muted center" style="font-size:13px;padding:8px 0">
-                🔒 Освой ещё ${idx === 1 ? l1Half - l1Done : l2Half - l2Done} рецептов из предыдущего уровня
+            <div class="progress-wrap" style="margin-bottom:${locked?8:14}px"><div class="progress-bar" style="width:${Math.round(lvlLearned/level.recipes.length*100)}%"></div></div>
+            ${locked ? `<div class="muted center" style="font-size:13px;padding:6px 0">🔒 Освой ещё ${idx===1?l1Half-l1Done:l2Half-l2Done} рецептов из предыдущего уровня</div>` :
+            level.recipes.map(r => `
+              <div class="recipe-item ${learned.includes(r.id)?'learned':''}" data-recipe="${r.id}">
+                <div class="recipe-checkbox"></div>
+                <span class="recipe-name">${r.name}</span>
               </div>
-            ` : `
-              ${level.recipes.map(r => `
-                <div class="recipe-item ${learned.includes(r.id) ? 'learned' : ''}" data-recipe="${r.id}">
-                  <div class="recipe-checkbox"></div>
-                  <span class="recipe-name">${r.name}</span>
-                </div>
-              `).join('')}
-            `}
+            `).join('')}
           </div>
         `;
       }).join('')}
+    </div>
+  `;
+}
+
+// ============================================================
+// PAGE: GARDEN
+// ============================================================
+
+function renderGarden() {
+  const habits = state.data.habits.active;
+  const drops = totalWaterDrops();
+  const unlocked = state.data.garden.unlockedAchievements;
+
+  const guitarMin = totalHobbyMinutes('guitar');
+  const pianoMin  = totalHobbyMinutes('piano');
+
+  return `
+    <div class="page">
+      <div class="page-header">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div><h1>Мой сад 🌸</h1><div class="subtitle">Ухаживай за растениями каждый день</div></div>
+          <div class="water-badge big">💧 ${drops}</div>
+        </div>
+      </div>
+
+      <div class="garden-grid">
+        ${habits.map(h => {
+          const streak = calcStreak(h.id);
+          const stage  = getPlantStage(streak);
+          const isCounter = h.id === COUNTER_HABIT;
+          const isTime    = TIME_HABITS.includes(h.id);
+          const mins      = isTime ? totalHobbyMinutes(h.id) : null;
+          return `
+            <div class="plant-pot">
+              <div class="plant-emoji">${stage.emoji}</div>
+              <div class="plant-name">${h.icon} ${h.name}</div>
+              <div class="plant-streak">${streak > 0 ? `🔥 ${streak} дн.` : 'Начни сегодня'}</div>
+              <div class="plant-stage">${stage.label}</div>
+              ${mins !== null ? `<div class="plant-time">⏱ ${mins < 60 ? mins+'м' : Math.floor(mins/60)+'ч '+(mins%60?mins%60+'м':'')}</div>` : ''}
+            </div>
+          `;
+        }).join('')}
+      </div>
+
+      ${(guitarMin + pianoMin) > 0 ? `
+        <div class="card">
+          <div class="card-title">Время практики</div>
+          <div style="display:flex;gap:14px">
+            <div style="flex:1;text-align:center;padding:12px;background:var(--surface2);border-radius:var(--radius-sm)">
+              <div style="font-size:28px">🎸</div>
+              <div style="font-size:18px;font-weight:700;color:var(--primary-dark);margin-top:4px">${guitarMin < 60 ? guitarMin+'м' : Math.floor(guitarMin/60)+'ч '+(guitarMin%60?guitarMin%60+'м':'')}</div>
+              <div class="muted" style="font-size:12px">Гитара</div>
+            </div>
+            <div style="flex:1;text-align:center;padding:12px;background:var(--surface2);border-radius:var(--radius-sm)">
+              <div style="font-size:28px">🎹</div>
+              <div style="font-size:18px;font-weight:700;color:var(--primary-dark);margin-top:4px">${pianoMin < 60 ? pianoMin+'м' : Math.floor(pianoMin/60)+'ч '+(pianoMin%60?pianoMin%60+'м':'')}</div>
+              <div class="muted" style="font-size:12px">Пианино</div>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <div class="card">
+        <div class="card-title">Достижения — ${unlocked.length}/${ACHIEVEMENTS.length}</div>
+        <div class="achievements-grid">
+          ${ACHIEVEMENTS.map(a => {
+            const done = unlocked.includes(a.id);
+            return `
+              <div class="achievement-item ${done?'done':''}">
+                <div class="achievement-icon">${done ? a.icon : '🔒'}</div>
+                <div class="achievement-title">${a.title}</div>
+                <div class="achievement-desc">${a.desc}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
     </div>
   `;
 }
@@ -721,17 +823,14 @@ function renderCooking() {
 function openModal(html) {
   closeModal();
   const overlay = document.createElement('div');
-  overlay.className = 'modal-overlay';
-  overlay.id = 'modal-root';
+  overlay.className = 'modal-overlay'; overlay.id = 'modal-root';
   overlay.innerHTML = `<div class="modal"><div class="modal-handle"></div>${html}</div>`;
   overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
   document.body.appendChild(overlay);
   bindModalEvents();
 }
 
-function closeModal() {
-  document.getElementById('modal-root')?.remove();
-}
+function closeModal() { document.getElementById('modal-root')?.remove(); }
 
 function openWakeModal() {
   const td = getTodayData();
@@ -739,9 +838,21 @@ function openWakeModal() {
     <h2>Время подъёма</h2>
     <div class="form-group">
       <label class="form-label">Во сколько встала?</label>
-      <input type="time" class="form-input" id="modal-wake-input" value="${td.wakeTime || new Date().toTimeString().slice(0,5)}">
+      <input type="time" class="form-input" id="modal-wake-input" value="${td.wakeTime||new Date().toTimeString().slice(0,5)}">
     </div>
     <button class="btn btn-primary btn-full" id="modal-save-wake">Сохранить</button>
+  `);
+}
+
+function openBedModal() {
+  const td = getTodayData();
+  openModal(`
+    <h2>Время отбоя</h2>
+    <div class="form-group">
+      <label class="form-label">Во сколько легла спать?</label>
+      <input type="time" class="form-input" id="modal-bed-input" value="${td.bedTime||'23:00'}">
+    </div>
+    <button class="btn btn-primary btn-full" id="modal-save-bed">Сохранить</button>
   `);
 }
 
@@ -751,13 +862,8 @@ function openAddExpense() {
     <h2>Новая трата</h2>
     <div class="form-group">
       <label class="form-label">Категория</label>
-      <div class="category-grid" id="cat-grid">
-        ${CATEGORIES.map(c => `
-          <button class="cat-btn ${c.id === tempCat ? 'selected' : ''}" data-cat="${c.id}">
-            <span class="cat-icon">${c.icon}</span>
-            ${c.name}
-          </button>
-        `).join('')}
+      <div class="category-grid">
+        ${CATEGORIES.map(c=>`<button class="cat-btn ${c.id===tempCat?'selected':''}" data-cat="${c.id}"><span class="cat-icon">${c.icon}</span>${c.name}</button>`).join('')}
       </div>
     </div>
     <div class="form-group">
@@ -778,11 +884,11 @@ function openBudgetSettings() {
     <h2>Настройки бюджета</h2>
     <div class="form-group">
       <label class="form-label">Бюджет на месяц (₸)</label>
-      <input type="number" class="form-input" id="budget-input" value="${finance.monthlyBudget || ''}" placeholder="150 000" inputmode="numeric">
+      <input type="number" class="form-input" id="budget-input" value="${finance.monthlyBudget||''}" placeholder="150 000" inputmode="numeric">
     </div>
     <div class="form-group">
       <label class="form-label">Цель накоплений (₸)</label>
-      <input type="number" class="form-input" id="savings-goal-input" value="${finance.savingsGoal || ''}" placeholder="500 000" inputmode="numeric">
+      <input type="number" class="form-input" id="savings-goal-input" value="${finance.savingsGoal||''}" placeholder="500 000" inputmode="numeric">
     </div>
     <button class="btn btn-primary btn-full" id="save-budget">Сохранить</button>
   `);
@@ -792,26 +898,12 @@ function openSavings() {
   const { finance } = state.data;
   openModal(`
     <h2>Пополнить накопления</h2>
-    <div style="text-align:center;margin-bottom:16px;color:var(--text-muted);font-size:14px">
-      Сейчас: ${formatMoney(finance.savingsCurrent)} ₸ из ${formatMoney(finance.savingsGoal)} ₸
-    </div>
+    <div style="text-align:center;margin-bottom:16px;color:var(--text-muted);font-size:14px">Сейчас: ${formatMoney(finance.savingsCurrent)} ₸ из ${formatMoney(finance.savingsGoal)} ₸</div>
     <div class="form-group">
       <label class="form-label">Текущая сумма накоплений (₸)</label>
-      <input type="number" class="form-input" id="savings-now-input" value="${finance.savingsCurrent || ''}" placeholder="0" inputmode="numeric">
+      <input type="number" class="form-input" id="savings-now-input" value="${finance.savingsCurrent||''}" placeholder="0" inputmode="numeric">
     </div>
     <button class="btn btn-primary btn-full" id="save-savings">Сохранить</button>
-  `);
-}
-
-function openBedModal() {
-  const td = getTodayData();
-  openModal(`
-    <h2>Время отбоя</h2>
-    <div class="form-group">
-      <label class="form-label">Во сколько легла спать?</label>
-      <input type="time" class="form-input" id="modal-bed-input" value="${td.bedTime || '23:00'}">
-    </div>
-    <button class="btn btn-primary btn-full" id="modal-save-bed">Сохранить</button>
   `);
 }
 
@@ -830,39 +922,86 @@ function openAddDoctor() {
   `);
 }
 
+function openAddGoal() {
+  tempInstrument = 'guitar';
+  const in3months = new Date(); in3months.setMonth(in3months.getMonth() + 3);
+  const dateStr = in3months.toISOString().slice(0,10);
+  openModal(`
+    <h2>Новая цель 🎯</h2>
+    <div class="form-group">
+      <label class="form-label">Название песни</label>
+      <input type="text" class="form-input" id="goal-title" placeholder="Например: Счастье — Ария">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Инструмент</label>
+      <div class="category-grid" style="grid-template-columns:repeat(4,1fr)">
+        ${[{id:'guitar',icon:'🎸',name:'Гитара'},{id:'piano',icon:'🎹',name:'Пианино'},{id:'voice',icon:'🎤',name:'Голос'},{id:'other',icon:'🎵',name:'Другое'}].map(i=>`
+          <button class="cat-btn ${i.id===tempInstrument?'selected':''}" data-instrument="${i.id}">
+            <span class="cat-icon">${i.icon}</span>${i.name}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Выучить к дате</label>
+      <input type="date" class="form-input" id="goal-date" value="${dateStr}">
+    </div>
+    <button class="btn btn-primary btn-full" id="save-goal">Создать план</button>
+  `);
+}
+
 // ============================================================
 // EVENT BINDING
 // ============================================================
 
 function bindEvents() {
   // Habit toggles
-  document.querySelectorAll('.habit-item').forEach(el => {
+  document.querySelectorAll('.habit-item[data-habit]').forEach(el => {
     el.addEventListener('click', () => {
       const id = el.dataset.habit;
       const td = getTodayData();
       td.habits[id] = !td.habits[id];
-      save();
-      render();
+      save(); render();
     });
   });
 
-  // Wake time — today page inline
+  // Time tracking inputs
+  document.querySelectorAll('.time-track-input').forEach(input => {
+    input.addEventListener('change', () => {
+      const id = input.dataset.habit;
+      const td = getTodayData();
+      td.times[id] = parseInt(input.value) || 0;
+      save();
+    });
+  });
+
+  // Sugar counter
+  document.querySelectorAll('.sugar-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const td = getTodayData();
+      if (btn.dataset.action === 'inc') td.sweets = (td.sweets || 0) + 1;
+      else td.sweets = Math.max(0, (td.sweets || 0) - 1);
+      // mark sugar habit done if sweets <= 1
+      td.habits[COUNTER_HABIT] = td.sweets <= 1;
+      save(); render();
+    });
+  });
+
+  // Wake time — today page
   document.getElementById('save-wake')?.addEventListener('click', () => {
     const val = document.getElementById('wake-input')?.value;
     if (val) { getTodayData().wakeTime = val; save(); render(); }
   });
-
   document.getElementById('change-wake')?.addEventListener('click', openWakeModal);
   document.getElementById('open-bed-modal')?.addEventListener('click', openBedModal);
 
-  // Wake time — sleep page inline
+  // Wake/bed — sleep page
   document.getElementById('save-wake-sleep')?.addEventListener('click', () => {
     const val = document.getElementById('wake-input-sleep')?.value;
     if (val) { getTodayData().wakeTime = val; save(); render(); }
   });
   document.getElementById('change-wake-sleep')?.addEventListener('click', openWakeModal);
-
-  // Bed time — sleep page inline
   document.getElementById('save-bed-sleep')?.addEventListener('click', () => {
     const val = document.getElementById('bed-input-sleep')?.value;
     if (val) { getTodayData().bedTime = val; save(); render(); }
@@ -879,78 +1018,97 @@ function bindEvents() {
     btn.addEventListener('click', () => {
       const doc = state.data.health.doctors.find(d => d.id === btn.dataset.doctor);
       if (!doc) return;
-      const cycle = ['needed', 'scheduled', 'done'];
-      doc.status = cycle[(cycle.indexOf(doc.status) + 1) % cycle.length];
+      const cycle = ['needed','scheduled','done'];
+      doc.status = cycle[(cycle.indexOf(doc.status)+1)%cycle.length];
       save(); render();
     });
   });
-
   document.getElementById('add-doctor')?.addEventListener('click', openAddDoctor);
 
-  // Cooking recipe toggles
-  document.querySelectorAll('.recipe-item').forEach(el => {
+  // Goals: song steps
+  document.querySelectorAll('.recipe-item[data-goal]').forEach(el => {
+    el.addEventListener('click', () => {
+      const goal = state.data.goals.find(g => g.id === el.dataset.goal);
+      const step = goal?.steps.find(s => s.id === el.dataset.step);
+      if (step) { step.done = !step.done; save(); render(); }
+    });
+  });
+  document.getElementById('add-goal')?.addEventListener('click', openAddGoal);
+
+  // Cooking
+  document.querySelectorAll('.recipe-item[data-recipe]').forEach(el => {
     el.addEventListener('click', () => {
       const id = el.dataset.recipe;
       const { learned } = state.data.cooking;
       const idx = learned.indexOf(id);
-      if (idx >= 0) learned.splice(idx, 1);
-      else learned.push(id);
+      if (idx >= 0) learned.splice(idx, 1); else learned.push(id);
       save(); render();
     });
   });
 }
 
 function bindModalEvents() {
-  // Wake modal save
   document.getElementById('modal-save-wake')?.addEventListener('click', () => {
     const val = document.getElementById('modal-wake-input')?.value;
     if (val) { getTodayData().wakeTime = val; save(); closeModal(); render(); }
   });
-
-  // Bed modal save
   document.getElementById('modal-save-bed')?.addEventListener('click', () => {
     const val = document.getElementById('modal-bed-input')?.value;
     if (val) { getTodayData().bedTime = val; save(); closeModal(); render(); }
   });
 
-  // Category selection in expense modal
-  document.querySelectorAll('.cat-btn').forEach(btn => {
+  document.querySelectorAll('.cat-btn[data-cat]').forEach(btn => {
     btn.addEventListener('click', () => {
       tempCat = btn.dataset.cat;
-      document.querySelectorAll('.cat-btn').forEach(b =>
-        b.classList.toggle('selected', b.dataset.cat === tempCat)
-      );
+      document.querySelectorAll('.cat-btn[data-cat]').forEach(b => b.classList.toggle('selected', b.dataset.cat === tempCat));
     });
   });
 
-  // Save expense
+  document.querySelectorAll('.cat-btn[data-instrument]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tempInstrument = btn.dataset.instrument;
+      document.querySelectorAll('.cat-btn[data-instrument]').forEach(b => b.classList.toggle('selected', b.dataset.instrument === tempInstrument));
+    });
+  });
+
   document.getElementById('save-expense')?.addEventListener('click', () => {
     const amount = parseFloat(document.getElementById('expense-amount')?.value);
-    const note   = (document.getElementById('expense-note')?.value || '').trim();
+    const note   = (document.getElementById('expense-note')?.value||'').trim();
     if (!amount || amount <= 0) { document.getElementById('expense-amount')?.focus(); return; }
     state.data.finance.expenses.push({ id: uid(), date: todayKey(), amount, category: tempCat, note });
     save(); closeModal(); render();
   });
 
-  // Save budget settings
   document.getElementById('save-budget')?.addEventListener('click', () => {
-    state.data.finance.monthlyBudget = parseFloat(document.getElementById('budget-input')?.value) || 0;
-    state.data.finance.savingsGoal   = parseFloat(document.getElementById('savings-goal-input')?.value) || 0;
+    state.data.finance.monthlyBudget = parseFloat(document.getElementById('budget-input')?.value)||0;
+    state.data.finance.savingsGoal   = parseFloat(document.getElementById('savings-goal-input')?.value)||0;
     save(); closeModal(); render();
   });
 
-  // Save savings
   document.getElementById('save-savings')?.addEventListener('click', () => {
-    state.data.finance.savingsCurrent = parseFloat(document.getElementById('savings-now-input')?.value) || 0;
+    state.data.finance.savingsCurrent = parseFloat(document.getElementById('savings-now-input')?.value)||0;
     save(); closeModal(); render();
   });
 
-  // Save doctor
   document.getElementById('save-doctor')?.addEventListener('click', () => {
-    const name = (document.getElementById('doctor-name-input')?.value || '').trim();
+    const name = (document.getElementById('doctor-name-input')?.value||'').trim();
     if (!name) return;
-    const spec = (document.getElementById('doctor-spec-input')?.value || '').trim();
-    state.data.health.doctors.push({ id: uid(), name, specialty: spec || 'Специалист', icon: '🏥', status: 'needed' });
+    const spec = (document.getElementById('doctor-spec-input')?.value||'').trim();
+    state.data.health.doctors.push({ id: uid(), name, specialty: spec||'Специалист', icon: '🏥', status: 'needed' });
+    save(); closeModal(); render();
+  });
+
+  document.getElementById('save-goal')?.addEventListener('click', () => {
+    const title = (document.getElementById('goal-title')?.value||'').trim();
+    const date  = document.getElementById('goal-date')?.value;
+    if (!title || !date) return;
+    state.data.goals.push({
+      id: uid(),
+      title,
+      instrument: tempInstrument,
+      targetDate: date,
+      steps: SONG_STEPS.map((name, i) => ({ id: `s${i}`, name, done: false })),
+    });
     save(); closeModal(); render();
   });
 }
@@ -962,27 +1120,13 @@ function bindModalEvents() {
 function setupNav() {
   document.getElementById('bottom-nav').addEventListener('click', e => {
     const btn = e.target.closest('.nav-btn');
-    if (btn && btn.dataset.page) {
-      state.page = btn.dataset.page;
-      window.scrollTo(0, 0);
-      render();
-    }
+    if (btn?.dataset.page) { state.page = btn.dataset.page; window.scrollTo(0,0); render(); }
   });
 }
 
-// ============================================================
-// SERVICE WORKER
-// ============================================================
-
 function registerSW() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  }
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
-
-// ============================================================
-// INIT
-// ============================================================
 
 function init() {
   state.data = loadData();
