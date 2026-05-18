@@ -1,46 +1,69 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F0E6FF"/>
+      <stop offset="100%" style="stop-color:#FFD6EA"/>
+    </linearGradient>
+  </defs>
+
   <!-- Background -->
-  <rect width="192" height="192" rx="42" fill="#A8D8EA"/>
+  <rect width="192" height="192" rx="42" fill="url(#bg)"/>
 
-  <!-- Left ear outer -->
-  <polygon points="38,85 62,18 88,70" fill="#FF6B35"/>
-  <!-- Left ear inner -->
-  <polygon points="50,78 65,34 82,66" fill="#FFB39A"/>
+  <!-- Sparkles -->
+  <text x="14" y="38"  font-size="18" font-family="serif" fill="#D4A8F0" opacity="0.8">✦</text>
+  <text x="158" y="30" font-size="13" font-family="serif" fill="#FFB3D1" opacity="0.7">✦</text>
+  <text x="162" y="160" font-size="11" font-family="serif" fill="#D4A8F0" opacity="0.6">✦</text>
+  <text x="12" y="165"  font-size="10" font-family="serif" fill="#FFB3D1" opacity="0.6">✦</text>
+  <text x="148" y="80"  font-size="9"  font-family="serif" fill="#C890E8" opacity="0.5">✦</text>
 
-  <!-- Right ear outer -->
-  <polygon points="154,85 130,18 104,70" fill="#FF6B35"/>
-  <!-- Right ear inner -->
-  <polygon points="142,78 127,34 110,66" fill="#FFB39A"/>
+  <!-- Left ear -->
+  <polygon points="40,92 63,20 90,75" fill="#E8722A"/>
+  <polygon points="52,86 66,36 84,72" fill="#FFCBA8"/>
+
+  <!-- Right ear -->
+  <polygon points="152,92 129,20 102,75" fill="#E8722A"/>
+  <polygon points="140,86 126,36 108,72" fill="#FFCBA8"/>
 
   <!-- Head -->
-  <ellipse cx="96" cy="112" rx="60" ry="54" fill="#FF8C42"/>
+  <circle cx="96" cy="118" r="62" fill="#F4884A"/>
 
-  <!-- White muzzle -->
-  <ellipse cx="96" cy="132" rx="34" ry="26" fill="#FFF0EC"/>
+  <!-- Muzzle -->
+  <ellipse cx="96" cy="138" rx="34" ry="25" fill="#FFF4F0"/>
 
   <!-- Left eye white -->
-  <circle cx="76" cy="105" r="11" fill="white"/>
+  <circle cx="74" cy="110" r="15" fill="white"/>
   <!-- Right eye white -->
-  <circle cx="116" cy="105" r="11" fill="white"/>
+  <circle cx="118" cy="110" r="15" fill="white"/>
 
-  <!-- Left eye -->
-  <circle cx="78" cy="106" r="7" fill="#2C1A10"/>
-  <!-- Right eye -->
-  <circle cx="118" cy="106" r="7" fill="#2C1A10"/>
+  <!-- Left pupil -->
+  <circle cx="76" cy="112" r="10" fill="#1C0A00"/>
+  <!-- Right pupil -->
+  <circle cx="120" cy="112" r="10" fill="#1C0A00"/>
 
-  <!-- Eye shine left -->
-  <circle cx="81" cy="103" r="2.5" fill="white"/>
-  <!-- Eye shine right -->
-  <circle cx="121" cy="103" r="2.5" fill="white"/>
+  <!-- Eye shine big -->
+  <circle cx="80" cy="107" r="4.5" fill="white"/>
+  <circle cx="124" cy="107" r="4.5" fill="white"/>
+  <!-- Eye shine small -->
+  <circle cx="72" cy="116" r="2" fill="white"/>
+  <circle cx="116" cy="116" r="2" fill="white"/>
 
   <!-- Nose -->
-  <ellipse cx="96" cy="124" rx="6" ry="4.5" fill="#2C1A10"/>
+  <ellipse cx="96" cy="130" rx="5.5" ry="4" fill="#C0556A"/>
 
   <!-- Mouth -->
-  <path d="M89,129 Q96,136 103,129" stroke="#2C1A10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M89,135 Q96,142 103,135" stroke="#C0556A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
 
-  <!-- Left blush -->
-  <ellipse cx="63" cy="120" rx="11" ry="7" fill="#FF8FAB" opacity="0.55"/>
-  <!-- Right blush -->
-  <ellipse cx="129" cy="120" rx="11" ry="7" fill="#FF8FAB" opacity="0.55"/>
+  <!-- Blush left -->
+  <ellipse cx="57" cy="124" rx="13" ry="8" fill="#FFB3C6" opacity="0.65"/>
+  <!-- Blush right -->
+  <ellipse cx="135" cy="124" rx="13" ry="8" fill="#FFB3C6" opacity="0.65"/>
+
+  <!-- Bow — left ear -->
+  <!-- Left wing -->
+  <path d="M28,52 Q18,38 28,30 Q38,22 44,36 Q46,44 40,50 Z" fill="#FF8FAB"/>
+  <!-- Right wing -->
+  <path d="M66,52 Q76,38 66,30 Q56,22 50,36 Q48,44 54,50 Z" fill="#FF8FAB"/>
+  <!-- Center knot -->
+  <circle cx="47" cy="42" r="7" fill="#FF6B90"/>
+  <ellipse cx="47" cy="42" rx="5" ry="3.5" fill="#FFB3C6"/>
 </svg>
