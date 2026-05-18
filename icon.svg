@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
   <!-- Background -->
-  <rect width="192" height="192" rx="42" fill="#FF8FAB"/>
+  <rect width="192" height="192" rx="42" fill="#A8D8EA"/>
 
   <!-- Left ear outer -->
   <polygon points="38,85 62,18 88,70" fill="#FF6B35"/>
