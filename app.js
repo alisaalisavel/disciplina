@@ -192,6 +192,66 @@ function getLast7Days() {
   return days;
 }
 
+function renderMonthCalendar() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const habits = state.data.habits.active;
+
+  // Monday-first: 0=Пн..6=Вс
+  const firstDow = (new Date(year, month, 1).getDay() + 6) % 7;
+
+  const dayLabels = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+
+  let cells = '';
+  // Empty cells before first day
+  for (let i = 0; i < firstDow; i++) {
+    cells += `<div class="mcell mcell-empty"></div>`;
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayData = state.data.daily[key];
+    const isToday = d === now.getDate();
+    const isFuture = new Date(year, month, d) > now;
+
+    let level = 'empty';
+    let title = '';
+
+    if (!isFuture && dayData) {
+      const done = habits.filter(h => dayData.habits?.[h.id]).length;
+      const pct = habits.length ? done / habits.length : 0;
+      if (pct === 0)       level = 'l0';
+      else if (pct < 0.5)  level = 'l1';
+      else if (pct < 1)    level = 'l2';
+      else                 level = 'l3';
+      title = `${done}/${habits.length} привычек`;
+    } else if (!isFuture) {
+      level = 'l0';
+    }
+
+    cells += `<div class="mcell mcell-${level} ${isToday ? 'mcell-today' : ''}" title="${title}">${d}</div>`;
+  }
+
+  return `
+    <div class="card">
+      <div class="card-title">${MONTH_NAMES[month]} ${year}</div>
+      <div class="month-dow">
+        ${dayLabels.map(l => `<div class="dow-label">${l}</div>`).join('')}
+      </div>
+      <div class="month-grid">${cells}</div>
+      <div class="chart-legend" style="margin-top:12px">
+        <div class="legend-dot" style="background:var(--border)"></div> Нет данных
+        <div class="legend-dot" style="background:var(--surface2);border:1px solid var(--border);margin-left:8px"></div> 0%
+        <div class="legend-dot" style="background:var(--primary-light);margin-left:8px"></div> &lt;50%
+        <div class="legend-dot" style="background:var(--primary);margin-left:8px"></div> &lt;100%
+        <div class="legend-dot" style="background:var(--primary-dark);margin-left:8px"></div> 100%
+      </div>
+    </div>
+  `;
+}
+
 function getMonthExpenses() {
   const d = new Date();
   const prefix = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
@@ -283,6 +343,8 @@ function renderToday() {
           `;
         }).join('')}
       </div>
+
+      ${renderMonthCalendar()}
 
       ${queue.length > 0 ? `
         <div class="card">
