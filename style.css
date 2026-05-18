@@ -593,6 +593,62 @@ body {
 .empty-icon { font-size: 40px; margin-bottom: 10px; }
 .empty-state p { font-size: 14px; line-height: 1.5; }
 
+/* ========== SLEEP DURATION ========== */
+.sleep-duration-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.sleep-duration-badge.good { background: var(--success-bg); color: var(--success-text); }
+.sleep-duration-badge.bad  { background: #FFF3E0; color: #BF360C; }
+
+.sleep-today-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.sleep-col { text-align: center; }
+.sleep-col-label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+.sleep-col-time  { font-size: 34px; font-weight: 700; color: var(--primary-dark); letter-spacing: -1px; }
+.sleep-col-input {
+  width: 100%;
+  padding: 8px 6px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-xs);
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--surface);
+  outline: none;
+}
+.sleep-col-input:focus { border-color: var(--primary); }
+
+.sleep-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.sleep-hours-badge {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 12px;
+  text-align: center;
+  white-space: nowrap;
+}
+.sleep-hours-badge.good    { background: var(--success-bg); color: var(--success-text); }
+.sleep-hours-badge.bad     { background: #FFF3E0; color: #BF360C; }
+.sleep-hours-badge.neutral { background: var(--surface2); color: var(--text-muted); }
+
 /* ========== MONTH CALENDAR ========== */
 .month-dow {
   display: grid;

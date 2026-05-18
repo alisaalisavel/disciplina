@@ -162,6 +162,21 @@ function parseToMin(t) {
   return h * 60 + m;
 }
 
+function calcSleepMin(bedTime, wakeTime) {
+  const b = parseToMin(bedTime);
+  const w = parseToMin(wakeTime);
+  if (b === null || w === null) return null;
+  // bed before midnight, wake after
+  return b > w ? (w + 1440) - b : w - b;
+}
+
+function formatSleep(minutes) {
+  if (minutes === null) return null;
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return m > 0 ? `${h}ч ${m}м` : `${h}ч`;
+}
+
 function calcStreak(habitId) {
   let streak = 0;
   const d = new Date();
@@ -305,14 +320,26 @@ function renderToday() {
       </div>
 
       <div class="card wake-card">
-        ${td.wakeTime ? `
-          <div class="card-title">Подъём сегодня</div>
-          <div class="wake-time-display">${td.wakeTime}</div>
-          <div class="wake-status ${td.wakeTime <= '05:30' ? 'good' : 'late'}">
-            ${td.wakeTime <= '05:30' ? '✓ Молодец, встала вовремя!' : td.wakeTime <= '07:00' ? '⚡ Почти! Завтра раньше' : '😴 Завтра обязательно встанем'}
-          </div>
-          <button class="btn btn-secondary btn-sm" style="margin-top:14px" id="change-wake">Изменить время</button>
-        ` : `
+        ${td.wakeTime ? (() => {
+          const sleptMin = calcSleepMin(td.bedTime, td.wakeTime);
+          const sleptStr = formatSleep(sleptMin);
+          const sleptOk  = sleptMin !== null && sleptMin >= 360;
+          return `
+            <div class="card-title">Подъём сегодня</div>
+            <div class="wake-time-display">${td.wakeTime}</div>
+            <div class="wake-status ${td.wakeTime <= '05:30' ? 'good' : 'late'}">
+              ${td.wakeTime <= '05:30' ? '✓ Молодец, встала вовремя!' : td.wakeTime <= '07:00' ? '⚡ Почти! Завтра раньше' : '😴 Завтра обязательно встанем'}
+            </div>
+            ${sleptStr ? `
+              <div class="sleep-duration-badge ${sleptOk ? 'good' : 'bad'}" style="margin-top:10px">
+                🌙 ${sleptStr} сна ${sleptOk ? '— отлично!' : '— маловато, цель 6ч+'}
+              </div>
+            ` : `
+              <button class="btn btn-secondary btn-sm" style="margin-top:12px" id="open-bed-modal">+ Добавить время отбоя</button>
+            `}
+            <button class="btn btn-secondary btn-sm" style="margin-top:8px" id="change-wake">Изменить подъём</button>
+          `;
+        })() : `
           <div class="card-title">Во сколько встала?</div>
           <div class="wake-input-wrap">
             <p>Зафикси время подъёма</p>
@@ -371,8 +398,14 @@ function renderSleep() {
   const days = getLast7Days();
 
   const withTime = days.filter(d => d.data?.wakeTime);
-  const avgMin = withTime.length
+  const withSleep = days.filter(d => d.data?.wakeTime && d.data?.bedTime);
+
+  const avgWakeMin = withTime.length
     ? Math.round(withTime.reduce((s, d) => s + parseToMin(d.data.wakeTime), 0) / withTime.length)
+    : null;
+
+  const avgSleepMin = withSleep.length
+    ? Math.round(withSleep.reduce((s, d) => s + calcSleepMin(d.data.bedTime, d.data.wakeTime), 0) / withSleep.length)
     : null;
 
   let streak = 0;
@@ -384,18 +417,20 @@ function renderSleep() {
 
   const times = days.map(d => d.data?.wakeTime ? parseToMin(d.data.wakeTime) : null);
   const validTimes = times.filter(Boolean);
-  const maxT = validTimes.length ? Math.max(...validTimes, 420) : 420; // at least 7:00
-  const minT = validTimes.length ? Math.min(...validTimes, 280) : 280; // at least 4:40
+  const maxT = validTimes.length ? Math.max(...validTimes, 420) : 420;
+  const minT = validTimes.length ? Math.min(...validTimes, 280) : 280;
 
   function minToStr(m) {
     return `${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
   }
 
+  const todaySleepMin = calcSleepMin(td.bedTime, td.wakeTime);
+
   return `
     <div class="page">
       <div class="page-header">
         <h1>Сон 🌙</h1>
-        <div class="subtitle">Цель подъёма: 5:00</div>
+        <div class="subtitle">Цель: вставать в 5:00, спать 6ч+</div>
       </div>
 
       <div class="stats-row">
@@ -404,47 +439,65 @@ function renderSleep() {
           <div class="stat-label">🔥 Стрик</div>
         </div>
         <div class="stat-box">
-          <div class="stat-value" style="font-size:18px">${avgMin !== null ? minToStr(avgMin) : '—'}</div>
-          <div class="stat-label">Среднее</div>
+          <div class="stat-value" style="font-size:18px">${avgWakeMin !== null ? minToStr(avgWakeMin) : '—'}</div>
+          <div class="stat-label">Ср. подъём</div>
         </div>
         <div class="stat-box">
-          <div class="stat-value">${withTime.length}/7</div>
-          <div class="stat-label">Зафиксировано</div>
+          <div class="stat-value" style="font-size:16px">${avgSleepMin !== null ? formatSleep(avgSleepMin) : '—'}</div>
+          <div class="stat-label">Ср. сон</div>
         </div>
       </div>
 
       <div class="card">
         <div class="card-title">Сегодня</div>
-        ${td.wakeTime ? `
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <div>
-              <div style="font-size:40px;font-weight:700;color:var(--primary-dark);letter-spacing:-1px">${td.wakeTime}</div>
-              <div class="muted" style="font-size:13px;margin-top:4px">
-                ${td.wakeTime <= '05:00' ? '✓ Идеально!' : td.wakeTime <= '06:00' ? '⚡ Почти в цели' : td.wakeTime <= '07:00' ? '😐 Ещё работаем' : '😴 Совсем поздно'}
+        <div class="sleep-today-grid">
+          <div class="sleep-col">
+            <div class="sleep-col-label">🌙 Отбой</div>
+            ${td.bedTime ? `
+              <div class="sleep-col-time">${td.bedTime}</div>
+              <button class="btn btn-secondary btn-sm" style="margin-top:8px" id="change-bed-sleep">Изменить</button>
+            ` : `
+              <input type="time" class="sleep-col-input" id="bed-input-sleep" value="23:00">
+              <button class="btn btn-primary btn-sm" style="margin-top:8px" id="save-bed-sleep">Сохранить</button>
+            `}
+          </div>
+          <div class="sleep-divider">
+            ${todaySleepMin !== null ? `
+              <div class="sleep-hours-badge ${todaySleepMin >= 360 ? 'good' : 'bad'}">
+                ${formatSleep(todaySleepMin)}
               </div>
-            </div>
-            <button class="btn btn-secondary btn-sm" id="change-wake-sleep">Изменить</button>
+            ` : `<div class="sleep-hours-badge neutral">?</div>`}
           </div>
-        ` : `
-          <div class="wake-input-wrap" style="padding:4px 0">
-            <input type="time" class="time-input" id="wake-input-sleep" value="${new Date().toTimeString().slice(0,5)}">
-            <button class="btn btn-primary" id="save-wake-sleep">Сохранить подъём</button>
+          <div class="sleep-col">
+            <div class="sleep-col-label">☀️ Подъём</div>
+            ${td.wakeTime ? `
+              <div class="sleep-col-time">${td.wakeTime}</div>
+              <button class="btn btn-secondary btn-sm" style="margin-top:8px" id="change-wake-sleep">Изменить</button>
+            ` : `
+              <input type="time" class="sleep-col-input" id="wake-input-sleep" value="${new Date().toTimeString().slice(0,5)}">
+              <button class="btn btn-primary btn-sm" style="margin-top:8px" id="save-wake-sleep">Сохранить</button>
+            `}
           </div>
-        `}
+        </div>
+        ${todaySleepMin !== null ? `
+          <div style="text-align:center;margin-top:12px;font-size:13px;color:${todaySleepMin >= 360 ? 'var(--success-text)' : '#BF360C'}">
+            ${todaySleepMin >= 360 ? '✓ Норма выполнена!' : `Не хватает ${formatSleep(360 - todaySleepMin)} до нормы`}
+          </div>
+        ` : ''}
       </div>
 
       <div class="card">
-        <div class="card-title">Последние 7 дней</div>
+        <div class="card-title">Последние 7 дней — часы сна</div>
         <div class="sleep-chart">
           ${days.map(d => {
-            const tMin = d.data?.wakeTime ? parseToMin(d.data.wakeTime) : null;
-            const range = maxT - minT || 60;
-            const pct = tMin ? Math.max(8, Math.min(100, (tMin - minT) / range * 100)) : 0;
-            const good = tMin && d.data.wakeTime <= '06:30';
+            const slMin = d.data?.wakeTime && d.data?.bedTime ? calcSleepMin(d.data.bedTime, d.data.wakeTime) : null;
+            const maxSl = 600; const minSl = 240;
+            const pct = slMin ? Math.max(8, Math.min(100, (slMin - minSl) / (maxSl - minSl) * 100)) : 0;
+            const good = slMin && slMin >= 360;
             return `
               <div class="chart-col">
                 <div class="chart-bar-wrap">
-                  <div class="chart-bar ${tMin ? (good ? 'good' : '') : 'empty'}" style="height:${pct}%"></div>
+                  <div class="chart-bar ${slMin ? (good ? 'good' : '') : 'empty'}" style="height:${pct}%"></div>
                 </div>
                 <div class="chart-day">${d.label}</div>
               </div>
@@ -452,9 +505,9 @@ function renderSleep() {
           }).join('')}
         </div>
         <div class="chart-legend">
-          <div class="legend-dot" style="background:var(--primary)"></div> До 6:30
-          <div class="legend-dot" style="background:var(--primary-light);margin-left:8px"></div> Позже
-          <div class="legend-dot" style="background:var(--border);margin-left:8px"></div> Не записано
+          <div class="legend-dot" style="background:var(--primary)"></div> 6ч+
+          <div class="legend-dot" style="background:var(--primary-light);margin-left:8px"></div> Меньше 6ч
+          <div class="legend-dot" style="background:var(--border);margin-left:8px"></div> Нет данных
         </div>
       </div>
     </div>
@@ -750,6 +803,18 @@ function openSavings() {
   `);
 }
 
+function openBedModal() {
+  const td = getTodayData();
+  openModal(`
+    <h2>Время отбоя</h2>
+    <div class="form-group">
+      <label class="form-label">Во сколько легла спать?</label>
+      <input type="time" class="form-input" id="modal-bed-input" value="${td.bedTime || '23:00'}">
+    </div>
+    <button class="btn btn-primary btn-full" id="modal-save-bed">Сохранить</button>
+  `);
+}
+
 function openAddDoctor() {
   openModal(`
     <h2>Добавить врача</h2>
@@ -788,14 +853,21 @@ function bindEvents() {
   });
 
   document.getElementById('change-wake')?.addEventListener('click', openWakeModal);
+  document.getElementById('open-bed-modal')?.addEventListener('click', openBedModal);
 
   // Wake time — sleep page inline
   document.getElementById('save-wake-sleep')?.addEventListener('click', () => {
     const val = document.getElementById('wake-input-sleep')?.value;
     if (val) { getTodayData().wakeTime = val; save(); render(); }
   });
-
   document.getElementById('change-wake-sleep')?.addEventListener('click', openWakeModal);
+
+  // Bed time — sleep page inline
+  document.getElementById('save-bed-sleep')?.addEventListener('click', () => {
+    const val = document.getElementById('bed-input-sleep')?.value;
+    if (val) { getTodayData().bedTime = val; save(); render(); }
+  });
+  document.getElementById('change-bed-sleep')?.addEventListener('click', openBedModal);
 
   // Finance
   document.getElementById('open-add-expense')?.addEventListener('click', openAddExpense);
@@ -833,6 +905,12 @@ function bindModalEvents() {
   document.getElementById('modal-save-wake')?.addEventListener('click', () => {
     const val = document.getElementById('modal-wake-input')?.value;
     if (val) { getTodayData().wakeTime = val; save(); closeModal(); render(); }
+  });
+
+  // Bed modal save
+  document.getElementById('modal-save-bed')?.addEventListener('click', () => {
+    const val = document.getElementById('modal-bed-input')?.value;
+    if (val) { getTodayData().bedTime = val; save(); closeModal(); render(); }
   });
 
   // Category selection in expense modal
