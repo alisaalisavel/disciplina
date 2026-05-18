@@ -1,0 +1,18 @@
+{
+  "name": "Моя жизнь",
+  "short_name": "Моя жизнь",
+  "description": "Трекер привычек, сна, финансов и целей",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FFF5F8",
+  "theme_color": "#FF8FAB",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
