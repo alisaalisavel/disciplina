@@ -1,4 +1,46 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <!-- Background -->
   <rect width="192" height="192" rx="42" fill="#FF8FAB"/>
-  <text x="96" y="130" font-size="100" text-anchor="middle" font-family="serif">🌸</text>
+
+  <!-- Left ear outer -->
+  <polygon points="38,85 62,18 88,70" fill="#FF6B35"/>
+  <!-- Left ear inner -->
+  <polygon points="50,78 65,34 82,66" fill="#FFB39A"/>
+
+  <!-- Right ear outer -->
+  <polygon points="154,85 130,18 104,70" fill="#FF6B35"/>
+  <!-- Right ear inner -->
+  <polygon points="142,78 127,34 110,66" fill="#FFB39A"/>
+
+  <!-- Head -->
+  <ellipse cx="96" cy="112" rx="60" ry="54" fill="#FF8C42"/>
+
+  <!-- White muzzle -->
+  <ellipse cx="96" cy="132" rx="34" ry="26" fill="#FFF0EC"/>
+
+  <!-- Left eye white -->
+  <circle cx="76" cy="105" r="11" fill="white"/>
+  <!-- Right eye white -->
+  <circle cx="116" cy="105" r="11" fill="white"/>
+
+  <!-- Left eye -->
+  <circle cx="78" cy="106" r="7" fill="#2C1A10"/>
+  <!-- Right eye -->
+  <circle cx="118" cy="106" r="7" fill="#2C1A10"/>
+
+  <!-- Eye shine left -->
+  <circle cx="81" cy="103" r="2.5" fill="white"/>
+  <!-- Eye shine right -->
+  <circle cx="121" cy="103" r="2.5" fill="white"/>
+
+  <!-- Nose -->
+  <ellipse cx="96" cy="124" rx="6" ry="4.5" fill="#2C1A10"/>
+
+  <!-- Mouth -->
+  <path d="M89,129 Q96,136 103,129" stroke="#2C1A10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Left blush -->
+  <ellipse cx="63" cy="120" rx="11" ry="7" fill="#FF8FAB" opacity="0.55"/>
+  <!-- Right blush -->
+  <ellipse cx="129" cy="120" rx="11" ry="7" fill="#FF8FAB" opacity="0.55"/>
 </svg>
