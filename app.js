@@ -95,6 +95,13 @@ const TIME_HABITS = ['guitar', 'piano'];
 // habit that is a counter
 const COUNTER_HABIT = 'sugar';
 
+const PRIORITIES = [
+  { id: 'high',   label: 'Высокий', icon: '🔴' },
+  { id: 'medium', label: 'Средний', icon: '🟡' },
+  { id: 'low',    label: 'Низкий',  icon: '🟢' },
+];
+const PRIORITY_ORDER = { high: 0, medium: 1, low: 2 };
+
 // ============================================================
 // STATE
 // ============================================================
@@ -107,6 +114,8 @@ let sleepPeriod = 'week';
 let workoutPeriod = 'week';
 let financeTab = 'overview';
 let financeAnalyticsPeriod = 'month';
+let tempPriority = 'medium';
+let editingTaskId = null;
 
 // ============================================================
 // DATA
@@ -1292,30 +1301,53 @@ function renderMore() {
 
 function renderPlanner() {
   const tasks = state.data.tasks || [];
-  const active = tasks.filter(t => !t.done);
-  const done   = tasks.filter(t => t.done);
+  const active = [...tasks.filter(t => !t.done)]
+    .sort((a, b) => (PRIORITY_ORDER[a.priority||'medium']) - (PRIORITY_ORDER[b.priority||'medium']));
+  const done = tasks.filter(t => t.done);
+
+  function priorityBadge(p) {
+    const pr = PRIORITIES.find(x => x.id === (p || 'medium'));
+    return `<span class="priority-badge priority-${pr.id}">${pr.icon} ${pr.label}</span>`;
+  }
 
   function taskCard(t) {
     const isExp = state.expandedTask === t.id;
     const dLeft = t.deadline ? daysUntil(t.deadline) : null;
     const overdue = dLeft !== null && dLeft < 0 && !t.done;
     const urgent  = dLeft !== null && dLeft <= 1 && dLeft >= 0 && !t.done;
+    const pr = t.priority || 'medium';
     return `
-      <div class="task-item ${t.done ? 'task-done' : ''}">
+      <div class="task-item ${t.done ? 'task-done' : ''} task-priority-${pr}">
         <div class="task-row">
           <button class="task-check ${t.done ? 'checked' : ''}" data-task-done="${t.id}"></button>
           <div class="task-body" data-task-toggle="${t.id}">
-            <div class="task-title">${t.title}</div>
+            <div class="task-title-row">
+              <span class="task-title">${t.title}</span>
+              ${!t.done ? `<span class="priority-dot priority-dot-${pr}" title="${PRIORITIES.find(x=>x.id===pr)?.label}"></span>` : ''}
+            </div>
             ${t.deadline ? `<div class="task-deadline ${overdue ? 'overdue' : urgent ? 'urgent' : ''}">
               ${overdue ? '⚠️ Просрочено' : dLeft === 0 ? '⏰ Сегодня!' : dLeft === 1 ? '📅 Завтра' : '📅 ' + formatDate(t.deadline)}
             </div>` : ''}
           </div>
-          <button class="task-del" data-task-del="${t.id}">×</button>
+          <div class="task-actions">
+            <button class="task-edit-btn" data-task-edit="${t.id}" title="Редактировать">✏️</button>
+            <button class="task-del" data-task-del="${t.id}" title="Удалить">×</button>
+          </div>
         </div>
-        ${isExp && t.description ? `<div class="task-desc">${t.description}</div>` : ''}
+        ${isExp ? `
+          <div class="task-expanded">
+            ${t.description ? `<div class="task-desc">${t.description}</div>` : ''}
+            <div class="task-meta-row">
+              ${priorityBadge(t.priority)}
+              ${t.deadline ? `<span class="task-meta-deadline">📅 ${formatDate(t.deadline)}</span>` : ''}
+            </div>
+          </div>
+        ` : ''}
       </div>
     `;
   }
+
+  const highCount  = active.filter(t => (t.priority||'medium') === 'high').length;
 
   return `
     <div class="page">
@@ -1323,7 +1355,7 @@ function renderPlanner() {
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
           <div>
             <h1>Планер 📋</h1>
-            <div class="subtitle">${active.length > 0 ? `${active.length} активных задач` : 'Всё чисто!'}</div>
+            <div class="subtitle">${active.length > 0 ? `${active.length} задач${highCount > 0 ? ` · ${highCount} срочных 🔴` : ''}` : 'Всё чисто!'}</div>
           </div>
           <button class="btn btn-primary btn-sm" id="add-task">+ Задача</button>
         </div>
@@ -1484,25 +1516,49 @@ function openLogWorkout() {
   `);
 }
 
-function openAddTask() {
+function taskModalHtml(title, t) {
   const in7 = new Date(); in7.setDate(in7.getDate() + 7);
-  const dateStr = in7.toISOString().slice(0,10);
-  openModal(`
-    <h2>Новая задача 📋</h2>
+  const defaultDate = in7.toISOString().slice(0,10);
+  return `
+    <h2>${title}</h2>
     <div class="form-group">
       <label class="form-label">Название *</label>
-      <input type="text" class="form-input" id="task-title" placeholder="Что нужно сделать?">
+      <input type="text" class="form-input" id="task-title" placeholder="Что нужно сделать?" value="${t ? t.title.replace(/"/g,'&quot;') : ''}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Приоритет</label>
+      <div class="priority-picker">
+        ${PRIORITIES.map(p => `
+          <button class="priority-pick-btn ${(t?.priority||'medium')===p.id?'selected':''} priority-pick-${p.id}" data-priority="${p.id}">
+            ${p.icon} ${p.label}
+          </button>
+        `).join('')}
+      </div>
     </div>
     <div class="form-group">
       <label class="form-label">Описание (необязательно)</label>
-      <textarea class="form-input" id="task-desc" rows="3" placeholder="Детали, ссылки, заметки..." style="resize:none"></textarea>
+      <textarea class="form-input" id="task-desc" rows="3" placeholder="Детали, ссылки, заметки..." style="resize:none">${t ? t.description||'' : ''}</textarea>
     </div>
     <div class="form-group">
       <label class="form-label">Дедлайн (необязательно)</label>
-      <input type="date" class="form-input" id="task-deadline" value="${dateStr}">
+      <input type="date" class="form-input" id="task-deadline" value="${t?.deadline || defaultDate}">
     </div>
-    <button class="btn btn-primary btn-full" id="save-task">Добавить</button>
-  `);
+    <button class="btn btn-primary btn-full" id="save-task">${t ? 'Сохранить' : 'Добавить'}</button>
+  `;
+}
+
+function openAddTask() {
+  editingTaskId = null;
+  tempPriority = 'medium';
+  openModal(taskModalHtml('Новая задача 📋', null));
+}
+
+function openEditTask(id) {
+  const t = state.data.tasks.find(t => t.id === id);
+  if (!t) return;
+  editingTaskId = id;
+  tempPriority = t.priority || 'medium';
+  openModal(taskModalHtml('Редактировать задачу ✏️', t));
 }
 
 function openAddGoal() {
@@ -1650,6 +1706,12 @@ function bindEvents() {
       save(); render();
     });
   });
+  document.querySelectorAll('[data-task-edit]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      openEditTask(btn.dataset.taskEdit);
+    });
+  });
 
   // Health
   document.querySelectorAll('.status-cycle-btn').forEach(btn => {
@@ -1757,13 +1819,32 @@ function bindModalEvents() {
     save(); closeModal(); render();
   });
 
+  // Priority picker in task modal
+  document.querySelectorAll('[data-priority]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tempPriority = btn.dataset.priority;
+      document.querySelectorAll('[data-priority]').forEach(b => {
+        b.classList.toggle('selected', b.dataset.priority === tempPriority);
+      });
+    });
+  });
+
   document.getElementById('save-task')?.addEventListener('click', () => {
     const title = (document.getElementById('task-title')?.value || '').trim();
     if (!title) { document.getElementById('task-title')?.focus(); return; }
     const desc     = (document.getElementById('task-desc')?.value || '').trim();
     const deadline = document.getElementById('task-deadline')?.value || null;
     if (!state.data.tasks) state.data.tasks = [];
-    state.data.tasks.push({ id: uid(), title, description: desc, deadline: deadline || null, done: false });
+
+    if (editingTaskId) {
+      // Edit existing
+      const t = state.data.tasks.find(t => t.id === editingTaskId);
+      if (t) { t.title = title; t.description = desc; t.deadline = deadline || null; t.priority = tempPriority; }
+      editingTaskId = null;
+    } else {
+      // Add new
+      state.data.tasks.push({ id: uid(), title, description: desc, deadline: deadline || null, priority: tempPriority, done: false });
+    }
     save(); closeModal(); render();
   });
 
