@@ -98,10 +98,12 @@ const COUNTER_HABIT = 'sugar';
 // STATE
 // ============================================================
 
-let state = { page: 'today', data: null, modal: null };
+let state = { page: 'today', data: null, modal: null, expandedTask: null };
 let tempCat = 'food';
 let tempInstrument = 'guitar';
 let tempWorkout = 'gym';
+let sleepPeriod = 'week';
+let workoutPeriod = 'week';
 
 // ============================================================
 // DATA
@@ -119,7 +121,7 @@ function defaultData() {
       queue: [
         { id: 'english', name: 'Английский', icon: '🇬🇧' },
         { id: 'solfege', name: 'Сольфеджио', icon: '🎵' },
-        { id: 'singing', name: 'Пение',       icon: '🎤' },
+        { id: 'singing', name: 'Вокал',       icon: '🎤' },
         { id: 'reading', name: 'Чтение',      icon: '📚' },
       ],
       archived: [
@@ -142,6 +144,7 @@ function defaultData() {
     cooking: { learned: [] },
     goals: [],
     garden: { unlockedAchievements: [] },
+    tasks: [],
   };
 }
 
@@ -153,10 +156,15 @@ function loadData() {
       if (!d.goals)  d.goals = [];
       if (!d.garden) d.garden = { unlockedAchievements: [] };
       if (!d.habits.archived) d.habits.archived = [];
+      if (!d.tasks)  d.tasks = [];
 
       // Migrate: rename sport → Тренировки
       const sport = d.habits.active.find(h => h.id === 'sport');
       if (sport) sport.name = 'Тренировки';
+
+      // Migrate: rename Пение → Вокал
+      const singing = d.habits.queue.find(h => h.id === 'singing');
+      if (singing && singing.name === 'Пение') singing.name = 'Вокал';
 
       // Migrate: archive sugar if still in active
       const sugarIdx = d.habits.active.findIndex(h => h.id === 'sugar');
@@ -345,14 +353,20 @@ function checkAchievements() {
 
 function render() {
   document.getElementById('app').innerHTML = renderPage();
+  const morePages = ['goals','health','garden','planner'];
+  const activeNav = morePages.includes(state.page) ? 'more' : state.page;
   document.querySelectorAll('.nav-btn').forEach(btn =>
-    btn.classList.toggle('active', btn.dataset.page === state.page)
+    btn.classList.toggle('active', btn.dataset.page === activeNav)
   );
   bindEvents();
 }
 
 function renderPage() {
-  const pages = { today: renderToday, sleep: renderSleep, finance: renderFinance, workout: renderWorkout, goals: renderGoals, garden: renderGarden };
+  const pages = {
+    today: renderToday, sleep: renderSleep, finance: renderFinance,
+    workout: renderWorkout, goals: renderGoals, garden: renderGarden,
+    more: renderMore, health: renderHealth, planner: renderPlanner,
+  };
   return (pages[state.page] || renderToday)();
 }
 
@@ -568,19 +582,27 @@ function renderSleep() {
       </div>
 
       <div class="card">
-        <div class="card-title">Часы сна — 7 дней</div>
-        <div class="sleep-chart">
-          ${days.map(d => {
-            const slMin = d.data?.wakeTime && d.data?.bedTime ? calcSleepMin(d.data.bedTime, d.data.wakeTime) : null;
-            const pct = slMin ? Math.max(8, Math.min(100, (slMin - 240) / 360 * 100)) : 0;
-            return `<div class="chart-col"><div class="chart-bar-wrap"><div class="chart-bar ${slMin?(slMin>=360?'good':''):' empty'}" style="height:${pct}%"></div></div><div class="chart-day">${d.label}</div></div>`;
-          }).join('')}
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <div class="card-title" style="margin-bottom:0">${sleepPeriod === 'week' ? 'Часы сна — 7 дней' : 'Сон за месяц'}</div>
+          <div class="period-tabs">
+            <button class="period-tab ${sleepPeriod==='week'?'active':''}" data-sleep-period="week">7 дней</button>
+            <button class="period-tab ${sleepPeriod==='month'?'active':''}" data-sleep-period="month">Месяц</button>
+          </div>
         </div>
-        <div class="chart-legend">
-          <div class="legend-dot" style="background:var(--primary)"></div> 6ч+
-          <div class="legend-dot" style="background:var(--primary-light);margin-left:8px"></div> Меньше 6ч
-          <div class="legend-dot" style="background:var(--border);margin-left:8px"></div> Нет данных
-        </div>
+        ${sleepPeriod === 'week' ? `
+          <div class="sleep-chart">
+            ${days.map(d => {
+              const slMin = d.data?.wakeTime && d.data?.bedTime ? calcSleepMin(d.data.bedTime, d.data.wakeTime) : null;
+              const pct = slMin ? Math.max(8, Math.min(100, (slMin - 240) / 360 * 100)) : 0;
+              return `<div class="chart-col"><div class="chart-bar-wrap"><div class="chart-bar ${slMin?(slMin>=360?'good':''):' empty'}" style="height:${pct}%"></div></div><div class="chart-day">${d.label}</div></div>`;
+            }).join('')}
+          </div>
+          <div class="chart-legend">
+            <div class="legend-dot" style="background:var(--primary)"></div> 6ч+
+            <div class="legend-dot" style="background:var(--primary-light);margin-left:8px"></div> Меньше 6ч
+            <div class="legend-dot" style="background:var(--border);margin-left:8px"></div> Нет данных
+          </div>
+        ` : renderSleepMonthGrid()}
       </div>
     </div>
   `;
@@ -708,22 +730,30 @@ function renderWorkout() {
       </div>
 
       <div class="card">
-        <div class="card-title">Последние 7 дней</div>
-        <div style="display:flex;gap:6px">
-          ${days.map(d => {
-            const w = d.data?.workout;
-            const wtype = w ? WORKOUT_TYPES.find(t => t.id === w.type) : null;
-            const done = !!d.data?.habits?.sport;
-            return `
-              <div style="flex:1;text-align:center">
-                <div style="font-size:22px;height:32px;display:flex;align-items:center;justify-content:center">
-                  ${done ? (wtype?.icon || '💪') : '<span style="color:var(--border);font-size:18px">·</span>'}
-                </div>
-                <div style="font-size:10px;color:var(--text-muted);margin-top:3px">${d.label}</div>
-              </div>
-            `;
-          }).join('')}
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <div class="card-title" style="margin-bottom:0">${workoutPeriod === 'week' ? 'Последние 7 дней' : 'Тренировки за месяц'}</div>
+          <div class="period-tabs">
+            <button class="period-tab ${workoutPeriod==='week'?'active':''}" data-workout-period="week">7 дней</button>
+            <button class="period-tab ${workoutPeriod==='month'?'active':''}" data-workout-period="month">Месяц</button>
+          </div>
         </div>
+        ${workoutPeriod === 'week' ? `
+          <div style="display:flex;gap:6px">
+            ${days.map(d => {
+              const w = d.data?.workout;
+              const wtype = w ? WORKOUT_TYPES.find(t => t.id === w.type) : null;
+              const done = !!d.data?.habits?.sport;
+              return `
+                <div style="flex:1;text-align:center">
+                  <div style="font-size:22px;height:32px;display:flex;align-items:center;justify-content:center">
+                    ${done ? (wtype?.icon || '💪') : '<span style="color:var(--border);font-size:18px">·</span>'}
+                  </div>
+                  <div style="font-size:10px;color:var(--text-muted);margin-top:3px">${d.label}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : renderWorkoutMonthGrid()}
       </div>
 
       ${recent.length > 0 ? `
@@ -772,6 +802,7 @@ function renderHealth() {
               <span class="status-badge ${d.status}">${d.status==='needed'?'Нужно':d.status==='scheduled'?'Записана':'✓ Сходила'}</span>
               <button class="status-cycle-btn" data-doctor="${d.id}">изменить →</button>
             </div>
+            <button class="doctor-delete-btn" data-doctor-del="${d.id}" title="Удалить">×</button>
           </div>
         `).join('')}
       </div>
@@ -941,6 +972,171 @@ function renderGarden() {
 }
 
 // ============================================================
+// HELPERS: MONTH GRIDS
+// ============================================================
+
+function renderSleepMonthGrid() {
+  const now = new Date();
+  const year = now.getFullYear(), month = now.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDow = (new Date(year, month, 1).getDay() + 6) % 7;
+  let cells = '';
+  for (let i = 0; i < firstDow; i++) cells += `<div class="mcell mcell-empty"></div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayData = state.data.daily[key];
+    const isToday = d === now.getDate();
+    const isFuture = new Date(year, month, d) > now;
+    let level = 'empty';
+    if (!isFuture) {
+      const slMin = dayData?.wakeTime && dayData?.bedTime ? calcSleepMin(dayData.bedTime, dayData.wakeTime) : null;
+      if (slMin === null) level = 'l0';
+      else if (slMin >= 420) level = 'l3';
+      else if (slMin >= 360) level = 'l2';
+      else level = 'l1';
+    }
+    cells += `<div class="mcell mcell-${level} ${isToday ? 'mcell-today' : ''}">${d}</div>`;
+  }
+  return `
+    <div class="month-dow">${['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(l=>`<div class="dow-label">${l}</div>`).join('')}</div>
+    <div class="month-grid">${cells}</div>
+    <div class="chart-legend" style="margin-top:10px">
+      <div class="legend-dot" style="background:var(--border)"></div> Нет данных
+      <div class="legend-dot" style="background:var(--primary-light);margin-left:8px"></div> &lt;6ч
+      <div class="legend-dot" style="background:var(--primary);margin-left:8px"></div> 6–7ч
+      <div class="legend-dot" style="background:var(--primary-dark);margin-left:8px"></div> 7ч+ 🌟
+    </div>
+  `;
+}
+
+function renderWorkoutMonthGrid() {
+  const now = new Date();
+  const year = now.getFullYear(), month = now.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDow = (new Date(year, month, 1).getDay() + 6) % 7;
+  let cells = '';
+  for (let i = 0; i < firstDow; i++) cells += `<div class="mcell mcell-empty"></div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayData = state.data.daily[key];
+    const isToday = d === now.getDate();
+    const isFuture = new Date(year, month, d) > now;
+    let level = 'empty';
+    if (!isFuture) level = dayData?.habits?.sport ? 'l3' : 'l0';
+    cells += `<div class="mcell mcell-${level} ${isToday ? 'mcell-today' : ''}">${d}</div>`;
+  }
+  return `
+    <div class="month-dow">${['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(l=>`<div class="dow-label">${l}</div>`).join('')}</div>
+    <div class="month-grid">${cells}</div>
+    <div class="chart-legend" style="margin-top:10px">
+      <div class="legend-dot" style="background:var(--border)"></div> Нет тренировки
+      <div class="legend-dot" style="background:var(--primary-dark);margin-left:8px"></div> Тренировка ✓
+    </div>
+  `;
+}
+
+// ============================================================
+// PAGE: MORE (hub)
+// ============================================================
+
+function renderMore() {
+  const sections = [
+    { id: 'goals',   icon: '🎯', title: 'Цели',     desc: 'Песни и кулинария' },
+    { id: 'health',  icon: '🌿', title: 'Здоровье', desc: 'Врачи и визиты' },
+    { id: 'garden',  icon: '🌱', title: 'Сад',       desc: 'Растения и ачивки' },
+    { id: 'planner', icon: '📋', title: 'Планер',   desc: 'Задачи и дедлайны' },
+  ];
+  const tasks = state.data.tasks || [];
+  const activeTasks = tasks.filter(t => !t.done).length;
+  return `
+    <div class="page">
+      <div class="page-header">
+        <h1>Ещё ✨</h1>
+        <div class="subtitle">Все разделы</div>
+      </div>
+      <div class="hub-grid">
+        ${sections.map(s => `
+          <button class="hub-card" data-page="${s.id}">
+            <div class="hub-card-icon">${s.icon}</div>
+            <div class="hub-card-title">${s.title}</div>
+            <div class="hub-card-desc">${s.id === 'planner' && activeTasks > 0 ? `${activeTasks} задач` : s.desc}</div>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// PAGE: PLANNER
+// ============================================================
+
+function renderPlanner() {
+  const tasks = state.data.tasks || [];
+  const active = tasks.filter(t => !t.done);
+  const done   = tasks.filter(t => t.done);
+
+  function taskCard(t) {
+    const isExp = state.expandedTask === t.id;
+    const dLeft = t.deadline ? daysUntil(t.deadline) : null;
+    const overdue = dLeft !== null && dLeft < 0 && !t.done;
+    const urgent  = dLeft !== null && dLeft <= 1 && dLeft >= 0 && !t.done;
+    return `
+      <div class="task-item ${t.done ? 'task-done' : ''}">
+        <div class="task-row">
+          <button class="task-check ${t.done ? 'checked' : ''}" data-task-done="${t.id}"></button>
+          <div class="task-body" data-task-toggle="${t.id}">
+            <div class="task-title">${t.title}</div>
+            ${t.deadline ? `<div class="task-deadline ${overdue ? 'overdue' : urgent ? 'urgent' : ''}">
+              ${overdue ? '⚠️ Просрочено' : dLeft === 0 ? '⏰ Сегодня!' : dLeft === 1 ? '📅 Завтра' : '📅 ' + formatDate(t.deadline)}
+            </div>` : ''}
+          </div>
+          <button class="task-del" data-task-del="${t.id}">×</button>
+        </div>
+        ${isExp && t.description ? `<div class="task-desc">${t.description}</div>` : ''}
+      </div>
+    `;
+  }
+
+  return `
+    <div class="page">
+      <div class="page-header">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <h1>Планер 📋</h1>
+            <div class="subtitle">${active.length > 0 ? `${active.length} активных задач` : 'Всё чисто!'}</div>
+          </div>
+          <button class="btn btn-primary btn-sm" id="add-task">+ Задача</button>
+        </div>
+      </div>
+
+      ${tasks.length === 0 ? `
+        <div class="card">
+          <div class="empty-state">
+            <div class="empty-icon">✅</div>
+            <p>Задач пока нет.<br>Добавь первую!</p>
+          </div>
+        </div>
+      ` : ''}
+
+      ${active.length > 0 ? `
+        <div class="card">
+          <div class="card-title">К выполнению — ${active.length}</div>
+          ${active.map(taskCard).join('')}
+        </div>
+      ` : ''}
+
+      ${done.length > 0 ? `
+        <div class="card">
+          <div class="card-title">Выполнено — ${done.length}</div>
+          ${done.map(taskCard).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+// ============================================================
 // MODALS
 // ============================================================
 
@@ -1069,6 +1265,27 @@ function openLogWorkout() {
   `);
 }
 
+function openAddTask() {
+  const in7 = new Date(); in7.setDate(in7.getDate() + 7);
+  const dateStr = in7.toISOString().slice(0,10);
+  openModal(`
+    <h2>Новая задача 📋</h2>
+    <div class="form-group">
+      <label class="form-label">Название *</label>
+      <input type="text" class="form-input" id="task-title" placeholder="Что нужно сделать?">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Описание (необязательно)</label>
+      <textarea class="form-input" id="task-desc" rows="3" placeholder="Детали, ссылки, заметки..." style="resize:none"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Дедлайн (необязательно)</label>
+      <input type="date" class="form-input" id="task-deadline" value="${dateStr}">
+    </div>
+    <button class="btn btn-primary btn-full" id="save-task">Добавить</button>
+  `);
+}
+
 function openAddGoal() {
   tempInstrument = 'guitar';
   const in3months = new Date(); in3months.setMonth(in3months.getMonth() + 3);
@@ -1164,6 +1381,49 @@ function bindEvents() {
   document.getElementById('open-budget-settings')?.addEventListener('click', openBudgetSettings);
   document.getElementById('open-savings')?.addEventListener('click', openSavings);
 
+  // Hub navigation
+  document.querySelectorAll('.hub-card[data-page]').forEach(card => {
+    card.addEventListener('click', () => {
+      state.page = card.dataset.page;
+      window.scrollTo(0, 0);
+      render();
+    });
+  });
+
+  // Period selectors — sleep
+  document.querySelectorAll('[data-sleep-period]').forEach(btn => {
+    btn.addEventListener('click', () => { sleepPeriod = btn.dataset.sleepPeriod; render(); });
+  });
+
+  // Period selectors — workout
+  document.querySelectorAll('[data-workout-period]').forEach(btn => {
+    btn.addEventListener('click', () => { workoutPeriod = btn.dataset.workoutPeriod; render(); });
+  });
+
+  // Planner
+  document.getElementById('add-task')?.addEventListener('click', openAddTask);
+  document.querySelectorAll('[data-task-done]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const t = state.data.tasks.find(t => t.id === btn.dataset.taskDone);
+      if (t) { t.done = !t.done; save(); render(); }
+    });
+  });
+  document.querySelectorAll('[data-task-toggle]').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.taskToggle;
+      state.expandedTask = state.expandedTask === id ? null : id;
+      render();
+    });
+  });
+  document.querySelectorAll('[data-task-del]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      state.data.tasks = state.data.tasks.filter(t => t.id !== btn.dataset.taskDel);
+      save(); render();
+    });
+  });
+
   // Health
   document.querySelectorAll('.status-cycle-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1171,6 +1431,12 @@ function bindEvents() {
       if (!doc) return;
       const cycle = ['needed','scheduled','done'];
       doc.status = cycle[(cycle.indexOf(doc.status)+1)%cycle.length];
+      save(); render();
+    });
+  });
+  document.querySelectorAll('.doctor-delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.data.health.doctors = state.data.health.doctors.filter(d => d.id !== btn.dataset.doctorDel);
       save(); render();
     });
   });
@@ -1261,6 +1527,16 @@ function bindModalEvents() {
     if (!name) return;
     const spec = (document.getElementById('doctor-spec-input')?.value||'').trim();
     state.data.health.doctors.push({ id: uid(), name, specialty: spec||'Специалист', icon: '🏥', status: 'needed' });
+    save(); closeModal(); render();
+  });
+
+  document.getElementById('save-task')?.addEventListener('click', () => {
+    const title = (document.getElementById('task-title')?.value || '').trim();
+    if (!title) { document.getElementById('task-title')?.focus(); return; }
+    const desc     = (document.getElementById('task-desc')?.value || '').trim();
+    const deadline = document.getElementById('task-deadline')?.value || null;
+    if (!state.data.tasks) state.data.tasks = [];
+    state.data.tasks.push({ id: uid(), title, description: desc, deadline: deadline || null, done: false });
     save(); closeModal(); render();
   });
 

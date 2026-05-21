@@ -845,3 +845,170 @@ body {
 .success-text { color: var(--success-text); }
 .muted        { color: var(--text-muted); }
 .center       { text-align: center; }
+
+/* ========== PERIOD TABS ========== */
+.period-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface2);
+  border-radius: 10px;
+  padding: 3px;
+  flex-shrink: 0;
+}
+
+.period-tab {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font);
+  white-space: nowrap;
+}
+
+.period-tab.active {
+  background: var(--surface);
+  color: var(--primary-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ========== HUB PAGE ========== */
+.hub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.hub-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  padding: 22px 16px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font);
+  color: var(--text);
+}
+
+.hub-card:active {
+  transform: scale(0.96);
+  background: var(--surface2);
+}
+
+.hub-card-icon { font-size: 38px; line-height: 1; }
+.hub-card-title { font-size: 16px; font-weight: 700; }
+.hub-card-desc  { font-size: 12px; color: var(--text-muted); }
+
+/* ========== PLANNER ========== */
+.task-item {
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+}
+.task-item:last-child { border-bottom: none; }
+
+.task-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 0;
+}
+
+.task-check {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--primary-light);
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.task-check.checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.task-check.checked::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 8px; height: 6px;
+  border-left: 2.5px solid white;
+  border-bottom: 2.5px solid white;
+  transform: translate(-50%, -60%) rotate(-45deg);
+  display: block;
+}
+
+.task-body {
+  flex: 1;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.task-title {
+  font-size: 15px;
+  font-weight: 500;
+  word-break: break-word;
+}
+.task-done .task-title {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.task-deadline {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+.task-deadline.urgent { color: #BF360C; font-weight: 600; }
+.task-deadline.overdue { color: #C62828; font-weight: 600; }
+
+.task-del {
+  font-size: 20px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 8px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  font-family: var(--font);
+}
+.task-del:active { color: #C62828; background: #FFF0F0; }
+
+.task-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  padding: 0 0 14px 38px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ========== DOCTOR DELETE ========== */
+.doctor-delete-btn {
+  font-size: 20px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  line-height: 1;
+  flex-shrink: 0;
+  font-family: var(--font);
+  transition: all 0.15s;
+}
+.doctor-delete-btn:active { color: #C62828; background: #FFF0F0; }
