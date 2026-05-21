@@ -54,6 +54,17 @@ const SONG_STEPS = [
 
 const INSTRUMENT_ICON = { guitar: '🎸', piano: '🎹', voice: '🎤', other: '🎵' };
 
+const WORKOUT_TYPES = [
+  { id: 'gym',     name: 'Зал',       icon: '🏋️' },
+  { id: 'run',     name: 'Пробежка',  icon: '🏃' },
+  { id: 'yoga',    name: 'Йога',      icon: '🧘' },
+  { id: 'bike',    name: 'Велосипед', icon: '🚴' },
+  { id: 'swim',    name: 'Бассейн',   icon: '🏊' },
+  { id: 'home',    name: 'Дома',      icon: '🤸' },
+  { id: 'walk',    name: 'Прогулка',  icon: '🚶' },
+  { id: 'other',   name: 'Другое',    icon: '⚡' },
+];
+
 const PLANT_STAGES = [
   { min: 0,  emoji: '🪴', label: 'Пустой горшок' },
   { min: 1,  emoji: '🌱', label: 'Семечко' },
@@ -90,6 +101,7 @@ const COUNTER_HABIT = 'sugar';
 let state = { page: 'today', data: null, modal: null };
 let tempCat = 'food';
 let tempInstrument = 'guitar';
+let tempWorkout = 'gym';
 
 // ============================================================
 // DATA
@@ -100,17 +112,19 @@ function defaultData() {
     habits: {
       active: [
         { id: 'wake',   name: 'Встала в 5:00',  icon: '🌅' },
-        { id: 'sport',  name: 'Спорт',           icon: '💪' },
+        { id: 'sport',  name: 'Тренировки',      icon: '💪' },
         { id: 'guitar', name: 'Гитара',          icon: '🎸' },
         { id: 'piano',  name: 'Пианино',         icon: '🎹' },
-        { id: 'sugar',  name: 'Меньше сладкого', icon: '🍫' },
       ],
       queue: [
         { id: 'english', name: 'Английский', icon: '🇬🇧' },
         { id: 'solfege', name: 'Сольфеджио', icon: '🎵' },
         { id: 'singing', name: 'Пение',       icon: '🎤' },
         { id: 'reading', name: 'Чтение',      icon: '📚' },
-      ]
+      ],
+      archived: [
+        { id: 'sugar', name: 'Меньше сладкого', icon: '🍫' },
+      ],
     },
     daily: {},
     finance: {
@@ -138,6 +152,18 @@ function loadData() {
       const d = JSON.parse(raw);
       if (!d.goals)  d.goals = [];
       if (!d.garden) d.garden = { unlockedAchievements: [] };
+      if (!d.habits.archived) d.habits.archived = [];
+
+      // Migrate: rename sport → Тренировки
+      const sport = d.habits.active.find(h => h.id === 'sport');
+      if (sport) sport.name = 'Тренировки';
+
+      // Migrate: archive sugar if still in active
+      const sugarIdx = d.habits.active.findIndex(h => h.id === 'sugar');
+      if (sugarIdx !== -1) {
+        const [sugar] = d.habits.active.splice(sugarIdx, 1);
+        if (!d.habits.archived.find(h => h.id === 'sugar')) d.habits.archived.push(sugar);
+      }
       return d;
     }
   } catch(e) {}
@@ -326,7 +352,7 @@ function render() {
 }
 
 function renderPage() {
-  const pages = { today: renderToday, sleep: renderSleep, finance: renderFinance, health: renderHealth, goals: renderGoals, garden: renderGarden };
+  const pages = { today: renderToday, sleep: renderSleep, finance: renderFinance, workout: renderWorkout, goals: renderGoals, garden: renderGarden };
   return (pages[state.page] || renderToday)();
 }
 
@@ -621,8 +647,106 @@ function renderFinance() {
 }
 
 // ============================================================
-// PAGE: HEALTH
+// PAGE: WORKOUT
 // ============================================================
+
+function renderWorkout() {
+  const td = getTodayData();
+  const days = getLast7Days();
+
+  // Stats
+  let streak = 0;
+  for (let i = days.length - 1; i >= 0; i--) {
+    if (days[i].data?.habits?.sport) streak++;
+    else if (days[i].key !== todayKey()) break;
+  }
+  const weekCount  = days.filter(d => d.data?.habits?.sport).length;
+  const now = new Date();
+  const monthPrefix = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const monthCount = Object.entries(state.data.daily)
+    .filter(([k, v]) => k.startsWith(monthPrefix) && v.habits?.sport).length;
+
+  // Recent workouts (last 10 with workout logged)
+  const recent = Object.entries(state.data.daily)
+    .filter(([k, v]) => v.workout?.type)
+    .sort(([a],[b]) => b.localeCompare(a))
+    .slice(0, 10);
+
+  const wt = WORKOUT_TYPES;
+
+  return `
+    <div class="page">
+      <div class="page-header"><h1>Тренировки 💪</h1><div class="subtitle">Фиксируй каждую тренировку</div></div>
+
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-value">${streak}</div><div class="stat-label">🔥 Стрик</div></div>
+        <div class="stat-box"><div class="stat-value">${weekCount}</div><div class="stat-label">За неделю</div></div>
+        <div class="stat-box"><div class="stat-value">${monthCount}</div><div class="stat-label">За месяц</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Сегодня</div>
+        ${td.workout?.type ? (() => {
+          const wtype = WORKOUT_TYPES.find(w => w.id === td.workout.type) || WORKOUT_TYPES[WORKOUT_TYPES.length-1];
+          return `
+            <div style="display:flex;align-items:center;gap:14px">
+              <div style="font-size:44px">${wtype.icon}</div>
+              <div style="flex:1">
+                <div style="font-size:18px;font-weight:700">${wtype.name}</div>
+                ${td.workout.notes ? `<div class="muted" style="font-size:13px;margin-top:3px">${td.workout.notes}</div>` : ''}
+              </div>
+              <button class="btn btn-secondary btn-sm" id="edit-workout">Изменить</button>
+            </div>
+          `;
+        })() : `
+          <div class="empty-state" style="padding:16px 0">
+            <div class="empty-icon">🏃</div>
+            <p>Была тренировка сегодня?<br>Зафиксируй её!</p>
+          </div>
+          <button class="btn btn-primary btn-full" id="log-workout">+ Записать тренировку</button>
+        `}
+      </div>
+
+      <div class="card">
+        <div class="card-title">Последние 7 дней</div>
+        <div style="display:flex;gap:6px">
+          ${days.map(d => {
+            const w = d.data?.workout;
+            const wtype = w ? WORKOUT_TYPES.find(t => t.id === w.type) : null;
+            const done = !!d.data?.habits?.sport;
+            return `
+              <div style="flex:1;text-align:center">
+                <div style="font-size:22px;height:32px;display:flex;align-items:center;justify-content:center">
+                  ${done ? (wtype?.icon || '💪') : '<span style="color:var(--border);font-size:18px">·</span>'}
+                </div>
+                <div style="font-size:10px;color:var(--text-muted);margin-top:3px">${d.label}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      ${recent.length > 0 ? `
+        <div class="card">
+          <div class="card-title">История тренировок</div>
+          ${recent.map(([key, v]) => {
+            const wtype = WORKOUT_TYPES.find(t => t.id === v.workout.type) || WORKOUT_TYPES[WORKOUT_TYPES.length-1];
+            return `
+              <div class="workout-history-item">
+                <div class="workout-history-icon">${wtype.icon}</div>
+                <div style="flex:1">
+                  <div style="font-size:14px;font-weight:600">${wtype.name}</div>
+                  ${v.workout.notes ? `<div class="muted" style="font-size:12px">${v.workout.notes}</div>` : ''}
+                </div>
+                <div class="muted" style="font-size:12px">${formatDate(key)}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
 
 function renderHealth() {
   const { doctors } = state.data.health;
@@ -922,6 +1046,29 @@ function openAddDoctor() {
   `);
 }
 
+function openLogWorkout() {
+  const td = getTodayData();
+  tempWorkout = td.workout?.type || 'gym';
+  openModal(`
+    <h2>Тренировка 💪</h2>
+    <div class="form-group">
+      <label class="form-label">Что за тренировка?</label>
+      <div class="category-grid" id="workout-grid">
+        ${WORKOUT_TYPES.map(w => `
+          <button class="cat-btn ${w.id === tempWorkout ? 'selected' : ''}" data-workout="${w.id}">
+            <span class="cat-icon">${w.icon}</span>${w.name}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Заметка (необязательно)</label>
+      <input type="text" class="form-input" id="workout-notes" placeholder="Ноги, кардио, 5км..." value="${td.workout?.notes || ''}">
+    </div>
+    <button class="btn btn-primary btn-full" id="save-workout">Сохранить</button>
+  `);
+}
+
 function openAddGoal() {
   tempInstrument = 'guitar';
   const in3months = new Date(); in3months.setMonth(in3months.getMonth() + 3);
@@ -1008,6 +1155,10 @@ function bindEvents() {
   });
   document.getElementById('change-bed-sleep')?.addEventListener('click', openBedModal);
 
+  // Workout
+  document.getElementById('log-workout')?.addEventListener('click', openLogWorkout);
+  document.getElementById('edit-workout')?.addEventListener('click', openLogWorkout);
+
   // Finance
   document.getElementById('open-add-expense')?.addEventListener('click', openAddExpense);
   document.getElementById('open-budget-settings')?.addEventListener('click', openBudgetSettings);
@@ -1069,6 +1220,21 @@ function bindModalEvents() {
       tempInstrument = btn.dataset.instrument;
       document.querySelectorAll('.cat-btn[data-instrument]').forEach(b => b.classList.toggle('selected', b.dataset.instrument === tempInstrument));
     });
+  });
+
+  document.querySelectorAll('.cat-btn[data-workout]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tempWorkout = btn.dataset.workout;
+      document.querySelectorAll('.cat-btn[data-workout]').forEach(b => b.classList.toggle('selected', b.dataset.workout === tempWorkout));
+    });
+  });
+
+  document.getElementById('save-workout')?.addEventListener('click', () => {
+    const notes = (document.getElementById('workout-notes')?.value || '').trim();
+    const td = getTodayData();
+    td.workout = { type: tempWorkout, notes };
+    td.habits['sport'] = true; // автоматически отмечаем тренировку
+    save(); closeModal(); render();
   });
 
   document.getElementById('save-expense')?.addEventListener('click', () => {
