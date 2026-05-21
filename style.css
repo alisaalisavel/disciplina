@@ -997,6 +997,108 @@ body {
   word-break: break-word;
 }
 
+/* ========== HUB CARD WIDE ========== */
+.hub-card-wide { grid-column: span 2; flex-direction: row; gap: 14px; padding: 18px 20px; justify-content: flex-start; }
+.hub-card-wide .hub-card-icon { font-size: 32px; }
+.hub-card-wide .hub-card-title { font-size: 17px; }
+.hub-card-wide .hub-card-desc  { font-size: 13px; }
+.hub-card-wide > div { text-align: left; }
+
+/* ========== FINANCE TABS ========== */
+.finance-tabs-wrap {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+}
+.finance-tab {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font);
+}
+.finance-tab.active {
+  background: var(--surface);
+  color: var(--primary-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ========== FINANCE ANALYTICS ========== */
+.analytics-period-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.analytics-period-tabs::-webkit-scrollbar { display: none; }
+.analytics-period-btn {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--font);
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.analytics-period-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.analytics-stats-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.analytics-stat {
+  flex: 1;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 10px 8px;
+  text-align: center;
+}
+.analytics-stat-value { font-size: 15px; font-weight: 700; color: var(--primary-dark); }
+.analytics-stat-label { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+.analytics-trend {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  text-align: center;
+  margin-top: 4px;
+}
+.analytics-trend.up   { background: #FFF3E0; color: #BF360C; }
+.analytics-trend.down { background: var(--success-bg); color: var(--success-text); }
+
+.cat-breakdown-row { margin-bottom: 2px; }
+.cat-breakdown-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cat-breakdown-name { flex: 1; font-size: 14px; font-weight: 500; }
+.cat-breakdown-pct  { font-size: 12px; color: var(--text-muted); min-width: 30px; text-align: right; }
+.cat-breakdown-amt  { font-size: 13px; font-weight: 600; min-width: 90px; text-align: right; color: var(--primary-dark); }
+
 /* ========== DOCTOR DELETE ========== */
 .doctor-delete-btn {
   font-size: 20px;

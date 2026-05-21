@@ -18,6 +18,7 @@ const CATEGORIES = [
   { id: 'health',    name: 'Здоровье',    icon: '💊' },
   { id: 'home',      name: 'Дом',         icon: '🏠' },
   { id: 'beauty',    name: 'Красота',     icon: '💅' },
+  { id: 'smoke',     name: 'Курилка',     icon: '🚬' },
   { id: 'other',     name: 'Другое',      icon: '📦' },
 ];
 
@@ -104,6 +105,8 @@ let tempInstrument = 'guitar';
 let tempWorkout = 'gym';
 let sleepPeriod = 'week';
 let workoutPeriod = 'week';
+let financeTab = 'overview';
+let financeAnalyticsPeriod = 'month';
 
 // ============================================================
 // DATA
@@ -113,10 +116,11 @@ function defaultData() {
   return {
     habits: {
       active: [
-        { id: 'wake',   name: 'Встала в 5:00',  icon: '🌅' },
-        { id: 'sport',  name: 'Тренировки',      icon: '💪' },
-        { id: 'guitar', name: 'Гитара',          icon: '🎸' },
-        { id: 'piano',  name: 'Пианино',         icon: '🎹' },
+        { id: 'wake',       name: 'Встала в 5:00',  icon: '🌅' },
+        { id: 'sleep_good', name: 'Сон 6+ ч',       icon: '🌙' },
+        { id: 'sport',      name: 'Тренировки',      icon: '💪' },
+        { id: 'guitar',     name: 'Гитара',          icon: '🎸' },
+        { id: 'piano',      name: 'Пианино',         icon: '🎹' },
       ],
       queue: [
         { id: 'english', name: 'Английский', icon: '🇬🇧' },
@@ -158,6 +162,14 @@ function loadData() {
       if (!d.habits.archived) d.habits.archived = [];
       if (!d.tasks)  d.tasks = [];
 
+      // Migrate: add sleep_good habit if missing
+      if (!d.habits.active.find(h => h.id === 'sleep_good')) {
+        const wakeIdx = d.habits.active.findIndex(h => h.id === 'wake');
+        const insert = { id: 'sleep_good', name: 'Сон 6+ ч', icon: '🌙' };
+        if (wakeIdx >= 0) d.habits.active.splice(wakeIdx + 1, 0, insert);
+        else d.habits.active.unshift(insert);
+      }
+
       // Migrate: rename sport → Тренировки
       const sport = d.habits.active.find(h => h.id === 'sport');
       if (sport) sport.name = 'Тренировки';
@@ -178,7 +190,16 @@ function loadData() {
   return defaultData();
 }
 
+function updateAutoHabits() {
+  // Auto-set sleep_good based on today's sleep data
+  const td = state.data.daily[todayKey()];
+  if (!td) return;
+  const slMin = calcSleepMin(td.bedTime, td.wakeTime);
+  if (slMin !== null) td.habits['sleep_good'] = slMin >= 360;
+}
+
 function save() {
+  updateAutoHabits();
   checkAchievements();
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data)); } catch(e) {}
 }
@@ -353,7 +374,7 @@ function checkAchievements() {
 
 function render() {
   document.getElementById('app').innerHTML = renderPage();
-  const morePages = ['goals','health','garden','planner'];
+  const morePages = ['goals','health','garden','planner','cooking'];
   const activeNav = morePages.includes(state.page) ? 'more' : state.page;
   document.querySelectorAll('.nav-btn').forEach(btn =>
     btn.classList.toggle('active', btn.dataset.page === activeNav)
@@ -366,6 +387,7 @@ function renderPage() {
     today: renderToday, sleep: renderSleep, finance: renderFinance,
     workout: renderWorkout, goals: renderGoals, garden: renderGarden,
     more: renderMore, health: renderHealth, planner: renderPlanner,
+    cooking: renderCooking,
   };
   return (pages[state.page] || renderToday)();
 }
@@ -609,62 +631,240 @@ function renderSleep() {
 }
 
 // ============================================================
+// PAGE: FINANCE — helpers
+// ============================================================
+
+function getExpensesForPeriod(period) {
+  const exps = state.data.finance.expenses;
+  const now = new Date();
+  const y = now.getFullYear(), m = now.getMonth();
+  if (period === 'month') {
+    const pfx = `${y}-${String(m+1).padStart(2,'0')}`;
+    return exps.filter(e => e.date.startsWith(pfx));
+  }
+  if (period === 'prev') {
+    const pd = new Date(y, m-1, 1);
+    const pfx = `${pd.getFullYear()}-${String(pd.getMonth()+1).padStart(2,'0')}`;
+    return exps.filter(e => e.date.startsWith(pfx));
+  }
+  if (period === '3m') {
+    const cut = new Date(y, m-2, 1);
+    const cutStr = `${cut.getFullYear()}-${String(cut.getMonth()+1).padStart(2,'0')}-01`;
+    return exps.filter(e => e.date >= cutStr);
+  }
+  return [...exps];
+}
+
+function getPeriodLabel(period) {
+  const now = new Date();
+  const m = now.getMonth(), y = now.getFullYear();
+  if (period === 'month') return `${MONTH_NAMES[m]} ${y}`;
+  if (period === 'prev') {
+    const pd = new Date(y, m-1, 1);
+    return `${MONTH_NAMES[pd.getMonth()]} ${pd.getFullYear()}`;
+  }
+  if (period === '3m') {
+    const start = new Date(y, m-2, 1);
+    return `${MONTH_NAMES[start.getMonth()]} — ${MONTH_NAMES[m]}`;
+  }
+  return 'Всё время';
+}
+
+function getPeriodDays(period) {
+  const now = new Date();
+  const y = now.getFullYear(), m = now.getMonth();
+  if (period === 'month') return now.getDate();
+  if (period === 'prev') return new Date(y, m, 0).getDate();
+  if (period === '3m') return 90;
+  const exps = state.data.finance.expenses;
+  if (!exps.length) return 1;
+  const oldest = exps.map(e=>e.date).sort()[0];
+  return Math.max(1, Math.ceil((now - new Date(oldest+'T00:00:00')) / 86400000) + 1);
+}
+
+function getCategoryBreakdown(expenses) {
+  const totals = {};
+  for (const e of expenses) totals[e.category] = (totals[e.category]||0) + e.amount;
+  const total = Object.values(totals).reduce((s,v)=>s+v, 0);
+  return CATEGORIES
+    .filter(c => totals[c.id])
+    .map(c => ({ ...c, amount: totals[c.id]||0, pct: total ? Math.round((totals[c.id]||0)/total*100) : 0 }))
+    .sort((a,b) => b.amount - a.amount);
+}
+
+function getDailyTotals(period) {
+  const exps = getExpensesForPeriod(period);
+  const map = {};
+  for (const e of exps) map[e.date] = (map[e.date]||0) + e.amount;
+  return map;
+}
+
+// ============================================================
 // PAGE: FINANCE
 // ============================================================
 
 function renderFinance() {
+  const now = new Date();
+  return `
+    <div class="page">
+      <div class="page-header">
+        <h1>Финансы 💸</h1>
+        <div class="subtitle">${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}</div>
+      </div>
+      <div class="finance-tabs-wrap">
+        <button class="finance-tab ${financeTab==='overview'?'active':''}" data-finance-tab="overview">📊 Обзор</button>
+        <button class="finance-tab ${financeTab==='analytics'?'active':''}" data-finance-tab="analytics">📈 Аналитика</button>
+      </div>
+      ${financeTab === 'overview' ? renderFinanceOverview() : renderFinanceAnalytics()}
+    </div>
+  `;
+}
+
+function renderFinanceOverview() {
   const { finance } = state.data;
   const spent = totalSpent(), budget = finance.monthlyBudget || 0;
   const pct = budget ? Math.min(100, Math.round(spent / budget * 100)) : 0;
   const remaining = budget - spent;
   const savPct = finance.savingsGoal ? Math.min(100, Math.round(finance.savingsCurrent / finance.savingsGoal * 100)) : 0;
-  const now = new Date();
-
-  const recent = getMonthExpenses().sort((a,b) => b.date.localeCompare(a.date)).slice(0, 10);
+  const recent = getMonthExpenses().sort((a,b) => b.date.localeCompare(a.date)).slice(0, 15);
 
   return `
-    <div class="page">
-      <div class="page-header"><h1>Финансы 💸</h1><div class="subtitle">${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}</div></div>
-
-      <div class="card">
-        <div class="card-title">Бюджет месяца</div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:24px;font-weight:700;${pct>90?'color:#C62828':''}">${formatMoney(spent)} ₸</span>
-          <span class="muted" style="font-size:13px">из ${formatMoney(budget)} ₸</span>
-        </div>
-        <div class="progress-wrap" style="margin-bottom:10px"><div class="progress-bar ${pct>90?'danger':''}" style="width:${pct}%"></div></div>
-        <div style="font-size:13px;${remaining<0?'color:#C62828;font-weight:600':'color:var(--text-muted)'}">
-          ${remaining>=0?`Осталось: ${formatMoney(remaining)} ₸`:`Превышение на ${formatMoney(-remaining)} ₸ 😱`}
-        </div>
-        <button class="btn btn-secondary btn-sm" style="margin-top:12px" id="open-budget-settings">⚙️ Настроить бюджет</button>
+    <div class="card">
+      <div class="card-title">Бюджет месяца</div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+        <span style="font-size:24px;font-weight:700;${pct>90?'color:#C62828':''}">${formatMoney(spent)} ₸</span>
+        <span class="muted" style="font-size:13px">из ${formatMoney(budget)} ₸</span>
       </div>
-
-      <div class="card">
-        <div class="card-title">Накопления</div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:24px;font-weight:700;color:var(--success-text)">${formatMoney(finance.savingsCurrent)} ₸</span>
-          <span class="muted" style="font-size:13px">цель: ${formatMoney(finance.savingsGoal)} ₸</span>
-        </div>
-        <div class="progress-wrap" style="margin-bottom:10px"><div class="progress-bar success" style="width:${savPct}%"></div></div>
-        <div style="font-size:13px;color:var(--text-muted)">${savPct}% от цели</div>
-        <button class="btn btn-secondary btn-sm" style="margin-top:12px" id="open-savings">+ Пополнить</button>
+      <div class="progress-wrap" style="margin-bottom:10px"><div class="progress-bar ${pct>90?'danger':''}" style="width:${pct}%"></div></div>
+      <div style="font-size:13px;${remaining<0?'color:#C62828;font-weight:600':'color:var(--text-muted)'}">
+        ${remaining>=0?`Осталось: ${formatMoney(remaining)} ₸`:`Превышение на ${formatMoney(-remaining)} ₸ 😱`}
       </div>
-
-      <button class="btn btn-primary btn-full" id="open-add-expense">+ Добавить трату</button>
-
-      ${recent.length > 0 ? `
-        <div class="card" style="margin-top:14px">
-          <div class="card-title">Последние траты</div>
-          ${recent.map(e => { const cat = getCat(e.category); return `
-            <div class="expense-item">
-              <div class="expense-icon">${cat.icon}</div>
-              <div class="expense-info"><div class="expense-note">${e.note||cat.name}</div><div class="expense-meta">${cat.name} · ${formatDate(e.date)}</div></div>
-              <div class="expense-amount">−${formatMoney(e.amount)} ₸</div>
-            </div>
-          `; }).join('')}
-        </div>
-      ` : `<div class="empty-state" style="margin-top:16px"><div class="empty-icon">💸</div><p>Трат ещё нет.<br>Добавь первую!</p></div>`}
+      <button class="btn btn-secondary btn-sm" style="margin-top:12px" id="open-budget-settings">⚙️ Настроить бюджет</button>
     </div>
+
+    <div class="card">
+      <div class="card-title">Накопления</div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+        <span style="font-size:24px;font-weight:700;color:var(--success-text)">${formatMoney(finance.savingsCurrent)} ₸</span>
+        <span class="muted" style="font-size:13px">цель: ${formatMoney(finance.savingsGoal)} ₸</span>
+      </div>
+      <div class="progress-wrap" style="margin-bottom:10px"><div class="progress-bar success" style="width:${savPct}%"></div></div>
+      <div style="font-size:13px;color:var(--text-muted)">${savPct}% от цели</div>
+      <button class="btn btn-secondary btn-sm" style="margin-top:12px" id="open-savings">+ Пополнить</button>
+    </div>
+
+    <button class="btn btn-primary btn-full" id="open-add-expense">+ Добавить трату</button>
+
+    ${recent.length > 0 ? `
+      <div class="card" style="margin-top:14px">
+        <div class="card-title">Последние траты</div>
+        ${recent.map(e => { const cat = getCat(e.category); return `
+          <div class="expense-item">
+            <div class="expense-icon">${cat.icon}</div>
+            <div class="expense-info"><div class="expense-note">${e.note||cat.name}</div><div class="expense-meta">${cat.name} · ${formatDate(e.date)}</div></div>
+            <div class="expense-amount">−${formatMoney(e.amount)} ₸</div>
+          </div>
+        `; }).join('')}
+      </div>
+    ` : `<div class="empty-state" style="margin-top:16px"><div class="empty-icon">💸</div><p>Трат ещё нет.<br>Добавь первую!</p></div>`}
+  `;
+}
+
+function renderFinanceAnalytics() {
+  const periods = [
+    { id: 'month', label: 'Этот мес.' },
+    { id: 'prev',  label: 'Прошлый' },
+    { id: '3m',    label: '3 месяца' },
+    { id: 'all',   label: 'Всё время' },
+  ];
+  const exps = getExpensesForPeriod(financeAnalyticsPeriod);
+  const totalAmt = exps.reduce((s,e) => s+e.amount, 0);
+  const days = getPeriodDays(financeAnalyticsPeriod);
+  const avgDay = days > 0 ? totalAmt / days : 0;
+  const breakdown = getCategoryBreakdown(exps);
+  const maxCatAmt = breakdown.length ? breakdown[0].amount : 1;
+
+  // Comparison with previous period
+  let prevExps = [], prevTotal = 0, trendPct = null;
+  if (financeAnalyticsPeriod === 'month') {
+    prevExps = getExpensesForPeriod('prev');
+    prevTotal = prevExps.reduce((s,e)=>s+e.amount,0);
+    if (prevTotal > 0) trendPct = Math.round((totalAmt - prevTotal) / prevTotal * 100);
+  }
+
+  // Daily chart for single-month periods
+  let dailyChartHtml = '';
+  if (financeAnalyticsPeriod === 'month' || financeAnalyticsPeriod === 'prev') {
+    const dailyTotals = getDailyTotals(financeAnalyticsPeriod);
+    const now = new Date();
+    let year, month;
+    if (financeAnalyticsPeriod === 'month') { year = now.getFullYear(); month = now.getMonth(); }
+    else { const pd = new Date(now.getFullYear(), now.getMonth()-1,1); year=pd.getFullYear(); month=pd.getMonth(); }
+    const daysInMon = new Date(year, month+1, 0).getDate();
+    const maxDay = Math.max(...Object.values(dailyTotals), 1);
+    const bars = [];
+    for (let d=1; d<=daysInMon; d++) {
+      const key = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const amt = dailyTotals[key] || 0;
+      const h = amt > 0 ? Math.max(8, Math.round(amt/maxDay*100)) : 0;
+      bars.push(`<div class="chart-col"><div class="chart-bar-wrap"><div class="chart-bar ${amt>0?'good':' empty'}" style="height:${h}%"></div></div><div class="chart-day" style="font-size:8px">${d}</div></div>`);
+    }
+    dailyChartHtml = `
+      <div class="card">
+        <div class="card-title">Траты по дням</div>
+        <div class="sleep-chart" style="gap:2px">${bars.join('')}</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:8px;text-align:center">высота бара = сумма трат за день</div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="analytics-period-tabs">
+      ${periods.map(p=>`<button class="analytics-period-btn ${financeAnalyticsPeriod===p.id?'active':''}" data-analytics-period="${p.id}">${p.label}</button>`).join('')}
+    </div>
+
+    <div class="card">
+      <div class="card-title">${getPeriodLabel(financeAnalyticsPeriod)}</div>
+      <div class="analytics-stats-row">
+        <div class="analytics-stat">
+          <div class="analytics-stat-value">${formatMoney(totalAmt)} ₸</div>
+          <div class="analytics-stat-label">Потрачено</div>
+        </div>
+        <div class="analytics-stat">
+          <div class="analytics-stat-value">${formatMoney(Math.round(avgDay))} ₸</div>
+          <div class="analytics-stat-label">В день</div>
+        </div>
+        <div class="analytics-stat">
+          <div class="analytics-stat-value">${exps.length}</div>
+          <div class="analytics-stat-label">Трат</div>
+        </div>
+      </div>
+      ${trendPct !== null ? `
+        <div class="analytics-trend ${trendPct > 0 ? 'up' : 'down'}">
+          ${trendPct > 0 ? '▲' : '▼'} ${Math.abs(trendPct)}% ${trendPct > 0 ? 'больше' : 'меньше'}, чем в прошлом месяце
+        </div>
+      ` : ''}
+    </div>
+
+    ${breakdown.length > 0 ? `
+      <div class="card">
+        <div class="card-title">По категориям</div>
+        ${breakdown.map(c => `
+          <div class="cat-breakdown-row">
+            <div class="cat-breakdown-header">
+              <span class="cat-breakdown-name">${c.icon} ${c.name}</span>
+              <span class="cat-breakdown-pct">${c.pct}%</span>
+              <span class="cat-breakdown-amt">${formatMoney(c.amount)} ₸</span>
+            </div>
+            <div class="progress-wrap" style="margin-top:5px;margin-bottom:10px;height:6px">
+              <div class="progress-bar" style="width:${c.pct}%;height:6px;border-radius:3px"></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    ` : `<div class="empty-state" style="margin-top:16px"><div class="empty-icon">📊</div><p>Нет данных за этот период.<br>Добавь траты в Обзоре!</p></div>`}
+
+    ${dailyChartHtml}
   `;
 }
 
@@ -812,24 +1012,18 @@ function renderHealth() {
 }
 
 // ============================================================
-// PAGE: GOALS (песни + кулинария)
+// PAGE: MUSIC (бывш. Цели)
 // ============================================================
 
 function renderGoals() {
-  const { goals, cooking } = state.data;
-  const { learned } = cooking;
-  const totalRecipes = COOKING_PLAN.reduce((s,l) => s+l.recipes.length, 0);
-  const l1Done = COOKING_PLAN[0].recipes.filter(r=>learned.includes(r.id)).length;
-  const l2Done = COOKING_PLAN[1].recipes.filter(r=>learned.includes(r.id)).length;
-  const l1Half = Math.ceil(COOKING_PLAN[0].recipes.length/2);
-  const l2Half = Math.ceil(COOKING_PLAN[1].recipes.length/2);
+  const { goals } = state.data;
 
   return `
     <div class="page">
-      <div class="page-header"><h1>Цели 🎯</h1><div class="subtitle">Песни и кулинария</div></div>
+      <div class="page-header"><h1>Музыка 🎵</h1><div class="subtitle">Песни, которые учу</div></div>
 
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div style="font-size:17px;font-weight:700">🎵 Мои песни</div>
+        <div style="font-size:17px;font-weight:700">🎸 Мои песни</div>
         <button class="btn btn-primary btn-sm" id="add-goal">+ Добавить</button>
       </div>
 
@@ -865,10 +1059,34 @@ function renderGoals() {
           </div>
         `;
       }).join('')}
+    </div>
+  `;
+}
 
-      <div style="font-size:17px;font-weight:700;margin:20px 0 14px">🍳 Кулинария</div>
-      <div class="muted" style="font-size:13px;margin-bottom:14px">${learned.length} из ${totalRecipes} рецептов освоено</div>
-      <div class="progress-wrap" style="margin-bottom:16px"><div class="progress-bar" style="width:${Math.round(learned.length/totalRecipes*100)}%"></div></div>
+// ============================================================
+// PAGE: COOKING
+// ============================================================
+
+function renderCooking() {
+  const { learned } = state.data.cooking;
+  const totalRecipes = COOKING_PLAN.reduce((s,l) => s+l.recipes.length, 0);
+  const l1Done = COOKING_PLAN[0].recipes.filter(r=>learned.includes(r.id)).length;
+  const l2Done = COOKING_PLAN[1].recipes.filter(r=>learned.includes(r.id)).length;
+  const l1Half = Math.ceil(COOKING_PLAN[0].recipes.length/2);
+  const l2Half = Math.ceil(COOKING_PLAN[1].recipes.length/2);
+
+  return `
+    <div class="page">
+      <div class="page-header"><h1>Кулинария 🍳</h1><div class="subtitle">Осваиваю рецепты</div></div>
+
+      <div class="card">
+        <div class="card-title">Прогресс</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <span style="font-size:22px;font-weight:700;color:var(--primary-dark)">${learned.length}</span>
+          <span class="muted" style="font-size:13px">из ${totalRecipes} рецептов</span>
+        </div>
+        <div class="progress-wrap"><div class="progress-bar" style="width:${Math.round(learned.length/totalRecipes*100)}%"></div></div>
+      </div>
 
       ${COOKING_PLAN.map((level, idx) => {
         const lvlLearned = level.recipes.filter(r=>learned.includes(r.id)).length;
@@ -1041,10 +1259,11 @@ function renderWorkoutMonthGrid() {
 
 function renderMore() {
   const sections = [
-    { id: 'goals',   icon: '🎯', title: 'Цели',     desc: 'Песни и кулинария' },
-    { id: 'health',  icon: '🌿', title: 'Здоровье', desc: 'Врачи и визиты' },
-    { id: 'garden',  icon: '🌱', title: 'Сад',       desc: 'Растения и ачивки' },
-    { id: 'planner', icon: '📋', title: 'Планер',   desc: 'Задачи и дедлайны' },
+    { id: 'goals',   icon: '🎵', title: 'Музыка',    desc: 'Песни и прогресс' },
+    { id: 'cooking', icon: '🍳', title: 'Кулинария', desc: 'Рецепты и уровни' },
+    { id: 'health',  icon: '🌿', title: 'Здоровье',  desc: 'Врачи и визиты' },
+    { id: 'garden',  icon: '🌱', title: 'Сад',        desc: 'Растения и ачивки' },
+    { id: 'planner', icon: '📋', title: 'Планер',    desc: 'Задачи и дедлайны' },
   ];
   const tasks = state.data.tasks || [];
   const activeTasks = tasks.filter(t => !t.done).length;
@@ -1055,8 +1274,8 @@ function renderMore() {
         <div class="subtitle">Все разделы</div>
       </div>
       <div class="hub-grid">
-        ${sections.map(s => `
-          <button class="hub-card" data-page="${s.id}">
+        ${sections.map((s, i) => `
+          <button class="hub-card ${i === sections.length-1 && sections.length%2!==0 ? 'hub-card-wide' : ''}" data-page="${s.id}">
             <div class="hub-card-icon">${s.icon}</div>
             <div class="hub-card-title">${s.title}</div>
             <div class="hub-card-desc">${s.id === 'planner' && activeTasks > 0 ? `${activeTasks} задач` : s.desc}</div>
@@ -1375,6 +1594,14 @@ function bindEvents() {
   // Workout
   document.getElementById('log-workout')?.addEventListener('click', openLogWorkout);
   document.getElementById('edit-workout')?.addEventListener('click', openLogWorkout);
+
+  // Finance tabs
+  document.querySelectorAll('[data-finance-tab]').forEach(btn => {
+    btn.addEventListener('click', () => { financeTab = btn.dataset.financeTab; render(); });
+  });
+  document.querySelectorAll('[data-analytics-period]').forEach(btn => {
+    btn.addEventListener('click', () => { financeAnalyticsPeriod = btn.dataset.analyticsPeriod; render(); });
+  });
 
   // Finance
   document.getElementById('open-add-expense')?.addEventListener('click', openAddExpense);
