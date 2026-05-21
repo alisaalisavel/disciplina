@@ -125,11 +125,8 @@ function defaultData() {
   return {
     habits: {
       active: [
-        { id: 'wake',       name: 'Встала в 5:00',  icon: '🌅' },
-        { id: 'sleep_good', name: 'Сон 6+ ч',       icon: '🌙' },
-        { id: 'sport',      name: 'Тренировки',      icon: '💪' },
-        { id: 'guitar',     name: 'Гитара',          icon: '🎸' },
-        { id: 'piano',      name: 'Пианино',         icon: '🎹' },
+        { id: 'sleep_good', name: 'Сон 6+ ч',   icon: '🌙' },
+        { id: 'sport',      name: 'Тренировки', icon: '💪' },
       ],
       queue: [
         { id: 'english', name: 'Английский', icon: '🇬🇧' },
@@ -138,7 +135,10 @@ function defaultData() {
         { id: 'reading', name: 'Чтение',      icon: '📚' },
       ],
       archived: [
-        { id: 'sugar', name: 'Меньше сладкого', icon: '🍫' },
+        { id: 'sugar',  name: 'Меньше сладкого', icon: '🍫' },
+        { id: 'wake',   name: 'Встала в 5:00',   icon: '🌅' },
+        { id: 'guitar', name: 'Гитара',           icon: '🎸' },
+        { id: 'piano',  name: 'Пианино',          icon: '🎹' },
       ],
     },
     daily: {},
@@ -187,11 +187,13 @@ function loadData() {
       const singing = d.habits.queue.find(h => h.id === 'singing');
       if (singing && singing.name === 'Пение') singing.name = 'Вокал';
 
-      // Migrate: archive sugar if still in active
-      const sugarIdx = d.habits.active.findIndex(h => h.id === 'sugar');
-      if (sugarIdx !== -1) {
-        const [sugar] = d.habits.active.splice(sugarIdx, 1);
-        if (!d.habits.archived.find(h => h.id === 'sugar')) d.habits.archived.push(sugar);
+      // Migrate: archive sugar/wake/guitar/piano if still in active
+      for (const id of ['sugar', 'wake', 'guitar', 'piano']) {
+        const idx = d.habits.active.findIndex(h => h.id === id);
+        if (idx !== -1) {
+          const [h] = d.habits.active.splice(idx, 1);
+          if (!d.habits.archived.find(a => a.id === id)) d.habits.archived.push(h);
+        }
       }
       return d;
     }
@@ -1319,7 +1321,7 @@ function renderMore() {
     { id: 'goals',        icon: '🎵', title: 'Музыка',      desc: 'Песни и прогресс' },
     { id: 'cooking',      icon: '🍳', title: 'Кулинария',   desc: 'Рецепты и уровни' },
     { id: 'health',       icon: '🌿', title: 'Здоровье',    desc: 'Врачи и визиты' },
-    { id: 'planner',      icon: '📋', title: 'Планер',      desc: 'Задачи и дедлайны' },
+    { id: 'planner',      icon: '📋', title: 'Планер',      desc: '' },
     { id: 'garden',       icon: '🌱', title: 'Сад',          desc: 'Растения' },
     { id: 'achievements', icon: '🏆', title: 'Достижения',  desc: 'Коллекция ачивок' },
   ];
@@ -1341,7 +1343,7 @@ function renderMore() {
             <button class="hub-card" data-page="${s.id}">
               <div class="hub-card-icon">${s.icon}</div>
               <div class="hub-card-title">${s.title}</div>
-              <div class="hub-card-desc">${desc}</div>
+              ${desc ? `<div class="hub-card-desc">${desc}</div>` : ''}
             </button>
           `;
         }).join('')}
