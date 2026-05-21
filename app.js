@@ -383,7 +383,7 @@ function checkAchievements() {
 
 function render() {
   document.getElementById('app').innerHTML = renderPage();
-  const morePages = ['goals','health','garden','planner','cooking'];
+  const morePages = ['goals','health','garden','planner','cooking','achievements'];
   const activeNav = morePages.includes(state.page) ? 'more' : state.page;
   document.querySelectorAll('.nav-btn').forEach(btn =>
     btn.classList.toggle('active', btn.dataset.page === activeNav)
@@ -396,7 +396,7 @@ function renderPage() {
     today: renderToday, sleep: renderSleep, finance: renderFinance,
     workout: renderWorkout, goals: renderGoals, garden: renderGarden,
     more: renderMore, health: renderHealth, planner: renderPlanner,
-    cooking: renderCooking,
+    cooking: renderCooking, achievements: renderAchievements,
   };
   return (pages[state.page] || renderToday)();
 }
@@ -1179,21 +1179,69 @@ function renderGarden() {
         </div>
       ` : ''}
 
-      <div class="card">
-        <div class="card-title">Достижения — ${unlocked.length}/${ACHIEVEMENTS.length}</div>
-        <div class="achievements-grid">
-          ${ACHIEVEMENTS.map(a => {
-            const done = unlocked.includes(a.id);
-            return `
-              <div class="achievement-item ${done?'done':''}">
-                <div class="achievement-icon">${done ? a.icon : '🔒'}</div>
-                <div class="achievement-title">${a.title}</div>
-                <div class="achievement-desc">${a.desc}</div>
-              </div>
-            `;
-          }).join('')}
-        </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// PAGE: ACHIEVEMENTS
+// ============================================================
+
+function renderAchievements() {
+  const unlocked = state.data.garden.unlockedAchievements;
+  const done   = ACHIEVEMENTS.filter(a => unlocked.includes(a.id));
+  const locked = ACHIEVEMENTS.filter(a => !unlocked.includes(a.id));
+  const pct    = Math.round(unlocked.length / ACHIEVEMENTS.length * 100);
+
+  return `
+    <div class="page">
+      <div class="page-header">
+        <h1>Достижения 🏆</h1>
+        <div class="subtitle">${unlocked.length} из ${ACHIEVEMENTS.length} открыто</div>
       </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <span style="font-size:28px;font-weight:700;color:var(--primary-dark)">${unlocked.length}</span>
+          <span class="muted" style="font-size:13px">из ${ACHIEVEMENTS.length}</span>
+        </div>
+        <div class="progress-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:8px">${pct}% коллекции собрано${pct===100?' 🌟 — всё открыто!':''}</div>
+      </div>
+
+      ${done.length > 0 ? `
+        <div style="font-size:13px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">✨ Открытые — ${done.length}</div>
+        <div class="card" style="margin-bottom:18px">
+          <div class="achievements-grid">
+            ${done.map(a => `
+              <div class="achievement-item done">
+                <div class="achievement-icon">${a.icon}</div>
+                <div>
+                  <div class="achievement-title">${a.title}</div>
+                  <div class="achievement-desc">${a.desc}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
+
+      ${locked.length > 0 ? `
+        <div style="font-size:13px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">🔒 Ещё не открыты — ${locked.length}</div>
+        <div class="card">
+          <div class="achievements-grid">
+            ${locked.map(a => `
+              <div class="achievement-item">
+                <div class="achievement-icon">🔒</div>
+                <div>
+                  <div class="achievement-title">${a.title}</div>
+                  <div class="achievement-desc">${a.desc}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
     </div>
   `;
 }
@@ -1268,14 +1316,16 @@ function renderWorkoutMonthGrid() {
 
 function renderMore() {
   const sections = [
-    { id: 'goals',   icon: '🎵', title: 'Музыка',    desc: 'Песни и прогресс' },
-    { id: 'cooking', icon: '🍳', title: 'Кулинария', desc: 'Рецепты и уровни' },
-    { id: 'health',  icon: '🌿', title: 'Здоровье',  desc: 'Врачи и визиты' },
-    { id: 'garden',  icon: '🌱', title: 'Сад',        desc: 'Растения и ачивки' },
-    { id: 'planner', icon: '📋', title: 'Планер',    desc: 'Задачи и дедлайны' },
+    { id: 'goals',        icon: '🎵', title: 'Музыка',      desc: 'Песни и прогресс' },
+    { id: 'cooking',      icon: '🍳', title: 'Кулинария',   desc: 'Рецепты и уровни' },
+    { id: 'health',       icon: '🌿', title: 'Здоровье',    desc: 'Врачи и визиты' },
+    { id: 'planner',      icon: '📋', title: 'Планер',      desc: 'Задачи и дедлайны' },
+    { id: 'garden',       icon: '🌱', title: 'Сад',          desc: 'Растения' },
+    { id: 'achievements', icon: '🏆', title: 'Достижения',  desc: 'Коллекция ачивок' },
   ];
   const tasks = state.data.tasks || [];
   const activeTasks = tasks.filter(t => !t.done).length;
+  const unlocked = state.data.garden.unlockedAchievements;
   return `
     <div class="page">
       <div class="page-header">
@@ -1283,13 +1333,18 @@ function renderMore() {
         <div class="subtitle">Все разделы</div>
       </div>
       <div class="hub-grid">
-        ${sections.map((s, i) => `
-          <button class="hub-card ${i === sections.length-1 && sections.length%2!==0 ? 'hub-card-wide' : ''}" data-page="${s.id}">
-            <div class="hub-card-icon">${s.icon}</div>
-            <div class="hub-card-title">${s.title}</div>
-            <div class="hub-card-desc">${s.id === 'planner' && activeTasks > 0 ? `${activeTasks} задач` : s.desc}</div>
-          </button>
-        `).join('')}
+        ${sections.map(s => {
+          let desc = s.desc;
+          if (s.id === 'planner' && activeTasks > 0) desc = `${activeTasks} задач`;
+          if (s.id === 'achievements') desc = `${unlocked.length}/${ACHIEVEMENTS.length} открыто`;
+          return `
+            <button class="hub-card" data-page="${s.id}">
+              <div class="hub-card-icon">${s.icon}</div>
+              <div class="hub-card-title">${s.title}</div>
+              <div class="hub-card-desc">${desc}</div>
+            </button>
+          `;
+        }).join('')}
       </div>
     </div>
   `;
