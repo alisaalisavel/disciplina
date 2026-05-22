@@ -22,26 +22,108 @@ const CATEGORIES = [
   { id: 'other',     name: 'Другое',      icon: '📦' },
 ];
 
-const COOKING_PLAN = [
-  { id: 'level1', emoji: '🌱', title: 'Уровень 1 — Основы', recipes: [
-    { id: 'l1_1', name: 'Яичница-болтунья' }, { id: 'l1_2', name: 'Омлет' },
-    { id: 'l1_3', name: 'Паста с томатным соусом' }, { id: 'l1_4', name: 'Греческий салат' },
-    { id: 'l1_5', name: 'Варёная курица' }, { id: 'l1_6', name: 'Отварной рис' },
-    { id: 'l1_7', name: 'Картошка по-деревенски' },
+// d=difficulty: 1=⭐ 2=⭐⭐ 3=⭐⭐⭐
+const COOKING_CATEGORIES = [
+  { id: 'breakfast', icon: '🌅', title: 'Завтраки', recipes: [
+    { id: 'br01', name: 'Яичница',                    d: 1 },
+    { id: 'br02', name: 'Омлет',                       d: 1 },
+    { id: 'br03', name: 'Рисовая каша',               d: 1 },
+    { id: 'br04', name: 'Авокадо-тост',               d: 1 },
+    { id: 'br05', name: 'Манная каша',                d: 1 },
+    { id: 'br06', name: 'Гранола с йогуртом',         d: 1 },
+    { id: 'br07', name: 'Тост с яйцом',               d: 1 },
+    { id: 'br08', name: 'Творожок с фруктами',        d: 1 },
+    { id: 'br09', name: 'Горячие бутерброды',         d: 1 },
+    { id: 'br10', name: 'Гренки',                      d: 1 },
+    { id: 'br11', name: 'Сэндвич',                    d: 1 },
+    { id: 'br12', name: 'Сырники',                    d: 2 },
+    { id: 'br13', name: 'Блинчики',                   d: 2 },
+    { id: 'br14', name: 'Панкейки',                   d: 2 },
+    { id: 'br15', name: 'Творожная запеканка',        d: 2 },
+    { id: 'br16', name: 'Дранники',                   d: 2 },
+    { id: 'br17', name: 'Оладушки',                   d: 2 },
+    { id: 'br18', name: 'Шакшука',                    d: 2 },
+    { id: 'br19', name: 'Блинчики с мясом',           d: 2 },
+    { id: 'br20', name: 'Блинчики с творогом',        d: 2 },
+    { id: 'br21', name: 'Яйца Бенедикт',              d: 3 },
+    { id: 'br22', name: 'Пончики',                    d: 3 },
   ]},
-  { id: 'level2', emoji: '🌿', title: 'Уровень 2 — Готовлю сама', recipes: [
-    { id: 'l2_1', name: 'Куриный суп' }, { id: 'l2_2', name: 'Жареная куриная грудка' },
-    { id: 'l2_3', name: 'Картофельное пюре' }, { id: 'l2_4', name: 'Салат Цезарь' },
-    { id: 'l2_5', name: 'Тушёные овощи' }, { id: 'l2_6', name: 'Яичница с помидорами' },
-    { id: 'l2_7', name: 'Паста карбонара' },
+  { id: 'salads', icon: '🥗', title: 'Салаты', recipes: [
+    { id: 'sl01', name: 'Классический овощной',       d: 1 },
+    { id: 'sl02', name: 'Греческий',                   d: 1 },
+    { id: 'sl03', name: 'Крабовый',                    d: 1 },
+    { id: 'sl04', name: 'Капрезе',                    d: 1 },
+    { id: 'sl05', name: 'Квашеная капуста',           d: 1 },
+    { id: 'sl06', name: 'Цезарь',                      d: 2 },
+    { id: 'sl07', name: 'Малибу',                      d: 2 },
+    { id: 'sl08', name: 'С печенью и яблоком',        d: 2 },
+    { id: 'sl09', name: 'Оливье',                      d: 2 },
+    { id: 'sl10', name: 'Тёплый с курицей',           d: 2 },
+    { id: 'sl11', name: 'Фунчоза с овощами',          d: 2 },
+    { id: 'sl12', name: 'Морской',                    d: 2 },
+    { id: 'sl13', name: 'Корейская морковь',          d: 2 },
+    { id: 'sl14', name: 'Никуаз',                      d: 3 },
   ]},
-  { id: 'level3', emoji: '🌸', title: 'Уровень 3 — Уверенный повар', recipes: [
-    { id: 'l3_1', name: 'Борщ' }, { id: 'l3_2', name: 'Ризотто' },
-    { id: 'l3_3', name: 'Запечённая рыба с овощами' }, { id: 'l3_4', name: 'Куриное карри' },
-    { id: 'l3_5', name: 'Домашняя пицца' }, { id: 'l3_6', name: 'Блины' },
-    { id: 'l3_7', name: 'Запечённая курица целиком' },
+  { id: 'mains', icon: '🍳', title: 'Основные блюда', recipes: [
+    { id: 'mn01', name: 'Грудка в аэрогриле',         d: 1 },
+    { id: 'mn02', name: 'Запечённые овощи',           d: 1 },
+    { id: 'mn03', name: 'Рис с овощами',              d: 1 },
+    { id: 'mn04', name: 'Жареная картошка',           d: 1 },
+    { id: 'mn05', name: 'Тушёная картошка',           d: 1 },
+    { id: 'mn06', name: 'Макароны с мясом',           d: 1 },
+    { id: 'mn07', name: 'Спагетти',                   d: 1 },
+    { id: 'mn08', name: 'Бёдра в аэрогриле',          d: 2 },
+    { id: 'mn09', name: 'Карбонара',                   d: 2 },
+    { id: 'mn10', name: 'Котлеты',                    d: 2 },
+    { id: 'mn11', name: 'Мясо по-французски',         d: 2 },
+    { id: 'mn12', name: 'Куриный суп',                d: 2 },
+    { id: 'mn13', name: 'Тефтели',                    d: 2 },
+    { id: 'mn14', name: 'Жаркое',                      d: 2 },
+    { id: 'mn15', name: 'Жюльен',                      d: 2 },
+    { id: 'mn16', name: 'Курица в кисло-сладком',     d: 2 },
+    { id: 'mn17', name: 'Мисо суп',                   d: 2 },
+    { id: 'mn18', name: 'Куриные котлеты с пюрешкой', d: 2 },
+    { id: 'mn19', name: 'Говяжьи котлеты с пюрешкой', d: 2 },
+    { id: 'mn20', name: 'Ленивые суши',               d: 2 },
+    { id: 'mn21', name: 'Окрошка',                    d: 2 },
+    { id: 'mn22', name: 'Холодник',                   d: 2 },
+    { id: 'mn23', name: 'Борщ',                        d: 3 },
+    { id: 'mn24', name: 'Курица целиком',              d: 3 },
+    { id: 'mn25', name: 'Плов',                        d: 3 },
+    { id: 'mn26', name: 'Голубцы',                    d: 3 },
+    { id: 'mn27', name: 'Лагман',                      d: 3 },
+    { id: 'mn28', name: 'Вареники',                   d: 3 },
+    { id: 'mn29', name: 'Манты',                       d: 3 },
+    { id: 'mn30', name: 'Пельмени',                   d: 3 },
+    { id: 'mn31', name: 'Том ям',                      d: 3 },
+    { id: 'mn32', name: 'Кукси',                       d: 3 },
+    { id: 'mn33', name: 'Пицца',                       d: 3 },
+    { id: 'mn34', name: 'Бешбармак',                   d: 3 },
+  ]},
+  { id: 'desserts', icon: '🍰', title: 'Десерты', recipes: [
+    { id: 'ds01', name: 'Шоколадный мусс',            d: 1 },
+    { id: 'ds02', name: 'Трюфели',                    d: 1 },
+    { id: 'ds03', name: 'Творожный мусс',             d: 1 },
+    { id: 'ds04', name: 'Сырки',                       d: 1 },
+    { id: 'ds05', name: 'Клубника в шоколаде',        d: 1 },
+    { id: 'ds06', name: 'Десерт в стакане',           d: 1 },
+    { id: 'ds07', name: 'Брауни',                      d: 2 },
+    { id: 'ds08', name: 'Чизкейк без выпечки',        d: 2 },
+    { id: 'ds09', name: 'Панна котта',                d: 2 },
+    { id: 'ds10', name: 'Яблочный пирог',             d: 2 },
+    { id: 'ds11', name: 'Печенье',                    d: 2 },
+    { id: 'ds12', name: 'Пирожное картошка',          d: 2 },
+    { id: 'ds13', name: 'Шарлотка',                   d: 2 },
+    { id: 'ds14', name: 'Маффины',                    d: 2 },
+    { id: 'ds15', name: 'Кексы',                       d: 2 },
+    { id: 'ds16', name: 'Пончики',                    d: 2 },
+    { id: 'ds17', name: 'Медовик',                    d: 3 },
+    { id: 'ds18', name: 'Шоколадный фондан',          d: 3 },
+    { id: 'ds19', name: 'Моти',                        d: 3 },
+    { id: 'ds20', name: 'Чизкейк классический',       d: 3 },
   ]},
 ];
+const DIFF_STARS = { 1: '⭐', 2: '⭐⭐', 3: '⭐⭐⭐' };
 
 const SONG_STEPS = [
   'Выучить аккорды / ноты',
@@ -115,6 +197,8 @@ let financeAnalyticsPeriod = 'month';
 let tempPriority = 'medium';
 let editingTaskId = null;
 let editingExpenseId = null;
+let cookingTab = 'dishes';
+let editingMyRecipeId = null;
 
 // ============================================================
 // DATA
@@ -153,7 +237,7 @@ function defaultData() {
         { id: 'd5', name: 'Офтальмолог', specialty: 'Зрение',           icon: '👁', status: 'needed' },
       ]
     },
-    cooking: { learned: [] },
+    cooking: { learned: [], myRecipes: [] },
     goals: [],
     garden: { unlockedAchievements: [] },
     tasks: [],
@@ -169,6 +253,8 @@ function loadData() {
       if (!d.garden) d.garden = { unlockedAchievements: [] };
       if (!d.habits.archived) d.habits.archived = [];
       if (!d.tasks)  d.tasks = [];
+      if (!d.cooking) d.cooking = { learned: [], myRecipes: [] };
+      if (!d.cooking.myRecipes) d.cooking.myRecipes = [];
 
       // Migrate: add sleep_good habit if missing
       if (!d.habits.active.find(h => h.id === 'sleep_good')) {
@@ -1082,46 +1168,100 @@ function renderGoals() {
 // ============================================================
 
 function renderCooking() {
-  const { learned } = state.data.cooking;
-  const totalRecipes = COOKING_PLAN.reduce((s,l) => s+l.recipes.length, 0);
-  const l1Done = COOKING_PLAN[0].recipes.filter(r=>learned.includes(r.id)).length;
-  const l2Done = COOKING_PLAN[1].recipes.filter(r=>learned.includes(r.id)).length;
-  const l1Half = Math.ceil(COOKING_PLAN[0].recipes.length/2);
-  const l2Half = Math.ceil(COOKING_PLAN[1].recipes.length/2);
+  const { learned, myRecipes } = state.data.cooking;
+  const allDishes = COOKING_CATEGORIES.flatMap(c => c.recipes);
+  const totalRecipes = allDishes.length;
+  const learnedCount = learned.length;
+  const pct = totalRecipes > 0 ? Math.round(learnedCount / totalRecipes * 100) : 0;
+
+  const dishesTab = cookingTab === 'dishes';
+
+  const tabsHtml = `
+    <div class="cooking-tabs">
+      <button class="cooking-tab ${dishesTab ? 'active' : ''}" data-cooking-tab="dishes">📋 Блюда</button>
+      <button class="cooking-tab ${!dishesTab ? 'active' : ''}" data-cooking-tab="recipes">📖 Рецепты</button>
+    </div>
+  `;
+
+  let contentHtml = '';
+
+  if (dishesTab) {
+    contentHtml = `
+      <div class="card">
+        <div class="card-title">Общий прогресс</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <span style="font-size:22px;font-weight:700;color:var(--primary-dark)">${learnedCount}</span>
+          <span class="muted" style="font-size:13px">из ${totalRecipes} блюд</span>
+        </div>
+        <div class="progress-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
+      </div>
+
+      ${COOKING_CATEGORIES.map(cat => {
+        const catLearned = cat.recipes.filter(r => learned.includes(r.id)).length;
+        const catPct = Math.round(catLearned / cat.recipes.length * 100);
+
+        const byDiff = [1, 2, 3].map(d => {
+          const group = cat.recipes.filter(r => r.d === d);
+          if (!group.length) return '';
+          return `
+            <div class="cook-diff-group">
+              <div class="cook-diff-label">${DIFF_STARS[d]}</div>
+              ${group.map(r => `
+                <div class="recipe-item ${learned.includes(r.id) ? 'learned' : ''}" data-recipe="${r.id}">
+                  <div class="recipe-checkbox"></div>
+                  <span class="recipe-name">${r.name}</span>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="card">
+            <div class="level-header">
+              <div class="level-title">${cat.icon} ${cat.title}</div>
+              <div class="level-progress-text">${catLearned}/${cat.recipes.length}</div>
+            </div>
+            <div class="progress-wrap" style="margin-bottom:10px"><div class="progress-bar" style="width:${catPct}%"></div></div>
+            ${byDiff}
+          </div>
+        `;
+      }).join('')}
+    `;
+  } else {
+    // My recipes tab
+    const recipeItems = myRecipes.length === 0
+      ? `<div class="muted" style="text-align:center;padding:24px 0;font-size:14px">Пока нет рецептов.<br>Нажми + чтобы добавить первый 🍳</div>`
+      : myRecipes.map(r => `
+          <div class="my-recipe-item">
+            <div class="my-recipe-top">
+              <div class="my-recipe-title">${r.title}</div>
+              <div class="my-recipe-actions">
+                <button class="my-recipe-edit-btn" data-recipe-edit="${r.id}">✏️</button>
+                <button class="my-recipe-del-btn" data-recipe-del="${r.id}">×</button>
+              </div>
+            </div>
+            ${r.text ? `<div class="my-recipe-text">${r.text.replace(/\n/g, '<br>')}</div>` : ''}
+          </div>
+        `).join('');
+
+    contentHtml = `
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <div class="card-title" style="margin:0">Мои рецепты 📖</div>
+          <button class="btn btn-primary" id="add-my-recipe" style="padding:6px 14px;font-size:13px">+ Добавить</button>
+        </div>
+        <div class="muted" style="font-size:12px;margin-bottom:14px">Твоя личная книга рецептов</div>
+        ${recipeItems}
+      </div>
+    `;
+  }
 
   return `
     <div class="page">
       <div class="page-header"><h1>Кулинария 🍳</h1><div class="subtitle">Осваиваю рецепты</div></div>
-
-      <div class="card">
-        <div class="card-title">Прогресс</div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:22px;font-weight:700;color:var(--primary-dark)">${learned.length}</span>
-          <span class="muted" style="font-size:13px">из ${totalRecipes} рецептов</span>
-        </div>
-        <div class="progress-wrap"><div class="progress-bar" style="width:${Math.round(learned.length/totalRecipes*100)}%"></div></div>
-      </div>
-
-      ${COOKING_PLAN.map((level, idx) => {
-        const lvlLearned = level.recipes.filter(r=>learned.includes(r.id)).length;
-        const locked = (idx===1&&l1Done<l1Half)||(idx===2&&l2Done<l2Half);
-        return `
-          <div class="card ${locked?'locked-level':''}">
-            <div class="level-header">
-              <div class="level-title">${level.emoji} ${level.title}</div>
-              <div class="level-progress-text">${lvlLearned}/${level.recipes.length}</div>
-            </div>
-            <div class="progress-wrap" style="margin-bottom:${locked?8:14}px"><div class="progress-bar" style="width:${Math.round(lvlLearned/level.recipes.length*100)}%"></div></div>
-            ${locked ? `<div class="muted center" style="font-size:13px;padding:6px 0">🔒 Освой ещё ${idx===1?l1Half-l1Done:l2Half-l2Done} рецептов из предыдущего уровня</div>` :
-            level.recipes.map(r => `
-              <div class="recipe-item ${learned.includes(r.id)?'learned':''}" data-recipe="${r.id}">
-                <div class="recipe-checkbox"></div>
-                <span class="recipe-name">${r.name}</span>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }).join('')}
+      ${tabsHtml}
+      ${contentHtml}
     </div>
   `;
 }
@@ -1666,6 +1806,40 @@ function openAddGoal() {
   `);
 }
 
+function openAddMyRecipe() {
+  editingMyRecipeId = null;
+  openModal(`
+    <h2>Новый рецепт 📖</h2>
+    <div class="form-group">
+      <label class="form-label">Название блюда</label>
+      <input type="text" class="form-input" id="my-recipe-title" placeholder="Например: Борщ бабушки">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Рецепт / заметки</label>
+      <textarea class="form-input" id="my-recipe-text" rows="8" placeholder="Ингредиенты, шаги, секреты..." style="resize:vertical;min-height:140px;font-family:inherit"></textarea>
+    </div>
+    <button class="btn btn-primary btn-full" id="save-my-recipe">Сохранить</button>
+  `);
+}
+
+function openEditMyRecipe(id) {
+  const r = state.data.cooking.myRecipes.find(x => x.id === id);
+  if (!r) return;
+  editingMyRecipeId = id;
+  openModal(`
+    <h2>Редактировать рецепт 📖</h2>
+    <div class="form-group">
+      <label class="form-label">Название блюда</label>
+      <input type="text" class="form-input" id="my-recipe-title" value="${r.title.replace(/"/g,'&quot;')}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Рецепт / заметки</label>
+      <textarea class="form-input" id="my-recipe-text" rows="8" style="resize:vertical;min-height:140px;font-family:inherit">${r.text || ''}</textarea>
+    </div>
+    <button class="btn btn-primary btn-full" id="save-my-recipe">Сохранить</button>
+  `);
+}
+
 // ============================================================
 // EVENT BINDING
 // ============================================================
@@ -1829,13 +2003,42 @@ function bindEvents() {
   });
   document.getElementById('add-goal')?.addEventListener('click', openAddGoal);
 
-  // Cooking
+  // Cooking tabs
+  document.querySelectorAll('[data-cooking-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      cookingTab = btn.dataset.cookingTab;
+      render();
+    });
+  });
+
+  // Cooking: toggle learned dish
   document.querySelectorAll('.recipe-item[data-recipe]').forEach(el => {
     el.addEventListener('click', () => {
       const id = el.dataset.recipe;
       const { learned } = state.data.cooking;
       const idx = learned.indexOf(id);
       if (idx >= 0) learned.splice(idx, 1); else learned.push(id);
+      save(); render();
+    });
+  });
+
+  // My Recipes: add
+  document.getElementById('add-my-recipe')?.addEventListener('click', openAddMyRecipe);
+
+  // My Recipes: edit
+  document.querySelectorAll('[data-recipe-edit]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      openEditMyRecipe(btn.dataset.recipeEdit);
+    });
+  });
+
+  // My Recipes: delete
+  document.querySelectorAll('[data-recipe-del]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (!confirm('Удалить рецепт?')) return;
+      state.data.cooking.myRecipes = state.data.cooking.myRecipes.filter(r => r.id !== btn.dataset.recipeDel);
       save(); render();
     });
   });
@@ -1940,6 +2143,20 @@ function bindModalEvents() {
     } else {
       // Add new
       state.data.tasks.push({ id: uid(), title, description: desc, deadline: deadline || null, priority: tempPriority, done: false });
+    }
+    save(); closeModal(); render();
+  });
+
+  document.getElementById('save-my-recipe')?.addEventListener('click', () => {
+    const title = (document.getElementById('my-recipe-title')?.value || '').trim();
+    if (!title) { document.getElementById('my-recipe-title')?.focus(); return; }
+    const text = (document.getElementById('my-recipe-text')?.value || '').trim();
+    if (editingMyRecipeId) {
+      const r = state.data.cooking.myRecipes.find(x => x.id === editingMyRecipeId);
+      if (r) { r.title = title; r.text = text; }
+      editingMyRecipeId = null;
+    } else {
+      state.data.cooking.myRecipes.push({ id: uid(), title, text });
     }
     save(); closeModal(); render();
   });

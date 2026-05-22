@@ -444,6 +444,31 @@ body {
 }
 
 /* ========== COOKING ========== */
+.cooking-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 0 16px 12px;
+}
+.cooking-tab {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.18s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.cooking-tab.active {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 2px 8px rgba(255,143,171,0.3);
+}
+
 .level-header {
   display: flex;
   align-items: center;
@@ -453,11 +478,20 @@ body {
 .level-title { font-size: 16px; font-weight: 700; }
 .level-progress-text { font-size: 13px; color: var(--text-muted); font-weight: 600; }
 
+.cook-diff-group { margin-bottom: 4px; }
+.cook-diff-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding: 6px 0 2px;
+  letter-spacing: 0.3px;
+}
+
 .recipe-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 0;
+  padding: 10px 0;
   border-bottom: 1px solid var(--border);
   cursor: pointer;
   transition: opacity 0.15s;
@@ -491,6 +525,49 @@ body {
 .recipe-item.learned .recipe-name { color: var(--text-muted); text-decoration: line-through; }
 
 .locked-level { opacity: 0.55; pointer-events: none; }
+
+/* My Recipe Book */
+.my-recipe-item {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.my-recipe-item:last-child { border-bottom: none; }
+.my-recipe-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.my-recipe-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  flex: 1;
+}
+.my-recipe-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.my-recipe-edit-btn, .my-recipe-del-btn {
+  background: none;
+  border: none;
+  padding: 4px 7px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  transition: background 0.15s;
+}
+.my-recipe-edit-btn:active, .my-recipe-del-btn:active { background: var(--bg); }
+.my-recipe-del-btn { color: var(--danger, #e05); font-weight: 700; font-size: 17px; }
+.my-recipe-text {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
 
 /* ========== MODAL ========== */
 .modal-overlay {
