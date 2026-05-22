@@ -56,14 +56,12 @@ const SONG_STEPS = [
 const INSTRUMENT_ICON = { guitar: '🎸', piano: '🎹', voice: '🎤', other: '🎵' };
 
 const WORKOUT_TYPES = [
-  { id: 'gym',     name: 'Зал',       icon: '🏋️' },
-  { id: 'run',     name: 'Пробежка',  icon: '🏃' },
-  { id: 'yoga',    name: 'Йога',      icon: '🧘' },
-  { id: 'bike',    name: 'Велосипед', icon: '🚴' },
-  { id: 'swim',    name: 'Бассейн',   icon: '🏊' },
-  { id: 'home',    name: 'Дома',      icon: '🤸' },
-  { id: 'walk',    name: 'Прогулка',  icon: '🚶' },
-  { id: 'other',   name: 'Другое',    icon: '⚡' },
+  { id: 'pilates',  name: 'Пилатес',        icon: '🧘' },
+  { id: 'func',     name: 'Функционал',     icon: '💪' },
+  { id: 'back',     name: 'Здоровая спина', icon: '🦴' },
+  { id: 'glutes',   name: '3Д ягодицы',    icon: '🍑' },
+  { id: 'stretch',  name: 'Стретчинг',      icon: '🤸' },
+  { id: 'walk',     name: 'Прогулка',       icon: '🚶' },
 ];
 
 const PLANT_STAGES = [
@@ -109,7 +107,7 @@ const PRIORITY_ORDER = { high: 0, medium: 1, low: 2 };
 let state = { page: 'today', data: null, modal: null, expandedTask: null };
 let tempCat = 'food';
 let tempInstrument = 'guitar';
-let tempWorkout = 'gym';
+let tempWorkout = 'pilates';
 let sleepPeriod = 'week';
 let workoutPeriod = 'week';
 let financeTab = 'overview';
