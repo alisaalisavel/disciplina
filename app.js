@@ -116,6 +116,7 @@ let financeTab = 'overview';
 let financeAnalyticsPeriod = 'month';
 let tempPriority = 'medium';
 let editingTaskId = null;
+let editingExpenseId = null;
 
 // ============================================================
 // DATA
@@ -761,7 +762,7 @@ function renderFinanceOverview() {
       </div>
       <div class="progress-wrap" style="margin-bottom:10px"><div class="progress-bar success" style="width:${savPct}%"></div></div>
       <div style="font-size:13px;color:var(--text-muted)">${savPct}% от цели</div>
-      <button class="btn btn-secondary btn-sm" style="margin-top:12px" id="open-savings">+ Пополнить</button>
+      <button class="btn btn-secondary btn-sm" style="margin-top:12px" id="open-savings">✏️ Скорректировать</button>
     </div>
 
     <button class="btn btn-primary btn-full" id="open-add-expense">+ Добавить трату</button>
@@ -774,6 +775,10 @@ function renderFinanceOverview() {
             <div class="expense-icon">${cat.icon}</div>
             <div class="expense-info"><div class="expense-note">${e.note||cat.name}</div><div class="expense-meta">${cat.name} · ${formatDate(e.date)}</div></div>
             <div class="expense-amount">−${formatMoney(e.amount)} ₸</div>
+            <div class="expense-actions">
+              <button class="expense-edit-btn" data-expense-edit="${e.id}">✏️</button>
+              <button class="expense-del-btn" data-expense-del="${e.id}">×</button>
+            </div>
           </div>
         `; }).join('')}
       </div>
@@ -1484,26 +1489,40 @@ function openBedModal() {
   `);
 }
 
-function openAddExpense() {
-  tempCat = 'food';
-  openModal(`
-    <h2>Новая трата</h2>
+function expenseModalHtml(title, e) {
+  const cat = e?.category || tempCat;
+  return `
+    <h2>${title}</h2>
     <div class="form-group">
       <label class="form-label">Категория</label>
       <div class="category-grid">
-        ${CATEGORIES.map(c=>`<button class="cat-btn ${c.id===tempCat?'selected':''}" data-cat="${c.id}"><span class="cat-icon">${c.icon}</span>${c.name}</button>`).join('')}
+        ${CATEGORIES.map(c=>`<button class="cat-btn ${c.id===cat?'selected':''}" data-cat="${c.id}"><span class="cat-icon">${c.icon}</span>${c.name}</button>`).join('')}
       </div>
     </div>
     <div class="form-group">
       <label class="form-label">Сумма (₸)</label>
-      <input type="number" class="form-input" id="expense-amount" placeholder="0" inputmode="numeric" min="0">
+      <input type="number" class="form-input" id="expense-amount" placeholder="0" inputmode="numeric" min="0" value="${e?.amount||''}">
     </div>
     <div class="form-group">
       <label class="form-label">Комментарий (необязательно)</label>
-      <input type="text" class="form-input" id="expense-note" placeholder="Кофе, кино...">
+      <input type="text" class="form-input" id="expense-note" placeholder="Кофе, кино..." value="${e?.note||''}">
     </div>
-    <button class="btn btn-primary btn-full" id="save-expense">Добавить</button>
-  `);
+    <button class="btn btn-primary btn-full" id="save-expense">${e ? 'Сохранить' : 'Добавить'}</button>
+  `;
+}
+
+function openAddExpense() {
+  editingExpenseId = null;
+  tempCat = 'food';
+  openModal(expenseModalHtml('Новая трата 💸', null));
+}
+
+function openEditExpense(id) {
+  const e = state.data.finance.expenses.find(x => x.id === id);
+  if (!e) return;
+  editingExpenseId = id;
+  tempCat = e.category;
+  openModal(expenseModalHtml('Редактировать трату ✏️', e));
 }
 
 function openBudgetSettings() {
@@ -1525,11 +1544,14 @@ function openBudgetSettings() {
 function openSavings() {
   const { finance } = state.data;
   openModal(`
-    <h2>Пополнить накопления</h2>
-    <div style="text-align:center;margin-bottom:16px;color:var(--text-muted);font-size:14px">Сейчас: ${formatMoney(finance.savingsCurrent)} ₸ из ${formatMoney(finance.savingsGoal)} ₸</div>
+    <h2>Накопления 💰</h2>
     <div class="form-group">
-      <label class="form-label">Текущая сумма накоплений (₸)</label>
+      <label class="form-label">Сколько накоплено сейчас (₸)</label>
       <input type="number" class="form-input" id="savings-now-input" value="${finance.savingsCurrent||''}" placeholder="0" inputmode="numeric">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Цель накоплений (₸)</label>
+      <input type="number" class="form-input" id="savings-goal-input2" value="${finance.savingsGoal||''}" placeholder="500 000" inputmode="numeric">
     </div>
     <button class="btn btn-primary btn-full" id="save-savings">Сохранить</button>
   `);
@@ -1708,6 +1730,17 @@ function bindEvents() {
   document.getElementById('log-workout')?.addEventListener('click', openLogWorkout);
   document.getElementById('edit-workout')?.addEventListener('click', openLogWorkout);
 
+  // Expense edit / delete
+  document.querySelectorAll('[data-expense-edit]').forEach(btn => {
+    btn.addEventListener('click', () => openEditExpense(btn.dataset.expenseEdit));
+  });
+  document.querySelectorAll('[data-expense-del]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.data.finance.expenses = state.data.finance.expenses.filter(e => e.id !== btn.dataset.expenseDel);
+      save(); render();
+    });
+  });
+
   // Finance tabs
   document.querySelectorAll('[data-finance-tab]').forEach(btn => {
     btn.addEventListener('click', () => { financeTab = btn.dataset.financeTab; render(); });
@@ -1853,7 +1886,13 @@ function bindModalEvents() {
     const amount = parseFloat(document.getElementById('expense-amount')?.value);
     const note   = (document.getElementById('expense-note')?.value||'').trim();
     if (!amount || amount <= 0) { document.getElementById('expense-amount')?.focus(); return; }
-    state.data.finance.expenses.push({ id: uid(), date: todayKey(), amount, category: tempCat, note });
+    if (editingExpenseId) {
+      const e = state.data.finance.expenses.find(x => x.id === editingExpenseId);
+      if (e) { e.amount = amount; e.category = tempCat; e.note = note; }
+      editingExpenseId = null;
+    } else {
+      state.data.finance.expenses.push({ id: uid(), date: todayKey(), amount, category: tempCat, note });
+    }
     save(); closeModal(); render();
   });
 
@@ -1865,6 +1904,8 @@ function bindModalEvents() {
 
   document.getElementById('save-savings')?.addEventListener('click', () => {
     state.data.finance.savingsCurrent = parseFloat(document.getElementById('savings-now-input')?.value)||0;
+    const goal = document.getElementById('savings-goal-input2')?.value;
+    if (goal !== undefined) state.data.finance.savingsGoal = parseFloat(goal)||0;
     save(); closeModal(); render();
   });
 

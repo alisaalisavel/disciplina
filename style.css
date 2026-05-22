@@ -383,6 +383,23 @@ body {
 .expense-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 .expense-amount { font-size: 15px; font-weight: 600; flex-shrink: 0; }
 
+.expense-actions { display: flex; align-items: center; gap: 2px; flex-shrink: 0; margin-left: 4px; }
+.expense-edit-btn, .expense-del-btn {
+  font-size: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 5px;
+  border-radius: 8px;
+  line-height: 1;
+  font-family: var(--font);
+  transition: background 0.15s;
+  opacity: 0.55;
+}
+.expense-edit-btn:active { opacity: 1; background: var(--surface2); }
+.expense-del-btn { font-size: 18px; color: var(--text-muted); opacity: 0.6; }
+.expense-del-btn:active { opacity: 1; color: #C62828; background: #FFF0F0; }
+
 /* ========== HEALTH ========== */
 .doctor-item {
   display: flex;
