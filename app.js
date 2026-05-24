@@ -140,7 +140,7 @@ const INSTRUMENT_ICON = { guitar: '🎸', piano: '🎹', voice: '🎤', other: '
 const WORKOUT_TYPES = [
   { id: 'pilates',  name: 'Пилатес',        icon: '🧘' },
   { id: 'func',     name: 'Функционал',     icon: '💪' },
-  { id: 'back',     name: 'Здоровая спина', icon: '🦴' },
+  { id: 'back',     name: 'Здоровая спина', icon: '💆' },
   { id: 'glutes',   name: '3Д ягодицы',    icon: '🍑' },
   { id: 'stretch',  name: 'Стретчинг',      icon: '🤸' },
   { id: 'walk',     name: 'Прогулка',       icon: '🚶' },
@@ -175,6 +175,30 @@ const TIME_HABITS = ['guitar', 'piano'];
 // habit that is a counter
 const COUNTER_HABIT = 'sugar';
 
+const SHOPPING_CATS = [
+  { id: 'food',     name: 'Продукты',  icon: '🛒' },
+  { id: 'home',     name: 'Дом',       icon: '🏠' },
+  { id: 'beauty',   name: 'Косметика', icon: '💄' },
+  { id: 'clothes',  name: 'Одежда',    icon: '👗' },
+  { id: 'medicine', name: 'Лекарства', icon: '💊' },
+  { id: 'other',    name: 'Другое',    icon: '📦' },
+];
+
+const BOOK_STATUSES = [
+  { id: 'want',    label: 'Хочу прочитать', icon: '🔖' },
+  { id: 'reading', label: 'Читаю',          icon: '📖' },
+  { id: 'done',    label: 'Прочитала',      icon: '✅' },
+];
+const MEDIA_TYPES = [
+  { id: 'movie',  label: 'Фильм',  icon: '🎬' },
+  { id: 'series', label: 'Сериал', icon: '📺' },
+];
+const MEDIA_STATUSES = [
+  { id: 'want',     label: 'Хочу',     icon: '❤️' },
+  { id: 'watching', label: 'Смотрю',   icon: '▶️' },
+  { id: 'done',     label: 'Смотрела', icon: '✅' },
+];
+
 const PRIORITIES = [
   { id: 'high',   label: 'Высокий', icon: '🔴' },
   { id: 'medium', label: 'Средний', icon: '🟡' },
@@ -199,6 +223,17 @@ let editingTaskId = null;
 let editingExpenseId = null;
 let cookingTab = 'dishes';
 let editingMyRecipeId = null;
+let tempRecipeRating = 0;
+let editingWorkoutKey = null;
+let booksTab = 'reading';
+let mediaTab = 'watching';
+let editingBookId = null;
+let editingMediaId = null;
+let editingShoppingId = null;
+let tempShoppingCat = 'food';
+let tempBookStatus = 'want';
+let tempMediaStatus = 'want';
+let tempMediaType = 'movie';
 
 // ============================================================
 // DATA
@@ -210,6 +245,7 @@ function defaultData() {
       active: [
         { id: 'sleep_good', name: 'Сон 6+ ч',   icon: '🌙' },
         { id: 'sport',      name: 'Тренировки', icon: '💪' },
+        { id: 'uborka',     name: 'Уборка',      icon: '🧹' },
       ],
       queue: [
         { id: 'english', name: 'Английский', icon: '🇬🇧' },
@@ -237,10 +273,13 @@ function defaultData() {
         { id: 'd5', name: 'Офтальмолог', specialty: 'Зрение',           icon: '👁', status: 'needed' },
       ]
     },
-    cooking: { learned: [], myRecipes: [] },
+    cooking: { learned: [], myRecipes: [], customDishes: [] },
     goals: [],
     garden: { unlockedAchievements: [] },
     tasks: [],
+    books: [],
+    media: [],
+    shopping: { items: [] },
   };
 }
 
@@ -252,9 +291,18 @@ function loadData() {
       if (!d.goals)  d.goals = [];
       if (!d.garden) d.garden = { unlockedAchievements: [] };
       if (!d.habits.archived) d.habits.archived = [];
-      if (!d.tasks)  d.tasks = [];
-      if (!d.cooking) d.cooking = { learned: [], myRecipes: [] };
-      if (!d.cooking.myRecipes) d.cooking.myRecipes = [];
+      if (!d.tasks)   d.tasks = [];
+      if (!d.books)   d.books = [];
+      if (!d.media)   d.media = [];
+      if (!d.shopping) d.shopping = { items: [] };
+      if (!d.shopping.items) d.shopping.items = [];
+      if (!d.cooking) d.cooking = { learned: [], myRecipes: [], customDishes: [] };
+      if (!d.cooking.myRecipes)   d.cooking.myRecipes = [];
+      if (!d.cooking.customDishes) d.cooking.customDishes = [];
+      // Migrate: add uborka habit if missing
+      if (!d.habits.active.find(h => h.id === 'uborka')) {
+        d.habits.active.push({ id: 'uborka', name: 'Уборка', icon: '🧹' });
+      }
 
       // Migrate: add sleep_good habit if missing
       if (!d.habits.active.find(h => h.id === 'sleep_good')) {
@@ -470,7 +518,7 @@ function checkAchievements() {
 
 function render() {
   document.getElementById('app').innerHTML = renderPage();
-  const morePages = ['goals','health','garden','planner','cooking','achievements'];
+  const morePages = ['goals','health','garden','planner','cooking','achievements','books','media','shopping'];
   const activeNav = morePages.includes(state.page) ? 'more' : state.page;
   document.querySelectorAll('.nav-btn').forEach(btn =>
     btn.classList.toggle('active', btn.dataset.page === activeNav)
@@ -484,6 +532,7 @@ function renderPage() {
     workout: renderWorkout, goals: renderGoals, garden: renderGarden,
     more: renderMore, health: renderHealth, planner: renderPlanner,
     cooking: renderCooking, achievements: renderAchievements,
+    books: renderBooks, media: renderMedia, shopping: renderShopping,
   };
   return (pages[state.page] || renderToday)();
 }
@@ -532,7 +581,9 @@ function renderMonthCalendar() {
 
 function renderToday() {
   const td = getTodayData();
-  const habits = state.data.habits.active;
+  const dow = new Date().getDay();
+  const isWeekend = dow === 0 || dow === 6;
+  const habits = state.data.habits.active.filter(h => h.id !== 'uborka' || isWeekend);
   const queue  = state.data.habits.queue;
   const doneCount = habits.filter(h => td.habits[h.id]).length;
   const pct = habits.length ? Math.round(doneCount / habits.length * 100) : 0;
@@ -1068,7 +1119,8 @@ function renderWorkout() {
                   <div style="font-size:14px;font-weight:600">${wtype.name}</div>
                   ${v.workout.notes ? `<div class="muted" style="font-size:12px">${v.workout.notes}</div>` : ''}
                 </div>
-                <div class="muted" style="font-size:12px">${formatDate(key)}</div>
+                <div class="muted" style="font-size:12px;margin-right:8px">${formatDate(key)}</div>
+                <button class="expense-edit-btn" data-workout-edit="${key}">✏️</button>
               </div>
             `;
           }).join('')}
@@ -1197,12 +1249,15 @@ function renderCooking() {
       </div>
 
       ${COOKING_CATEGORIES.map(cat => {
-        const catLearned = cat.recipes.filter(r => learned.includes(r.id)).length;
-        const catPct = Math.round(catLearned / cat.recipes.length * 100);
+        const customCat = state.data.cooking.customDishes.filter(d => d.catId === cat.id);
+        const catTotal = cat.recipes.length + customCat.length;
+        const catLearned = [...cat.recipes, ...customCat].filter(r => learned.includes(r.id)).length;
+        const catPct = catTotal > 0 ? Math.round(catLearned / catTotal * 100) : 0;
 
         const byDiff = [1, 2, 3].map(d => {
           const group = cat.recipes.filter(r => r.d === d);
-          if (!group.length) return '';
+          const customGroup = customCat.filter(r => r.d === d);
+          if (!group.length && !customGroup.length) return '';
           return `
             <div class="cook-diff-group">
               <div class="cook-diff-label">${DIFF_STARS[d]}</div>
@@ -1210,6 +1265,12 @@ function renderCooking() {
                 <div class="recipe-item ${learned.includes(r.id) ? 'learned' : ''}" data-recipe="${r.id}">
                   <div class="recipe-checkbox"></div>
                   <span class="recipe-name">${r.name}</span>
+                </div>
+              `).join('')}
+              ${customGroup.map(r => `
+                <div class="recipe-item ${learned.includes(r.id) ? 'learned' : ''}" data-recipe="${r.id}">
+                  <div class="recipe-checkbox"></div>
+                  <span class="recipe-name">${r.name} <span style="font-size:10px;color:var(--text-muted)">✎</span></span>
                 </div>
               `).join('')}
             </div>
@@ -1220,7 +1281,10 @@ function renderCooking() {
           <div class="card">
             <div class="level-header">
               <div class="level-title">${cat.icon} ${cat.title}</div>
-              <div class="level-progress-text">${catLearned}/${cat.recipes.length}</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="level-progress-text">${catLearned}/${catTotal}</div>
+                <button class="cook-add-dish-btn" data-add-dish="${cat.id}">+ Блюдо</button>
+              </div>
             </div>
             <div class="progress-wrap" style="margin-bottom:10px"><div class="progress-bar" style="width:${catPct}%"></div></div>
             ${byDiff}
@@ -1241,6 +1305,7 @@ function renderCooking() {
                 <button class="my-recipe-del-btn" data-recipe-del="${r.id}">×</button>
               </div>
             </div>
+            ${r.rating ? `<div style="font-size:12px;margin-top:3px">${'⭐'.repeat(r.rating)}</div>` : ''}
             ${r.text ? `<div class="my-recipe-text">${r.text.replace(/\n/g, '<br>')}</div>` : ''}
           </div>
         `).join('');
@@ -1456,21 +1521,232 @@ function renderWorkoutMonthGrid() {
 }
 
 // ============================================================
+// PAGE: BOOKS
+// ============================================================
+
+function renderBooks() {
+  const books = state.data.books || [];
+  const tabs = [
+    { id: 'reading', label: '📖 Читаю',    filter: b => b.status === 'reading' },
+    { id: 'done',    label: '✅ Прочитала', filter: b => b.status === 'done' },
+    { id: 'want',    label: '🔖 Хочу',     filter: b => b.status === 'want' },
+  ];
+  const list = books.filter(tabs.find(t => t.id === booksTab)?.filter || (() => true));
+  const doneBooks = books.filter(b => b.status === 'done');
+  const totalPagesRead = doneBooks.reduce((s, b) => s + (b.totalPages || 0), 0);
+
+  function bookCard(b) {
+    const bs = BOOK_STATUSES.find(s => s.id === b.status) || BOOK_STATUSES[0];
+    const pct = b.totalPages > 0 ? Math.min(100, Math.round((b.pagesRead || 0) / b.totalPages * 100)) : 0;
+    return `
+      <div class="book-item">
+        <div class="book-item-top">
+          <div style="flex:1">
+            <div class="book-title">${b.title}</div>
+            ${b.author ? `<div class="book-author">${b.author}</div>` : ''}
+            ${b.rating ? `<div style="font-size:11px;margin-top:2px">${'⭐'.repeat(b.rating)}</div>` : ''}
+          </div>
+          <div style="display:flex;gap:4px;flex-shrink:0">
+            <button class="expense-edit-btn" data-book-edit="${b.id}">✏️</button>
+            <button class="expense-del-btn" data-book-del="${b.id}">×</button>
+          </div>
+        </div>
+        ${b.status === 'reading' && b.totalPages > 0 ? `
+          <div style="margin-top:8px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:4px">
+              <span>${b.pagesRead || 0} / ${b.totalPages} стр.</span><span>${pct}%</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+              <input type="number" class="form-input" style="width:80px;padding:6px 8px;font-size:13px"
+                placeholder="Стр." id="pages-input-${b.id}" min="0" max="${b.totalPages}" inputmode="numeric">
+              <button class="btn btn-secondary btn-sm" data-log-pages="${b.id}">+ Записать</button>
+            </div>
+          </div>
+        ` : ''}
+        ${b.status === 'done' && b.totalPages > 0 ? `<div class="muted" style="font-size:12px;margin-top:4px">📄 ${b.totalPages} стр.</div>` : ''}
+      </div>
+    `;
+  }
+
+  return `
+    <div class="page">
+      <div class="page-header">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div><h1>Книги 📚</h1><div class="subtitle">Читаю и хочу прочитать</div></div>
+          <button class="btn btn-primary btn-sm" id="add-book">+ Добавить</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-value">${doneBooks.length}</div><div class="stat-label">Прочитано</div></div>
+        <div class="stat-box"><div class="stat-value">${books.filter(b=>b.status==='reading').length}</div><div class="stat-label">Читаю сейчас</div></div>
+        <div class="stat-box"><div class="stat-value" style="font-size:16px">${totalPagesRead > 0 ? totalPagesRead.toLocaleString('ru') : '—'}</div><div class="stat-label">Стр. всего</div></div>
+      </div>
+
+      <div class="cooking-tabs">
+        ${tabs.map(t => `<button class="cooking-tab ${booksTab===t.id?'active':''}" data-books-tab="${t.id}">${t.label}</button>`).join('')}
+      </div>
+
+      <div class="card">
+        ${list.length === 0 ? `<div class="muted" style="text-align:center;padding:20px 0;font-size:14px">Список пустой 📭</div>`
+          : list.map(bookCard).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// PAGE: MEDIA
+// ============================================================
+
+function renderMedia() {
+  const media = state.data.media || [];
+  const tabs = [
+    { id: 'watching', label: '▶️ Смотрю',   filter: m => m.status === 'watching' },
+    { id: 'done',     label: '✅ Смотрела',  filter: m => m.status === 'done' },
+    { id: 'want',     label: '❤️ Хочу',     filter: m => m.status === 'want' },
+  ];
+  const list = media.filter(tabs.find(t => t.id === mediaTab)?.filter || (() => true));
+  const now = new Date();
+  const weekAgo = new Date(now); weekAgo.setDate(weekAgo.getDate() - 7);
+  const monthPrefix = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const doneAll = media.filter(m => m.status === 'done');
+  const doneMonth = doneAll.filter(m => m.dateDone?.startsWith(monthPrefix));
+
+  function mediaCard(m) {
+    const mt = MEDIA_TYPES.find(t => t.id === m.type) || MEDIA_TYPES[0];
+    return `
+      <div class="book-item">
+        <div class="book-item-top">
+          <div style="flex:1">
+            <div class="book-title">${m.title}</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:2px">${mt.icon} ${mt.label}</div>
+            ${m.rating ? `<div style="font-size:11px;margin-top:2px">${'⭐'.repeat(m.rating)}</div>` : ''}
+          </div>
+          <div style="display:flex;gap:4px;flex-shrink:0">
+            <button class="expense-edit-btn" data-media-edit="${m.id}">✏️</button>
+            <button class="expense-del-btn" data-media-del="${m.id}">×</button>
+          </div>
+        </div>
+        ${m.status !== 'done' ? `
+          <button class="btn btn-secondary btn-sm" style="margin-top:8px" data-media-done="${m.id}">✓ Отметить просмотрено</button>
+        ` : m.dateDone ? `<div class="muted" style="font-size:11px;margin-top:4px">Просмотрено: ${formatDate(m.dateDone)}</div>` : ''}
+      </div>
+    `;
+  }
+
+  return `
+    <div class="page">
+      <div class="page-header">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div><h1>Кино & Сериалы 🎬</h1><div class="subtitle">Смотрю и хочу посмотреть</div></div>
+          <button class="btn btn-primary btn-sm" id="add-media">+ Добавить</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-value">${doneAll.length}</div><div class="stat-label">Смотрела всего</div></div>
+        <div class="stat-box"><div class="stat-value">${doneMonth.length}</div><div class="stat-label">В этом месяце</div></div>
+        <div class="stat-box"><div class="stat-value">${media.filter(m=>m.status==='want').length}</div><div class="stat-label">Хочу посмотреть</div></div>
+      </div>
+
+      <div class="cooking-tabs">
+        ${tabs.map(t => `<button class="cooking-tab ${mediaTab===t.id?'active':''}" data-media-tab="${t.id}">${t.label}</button>`).join('')}
+      </div>
+
+      <div class="card">
+        ${list.length === 0 ? `<div class="muted" style="text-align:center;padding:20px 0;font-size:14px">Список пустой 🎭</div>`
+          : list.map(mediaCard).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// PAGE: SHOPPING
+// ============================================================
+
+function renderShopping() {
+  const items = state.data.shopping?.items || [];
+  const active = items.filter(i => !i.done);
+  const done   = items.filter(i => i.done);
+
+  const byCat = SHOPPING_CATS.map(cat => ({
+    ...cat,
+    items: active.filter(i => i.category === cat.id)
+  })).filter(c => c.items.length > 0);
+
+  const highCount = active.filter(i => (i.priority || 'medium') === 'high').length;
+
+  function itemRow(item) {
+    const pr = PRIORITIES.find(p => p.id === (item.priority || 'medium'));
+    return `
+      <div class="shop-item ${item.done ? 'done' : ''}">
+        <div class="shop-item-check" data-shop-toggle="${item.id}">
+          ${item.done ? '✓' : ''}
+        </div>
+        <div style="flex:1">
+          <div class="shop-item-name">${item.name}</div>
+        </div>
+        <span class="priority-badge priority-${pr.id}" style="font-size:11px">${pr.icon}</span>
+        <button class="expense-del-btn" data-shop-del="${item.id}">×</button>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="page">
+      <div class="page-header">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div><h1>Список покупок 🛒</h1><div class="subtitle">${active.length} нужно купить${highCount > 0 ? ` · 🔴 ${highCount} срочно` : ''}</div></div>
+          <button class="btn btn-primary btn-sm" id="add-shop-item">+ Добавить</button>
+        </div>
+      </div>
+
+      ${active.length === 0 ? `
+        <div class="card">
+          <div class="muted" style="text-align:center;padding:20px 0;font-size:14px">Список пустой 🎉<br>Всё куплено!</div>
+        </div>
+      ` : byCat.map(cat => `
+        <div class="card">
+          <div class="card-title">${cat.icon} ${cat.name}</div>
+          ${cat.items.sort((a,b) => (PRIORITY_ORDER[a.priority||'medium'])-(PRIORITY_ORDER[b.priority||'medium'])).map(itemRow).join('')}
+        </div>
+      `).join('')}
+
+      ${done.length > 0 ? `
+        <div class="card">
+          <div class="card-title" style="color:var(--text-muted)">✓ Куплено (${done.length})</div>
+          ${done.map(itemRow).join('')}
+          <button class="btn btn-secondary btn-sm" style="margin-top:10px" id="clear-bought">Очистить купленное</button>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+// ============================================================
 // PAGE: MORE (hub)
 // ============================================================
 
 function renderMore() {
   const sections = [
-    { id: 'goals',        icon: '🎵', title: 'Музыка',      desc: 'Песни и прогресс' },
-    { id: 'cooking',      icon: '🍳', title: 'Кулинария',   desc: 'Рецепты и уровни' },
-    { id: 'health',       icon: '🌿', title: 'Здоровье',    desc: 'Врачи и визиты' },
-    { id: 'planner',      icon: '📋', title: 'Планер',      desc: '' },
-    { id: 'garden',       icon: '🌱', title: 'Сад',          desc: 'Растения' },
-    { id: 'achievements', icon: '🏆', title: 'Достижения',  desc: 'Коллекция ачивок' },
+    { id: 'goals',        icon: '🎵', title: 'Музыка',        desc: 'Песни и прогресс' },
+    { id: 'cooking',      icon: '🍳', title: 'Кулинария',     desc: 'Рецепты и уровни' },
+    { id: 'books',        icon: '📚', title: 'Книги',         desc: 'Читаю и хочу прочитать' },
+    { id: 'media',        icon: '🎬', title: 'Кино & Сериалы', desc: 'Смотрю и хочу' },
+    { id: 'shopping',     icon: '🛒', title: 'Список покупок', desc: '' },
+    { id: 'health',       icon: '🌿', title: 'Здоровье',      desc: 'Врачи и визиты' },
+    { id: 'planner',      icon: '📋', title: 'Планер',        desc: '' },
+    { id: 'garden',       icon: '🌱', title: 'Сад',           desc: 'Растения' },
+    { id: 'achievements', icon: '🏆', title: 'Достижения',    desc: 'Коллекция ачивок' },
   ];
   const tasks = state.data.tasks || [];
   const activeTasks = tasks.filter(t => !t.done).length;
   const unlocked = state.data.garden.unlockedAchievements;
+  const shopItems = (state.data.shopping?.items || []).filter(i => !i.done).length;
+  const readingBooks = (state.data.books || []).filter(b => b.status === 'reading').length;
   return `
     <div class="page">
       <div class="page-header">
@@ -1482,6 +1758,8 @@ function renderMore() {
           let desc = s.desc;
           if (s.id === 'planner' && activeTasks > 0) desc = `${activeTasks} задач`;
           if (s.id === 'achievements') desc = `${unlocked.length}/${ACHIEVEMENTS.length} открыто`;
+          if (s.id === 'shopping' && shopItems > 0) desc = `${shopItems} не куплено`;
+          if (s.id === 'books' && readingBooks > 0) desc = `Читаю: ${readingBooks}`;
           return `
             <button class="hub-card" data-page="${s.id}">
               <div class="hub-card-icon">${s.icon}</div>
@@ -1710,11 +1988,12 @@ function openAddDoctor() {
   `);
 }
 
-function openLogWorkout() {
-  const td = getTodayData();
-  tempWorkout = td.workout?.type || 'gym';
+function openLogWorkout(key) {
+  editingWorkoutKey = key || null;
+  const dayData = key ? (state.data.daily[key] || {}) : getTodayData();
+  tempWorkout = dayData.workout?.type || 'pilates';
   openModal(`
-    <h2>Тренировка 💪</h2>
+    <h2>${key ? 'Изменить тренировку ✏️' : 'Тренировка 💪'}</h2>
     <div class="form-group">
       <label class="form-label">Что за тренировка?</label>
       <div class="category-grid" id="workout-grid">
@@ -1727,7 +2006,7 @@ function openLogWorkout() {
     </div>
     <div class="form-group">
       <label class="form-label">Заметка (необязательно)</label>
-      <input type="text" class="form-input" id="workout-notes" placeholder="Ноги, кардио, 5км..." value="${td.workout?.notes || ''}">
+      <input type="text" class="form-input" id="workout-notes" placeholder="Ноги, кардио, 5км..." value="${dayData.workout?.notes || ''}">
     </div>
     <button class="btn btn-primary btn-full" id="save-workout">Сохранить</button>
   `);
@@ -1806,8 +2085,15 @@ function openAddGoal() {
   `);
 }
 
+function recipeRatingHtml(current) {
+  return `<div class="star-rating-picker">${[1,2,3,4,5].map(s =>
+    `<button class="star-btn ${s <= current ? 'active' : ''}" data-star="${s}">⭐</button>`
+  ).join('')}</div>`;
+}
+
 function openAddMyRecipe() {
   editingMyRecipeId = null;
+  tempRecipeRating = 0;
   openModal(`
     <h2>Новый рецепт 📖</h2>
     <div class="form-group">
@@ -1815,8 +2101,12 @@ function openAddMyRecipe() {
       <input type="text" class="form-input" id="my-recipe-title" placeholder="Например: Борщ бабушки">
     </div>
     <div class="form-group">
+      <label class="form-label">Оценка</label>
+      ${recipeRatingHtml(0)}
+    </div>
+    <div class="form-group">
       <label class="form-label">Рецепт / заметки</label>
-      <textarea class="form-input" id="my-recipe-text" rows="8" placeholder="Ингредиенты, шаги, секреты..." style="resize:vertical;min-height:140px;font-family:inherit"></textarea>
+      <textarea class="form-input" id="my-recipe-text" rows="7" placeholder="Ингредиенты, шаги, секреты..." style="resize:vertical;min-height:130px;font-family:inherit"></textarea>
     </div>
     <button class="btn btn-primary btn-full" id="save-my-recipe">Сохранить</button>
   `);
@@ -1826,6 +2116,7 @@ function openEditMyRecipe(id) {
   const r = state.data.cooking.myRecipes.find(x => x.id === id);
   if (!r) return;
   editingMyRecipeId = id;
+  tempRecipeRating = r.rating || 0;
   openModal(`
     <h2>Редактировать рецепт 📖</h2>
     <div class="form-group">
@@ -1833,10 +2124,215 @@ function openEditMyRecipe(id) {
       <input type="text" class="form-input" id="my-recipe-title" value="${r.title.replace(/"/g,'&quot;')}">
     </div>
     <div class="form-group">
+      <label class="form-label">Оценка</label>
+      ${recipeRatingHtml(r.rating || 0)}
+    </div>
+    <div class="form-group">
       <label class="form-label">Рецепт / заметки</label>
-      <textarea class="form-input" id="my-recipe-text" rows="8" style="resize:vertical;min-height:140px;font-family:inherit">${r.text || ''}</textarea>
+      <textarea class="form-input" id="my-recipe-text" rows="7" style="resize:vertical;min-height:130px;font-family:inherit">${r.text || ''}</textarea>
     </div>
     <button class="btn btn-primary btn-full" id="save-my-recipe">Сохранить</button>
+  `);
+}
+
+function openAddCustomDish(catId) {
+  const cat = COOKING_CATEGORIES.find(c => c.id === catId);
+  openModal(`
+    <h2>${cat?.icon || '🍳'} Добавить блюдо</h2>
+    <div class="form-group">
+      <label class="form-label">Название блюда</label>
+      <input type="text" class="form-input" id="custom-dish-name" placeholder="Название блюда">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Сложность</label>
+      <div class="category-grid" style="grid-template-columns:repeat(3,1fr)">
+        ${[1,2,3].map(d => `
+          <button class="cat-btn ${d===1?'selected':''}" data-diff="${d}">
+            ${DIFF_STARS[d]}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <input type="hidden" id="custom-dish-cat" value="${catId}">
+    <button class="btn btn-primary btn-full" id="save-custom-dish">Добавить</button>
+  `);
+}
+
+function openAddBook() {
+  editingBookId = null;
+  tempBookStatus = 'want';
+  openModal(`
+    <h2>Добавить книгу 📚</h2>
+    <div class="form-group">
+      <label class="form-label">Название *</label>
+      <input type="text" class="form-input" id="book-title" placeholder="Название книги">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Автор</label>
+      <input type="text" class="form-input" id="book-author" placeholder="Имя автора">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Кол-во страниц</label>
+      <input type="number" class="form-input" id="book-pages" placeholder="300" inputmode="numeric">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Статус</label>
+      <div class="category-grid" style="grid-template-columns:repeat(3,1fr)">
+        ${BOOK_STATUSES.map(s => `
+          <button class="cat-btn ${s.id===tempBookStatus?'selected':''}" data-book-status="${s.id}">
+            <span class="cat-icon">${s.icon}</span>${s.label}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" id="save-book">Добавить</button>
+  `);
+}
+
+function openEditBook(id) {
+  const b = state.data.books.find(x => x.id === id);
+  if (!b) return;
+  editingBookId = id;
+  tempBookStatus = b.status;
+  tempRecipeRating = b.rating || 0;
+  openModal(`
+    <h2>Редактировать книгу 📚</h2>
+    <div class="form-group">
+      <label class="form-label">Название</label>
+      <input type="text" class="form-input" id="book-title" value="${b.title.replace(/"/g,'&quot;')}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Автор</label>
+      <input type="text" class="form-input" id="book-author" value="${b.author || ''}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Кол-во страниц</label>
+      <input type="number" class="form-input" id="book-pages" value="${b.totalPages || ''}" inputmode="numeric">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Статус</label>
+      <div class="category-grid" style="grid-template-columns:repeat(3,1fr)">
+        ${BOOK_STATUSES.map(s => `
+          <button class="cat-btn ${s.id===b.status?'selected':''}" data-book-status="${s.id}">
+            <span class="cat-icon">${s.icon}</span>${s.label}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Оценка</label>
+      ${recipeRatingHtml(b.rating || 0)}
+    </div>
+    <button class="btn btn-primary btn-full" id="save-book">Сохранить</button>
+  `);
+}
+
+function openAddMedia() {
+  editingMediaId = null;
+  tempMediaStatus = 'want';
+  tempMediaType = 'movie';
+  openModal(`
+    <h2>Добавить фильм / сериал 🎬</h2>
+    <div class="form-group">
+      <label class="form-label">Название *</label>
+      <input type="text" class="form-input" id="media-title" placeholder="Название">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Тип</label>
+      <div class="category-grid" style="grid-template-columns:repeat(2,1fr)">
+        ${MEDIA_TYPES.map(t => `
+          <button class="cat-btn ${t.id===tempMediaType?'selected':''}" data-media-type="${t.id}">
+            <span class="cat-icon">${t.icon}</span>${t.label}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Статус</label>
+      <div class="category-grid" style="grid-template-columns:repeat(3,1fr)">
+        ${MEDIA_STATUSES.map(s => `
+          <button class="cat-btn ${s.id===tempMediaStatus?'selected':''}" data-media-status="${s.id}">
+            <span class="cat-icon">${s.icon}</span>${s.label}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" id="save-media">Добавить</button>
+  `);
+}
+
+function openEditMedia(id) {
+  const m = state.data.media.find(x => x.id === id);
+  if (!m) return;
+  editingMediaId = id;
+  tempMediaStatus = m.status;
+  tempMediaType = m.type || 'movie';
+  tempRecipeRating = m.rating || 0;
+  openModal(`
+    <h2>Редактировать 🎬</h2>
+    <div class="form-group">
+      <label class="form-label">Название</label>
+      <input type="text" class="form-input" id="media-title" value="${m.title.replace(/"/g,'&quot;')}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Тип</label>
+      <div class="category-grid" style="grid-template-columns:repeat(2,1fr)">
+        ${MEDIA_TYPES.map(t => `
+          <button class="cat-btn ${t.id===m.type?'selected':''}" data-media-type="${t.id}">
+            <span class="cat-icon">${t.icon}</span>${t.label}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Статус</label>
+      <div class="category-grid" style="grid-template-columns:repeat(3,1fr)">
+        ${MEDIA_STATUSES.map(s => `
+          <button class="cat-btn ${s.id===m.status?'selected':''}" data-media-status="${s.id}">
+            <span class="cat-icon">${s.icon}</span>${s.label}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Оценка</label>
+      ${recipeRatingHtml(m.rating || 0)}
+    </div>
+    <button class="btn btn-primary btn-full" id="save-media">Сохранить</button>
+  `);
+}
+
+function openAddShoppingItem() {
+  editingShoppingId = null;
+  tempShoppingCat = 'food';
+  tempPriority = 'medium';
+  openModal(`
+    <h2>Добавить в список 🛒</h2>
+    <div class="form-group">
+      <label class="form-label">Что купить *</label>
+      <input type="text" class="form-input" id="shop-name" placeholder="Например: Молоко">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Категория</label>
+      <div class="category-grid">
+        ${SHOPPING_CATS.map(c => `
+          <button class="cat-btn ${c.id===tempShoppingCat?'selected':''}" data-shop-cat="${c.id}">
+            <span class="cat-icon">${c.icon}</span>${c.name}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Приоритет</label>
+      <div class="priority-picker">
+        ${PRIORITIES.map(p => `
+          <button class="priority-pick-btn ${p.id==='medium'?'selected':''} priority-pick-${p.id}" data-shop-priority="${p.id}">
+            ${p.icon} ${p.label}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" id="save-shop-item">Добавить</button>
   `);
 }
 
@@ -1899,8 +2395,11 @@ function bindEvents() {
   document.getElementById('change-bed-sleep')?.addEventListener('click', openBedModal);
 
   // Workout
-  document.getElementById('log-workout')?.addEventListener('click', openLogWorkout);
-  document.getElementById('edit-workout')?.addEventListener('click', openLogWorkout);
+  document.getElementById('log-workout')?.addEventListener('click', () => openLogWorkout(null));
+  document.getElementById('edit-workout')?.addEventListener('click', () => openLogWorkout(null));
+  document.querySelectorAll('[data-workout-edit]').forEach(btn => {
+    btn.addEventListener('click', e => { e.stopPropagation(); openLogWorkout(btn.dataset.workoutEdit); });
+  });
 
   // Expense edit / delete
   document.querySelectorAll('[data-expense-edit]').forEach(btn => {
@@ -2003,6 +2502,11 @@ function bindEvents() {
   });
   document.getElementById('add-goal')?.addEventListener('click', openAddGoal);
 
+  // Cooking: add dish per category
+  document.querySelectorAll('[data-add-dish]').forEach(btn => {
+    btn.addEventListener('click', e => { e.stopPropagation(); openAddCustomDish(btn.dataset.addDish); });
+  });
+
   // Cooking tabs
   document.querySelectorAll('[data-cooking-tab]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -2020,6 +2524,79 @@ function bindEvents() {
       if (idx >= 0) learned.splice(idx, 1); else learned.push(id);
       save(); render();
     });
+  });
+
+  // Books
+  document.getElementById('add-book')?.addEventListener('click', openAddBook);
+  document.querySelectorAll('[data-books-tab]').forEach(btn => {
+    btn.addEventListener('click', () => { booksTab = btn.dataset.booksTab; render(); });
+  });
+  document.querySelectorAll('[data-book-edit]').forEach(btn => {
+    btn.addEventListener('click', e => { e.stopPropagation(); openEditBook(btn.dataset.bookEdit); });
+  });
+  document.querySelectorAll('[data-book-del]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (!confirm('Удалить книгу?')) return;
+      state.data.books = state.data.books.filter(b => b.id !== btn.dataset.bookDel);
+      save(); render();
+    });
+  });
+  document.querySelectorAll('[data-log-pages]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const bookId = btn.dataset.logPages;
+      const input = document.getElementById(`pages-input-${bookId}`);
+      const pages = parseInt(input?.value);
+      if (!pages || pages <= 0) return;
+      const b = state.data.books.find(x => x.id === bookId);
+      if (!b) return;
+      b.pagesRead = Math.min(b.totalPages || 9999, (b.pagesRead || 0) + pages);
+      if (b.pagesRead >= b.totalPages) b.status = 'done';
+      save(); render();
+    });
+  });
+
+  // Media
+  document.getElementById('add-media')?.addEventListener('click', openAddMedia);
+  document.querySelectorAll('[data-media-tab]').forEach(btn => {
+    btn.addEventListener('click', () => { mediaTab = btn.dataset.mediaTab; render(); });
+  });
+  document.querySelectorAll('[data-media-edit]').forEach(btn => {
+    btn.addEventListener('click', e => { e.stopPropagation(); openEditMedia(btn.dataset.mediaEdit); });
+  });
+  document.querySelectorAll('[data-media-del]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (!confirm('Удалить?')) return;
+      state.data.media = state.data.media.filter(m => m.id !== btn.dataset.mediaDel);
+      save(); render();
+    });
+  });
+  document.querySelectorAll('[data-media-done]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const m = state.data.media.find(x => x.id === btn.dataset.mediaDone);
+      if (m) { m.status = 'done'; m.dateDone = todayKey(); save(); render(); }
+    });
+  });
+
+  // Shopping
+  document.getElementById('add-shop-item')?.addEventListener('click', openAddShoppingItem);
+  document.querySelectorAll('[data-shop-toggle]').forEach(el => {
+    el.addEventListener('click', () => {
+      const item = state.data.shopping.items.find(i => i.id === el.dataset.shopToggle);
+      if (item) { item.done = !item.done; save(); render(); }
+    });
+  });
+  document.querySelectorAll('[data-shop-del]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      state.data.shopping.items = state.data.shopping.items.filter(i => i.id !== btn.dataset.shopDel);
+      save(); render();
+    });
+  });
+  document.getElementById('clear-bought')?.addEventListener('click', () => {
+    state.data.shopping.items = state.data.shopping.items.filter(i => !i.done);
+    save(); render();
   });
 
   // My Recipes: add
@@ -2077,9 +2654,18 @@ function bindModalEvents() {
 
   document.getElementById('save-workout')?.addEventListener('click', () => {
     const notes = (document.getElementById('workout-notes')?.value || '').trim();
-    const td = getTodayData();
-    td.workout = { type: tempWorkout, notes };
-    td.habits['sport'] = true; // автоматически отмечаем тренировку
+    let dayData;
+    if (editingWorkoutKey) {
+      if (!state.data.daily[editingWorkoutKey]) {
+        state.data.daily[editingWorkoutKey] = { habits: {}, times: {}, sweets: 0, wakeTime: null, bedTime: null };
+      }
+      dayData = state.data.daily[editingWorkoutKey];
+      editingWorkoutKey = null;
+    } else {
+      dayData = getTodayData();
+    }
+    dayData.workout = { type: tempWorkout, notes };
+    dayData.habits['sport'] = true;
     save(); closeModal(); render();
   });
 
@@ -2147,17 +2733,120 @@ function bindModalEvents() {
     save(); closeModal(); render();
   });
 
+  // Star rating picker in recipe modal
+  document.querySelectorAll('.star-btn[data-star]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const s = parseInt(btn.dataset.star);
+      tempRecipeRating = tempRecipeRating === s ? 0 : s;
+      document.querySelectorAll('.star-btn[data-star]').forEach(b => {
+        b.classList.toggle('active', parseInt(b.dataset.star) <= tempRecipeRating);
+      });
+    });
+  });
+
+  // Diff picker in custom dish modal
+  let tempDiff = 1;
+  document.querySelectorAll('.cat-btn[data-diff]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tempDiff = parseInt(btn.dataset.diff);
+      document.querySelectorAll('.cat-btn[data-diff]').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.diff) === tempDiff));
+    });
+  });
+
+  document.getElementById('save-custom-dish')?.addEventListener('click', () => {
+    const name = (document.getElementById('custom-dish-name')?.value || '').trim();
+    const catId = document.getElementById('custom-dish-cat')?.value;
+    if (!name) { document.getElementById('custom-dish-name')?.focus(); return; }
+    const id = 'c_' + uid();
+    state.data.cooking.customDishes.push({ id, catId, name, d: tempDiff });
+    save(); closeModal(); render();
+  });
+
   document.getElementById('save-my-recipe')?.addEventListener('click', () => {
     const title = (document.getElementById('my-recipe-title')?.value || '').trim();
     if (!title) { document.getElementById('my-recipe-title')?.focus(); return; }
     const text = (document.getElementById('my-recipe-text')?.value || '').trim();
     if (editingMyRecipeId) {
       const r = state.data.cooking.myRecipes.find(x => x.id === editingMyRecipeId);
-      if (r) { r.title = title; r.text = text; }
+      if (r) { r.title = title; r.text = text; r.rating = tempRecipeRating; }
       editingMyRecipeId = null;
     } else {
-      state.data.cooking.myRecipes.push({ id: uid(), title, text });
+      state.data.cooking.myRecipes.push({ id: uid(), title, text, rating: tempRecipeRating });
     }
+    save(); closeModal(); render();
+  });
+
+  // Book status picker
+  document.querySelectorAll('[data-book-status]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tempBookStatus = btn.dataset.bookStatus;
+      document.querySelectorAll('[data-book-status]').forEach(b => b.classList.toggle('selected', b.dataset.bookStatus === tempBookStatus));
+    });
+  });
+
+  document.getElementById('save-book')?.addEventListener('click', () => {
+    const title = (document.getElementById('book-title')?.value || '').trim();
+    if (!title) { document.getElementById('book-title')?.focus(); return; }
+    const author = (document.getElementById('book-author')?.value || '').trim();
+    const totalPages = parseInt(document.getElementById('book-pages')?.value) || 0;
+    if (editingBookId) {
+      const b = state.data.books.find(x => x.id === editingBookId);
+      if (b) { b.title = title; b.author = author; b.totalPages = totalPages; b.status = tempBookStatus; b.rating = tempRecipeRating; }
+      editingBookId = null;
+    } else {
+      state.data.books.push({ id: uid(), title, author, totalPages, status: tempBookStatus, pagesRead: 0, rating: 0 });
+    }
+    save(); closeModal(); render();
+  });
+
+  // Media type / status pickers
+  document.querySelectorAll('[data-media-type]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tempMediaType = btn.dataset.mediaType;
+      document.querySelectorAll('[data-media-type]').forEach(b => b.classList.toggle('selected', b.dataset.mediaType === tempMediaType));
+    });
+  });
+  document.querySelectorAll('[data-media-status]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tempMediaStatus = btn.dataset.mediaStatus;
+      document.querySelectorAll('[data-media-status]').forEach(b => b.classList.toggle('selected', b.dataset.mediaStatus === tempMediaStatus));
+    });
+  });
+
+  document.getElementById('save-media')?.addEventListener('click', () => {
+    const title = (document.getElementById('media-title')?.value || '').trim();
+    if (!title) { document.getElementById('media-title')?.focus(); return; }
+    if (editingMediaId) {
+      const m = state.data.media.find(x => x.id === editingMediaId);
+      if (m) { m.title = title; m.type = tempMediaType; m.status = tempMediaStatus; m.rating = tempRecipeRating;
+        if (tempMediaStatus === 'done' && !m.dateDone) m.dateDone = todayKey();
+      }
+      editingMediaId = null;
+    } else {
+      state.data.media.push({ id: uid(), title, type: tempMediaType, status: tempMediaStatus,
+        rating: 0, dateAdded: todayKey(), dateDone: tempMediaStatus === 'done' ? todayKey() : null });
+    }
+    save(); closeModal(); render();
+  });
+
+  // Shopping cat / priority pickers
+  document.querySelectorAll('[data-shop-cat]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tempShoppingCat = btn.dataset.shopCat;
+      document.querySelectorAll('[data-shop-cat]').forEach(b => b.classList.toggle('selected', b.dataset.shopCat === tempShoppingCat));
+    });
+  });
+  document.querySelectorAll('[data-shop-priority]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tempPriority = btn.dataset.shopPriority;
+      document.querySelectorAll('[data-shop-priority]').forEach(b => b.classList.toggle('selected', b.dataset.shopPriority === tempPriority));
+    });
+  });
+
+  document.getElementById('save-shop-item')?.addEventListener('click', () => {
+    const name = (document.getElementById('shop-name')?.value || '').trim();
+    if (!name) { document.getElementById('shop-name')?.focus(); return; }
+    state.data.shopping.items.push({ id: uid(), name, category: tempShoppingCat, priority: tempPriority, done: false });
     save(); closeModal(); render();
   });
 
