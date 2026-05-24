@@ -332,7 +332,8 @@ function loadData() {
       const d = JSON.parse(raw);
       if (!d.goals)  d.goals = [];
       if (!d.garden) d.garden = { unlockedAchievements: [] };
-      if (!d.coins)  d.coins  = { balance: 0, lastCollected: null };
+      if (!d.coins)  d.coins  = { balance: 0, harvested: {} };
+      if (!d.coins.harvested) d.coins.harvested = {};
       if (!d.habits.archived) d.habits.archived = [];
       if (!d.tasks)   d.tasks = [];
       if (!d.finance.income)       d.finance.income = [];
@@ -488,21 +489,21 @@ function calcStreak(habitId) {
   return streak;
 }
 
-function collectCoins() {
-  if (!state.data.coins) state.data.coins = { balance: 0, lastCollected: null };
-  const today = todayKey();
-  if (state.data.coins.lastCollected === today) return;
-  let earned = 0;
-  const habits = state.data.habits.active.filter(h => !h.startDate || h.startDate <= today);
-  for (const h of habits) {
-    const streak = calcStreak(h.id);
-    let stage = PLANT_STAGES[0];
-    for (const s of PLANT_STAGES) { if (streak >= s.min) stage = s; }
-    earned += stage.coins;
-  }
-  state.data.coins.balance = (state.data.coins.balance || 0) + earned;
-  state.data.coins.lastCollected = today;
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data)); } catch(e) {}
+function canHarvest(habitId, streak) {
+  const stage = getPlantStage(streak);
+  if (stage.coins === 0) return false;
+  return state.data.coins?.harvested?.[habitId] !== todayKey();
+}
+
+function harvestPlant(habitId) {
+  const streak = calcStreak(habitId);
+  if (!canHarvest(habitId, streak)) return;
+  const stage = getPlantStage(streak);
+  if (!state.data.coins) state.data.coins = { balance: 0, harvested: {} };
+  if (!state.data.coins.harvested) state.data.coins.harvested = {};
+  state.data.coins.balance = (state.data.coins.balance || 0) + stage.coins;
+  state.data.coins.harvested[habitId] = todayKey();
+  save(); render();
 }
 
 function getLast7Days() {
@@ -701,7 +702,6 @@ function checkAchievements() {
 // ============================================================
 
 function render() {
-  collectCoins();
   document.getElementById('app').innerHTML = renderPage();
   const morePages = ['goals','health','garden','planner','cooking','achievements','books','media','shopping'];
   const activeNav = morePages.includes(state.page) ? 'more' : state.page;
@@ -1694,7 +1694,7 @@ function renderGarden() {
           <div><h1>Мой сад 🌸</h1><div class="subtitle">Ухаживай за растениями каждый день</div></div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
             <div class="water-badge big">💧 ${drops}</div>
-            <div class="coin-badge">🪙 ${coins}</div>
+            <div class="coin-badge"><span class="gcoin">🪙</span> ${coins}</div>
           </div>
         </div>
       </div>
@@ -1710,16 +1710,22 @@ function renderGarden() {
               <div class="plant-emoji">${stage.emoji}</div>
               <div class="plant-name">${h.icon} ${h.name}</div>
               <div class="plant-streak">${streak > 0 ? `🔥 ${streak} дн.` : 'Начни сегодня'}</div>
-              <div class="plant-stage">${stage.label} · ${stage.coins > 0 ? `+${stage.coins}🪙/день` : '—'}</div>
+              <div class="plant-stage">${stage.label}</div>
               ${mins !== null ? `<div class="plant-time">⏱ ${mins < 60 ? mins+'м' : Math.floor(mins/60)+'ч '+(mins%60?mins%60+'м':'')}</div>` : ''}
+              ${stage.coins > 0
+                ? canHarvest(h.id, streak)
+                  ? `<button class="harvest-btn" data-harvest="${h.id}">Собрать +${stage.coins} <span class="gcoin">🪙</span></button>`
+                  : `<div class="harvested-badge">✅ +${stage.coins} <span class="gcoin">🪙</span> собрано</div>`
+                : ''
+              }
             </div>
           `;
         }).join('')}
       </div>
 
       <div class="card">
-        <div class="card-title">🏪 Магазин силы</div>
-        <div class="muted" style="font-size:13px;margin-bottom:12px">Монетки зарабатываются каждый день, когда ты ухаживаешь за растениями</div>
+        <div class="card-title">🛍️ Магазинчик</div>
+        <div class="muted" style="font-size:13px;margin-bottom:12px">Собирай монетки с цветочков и трать на приятности ✨</div>
         ${shopItems.map(item => `
           <div class="shop-item-card ${item.disabled ? 'disabled' : ''}">
             <div style="font-size:28px">${item.icon}</div>
@@ -1729,7 +1735,7 @@ function renderGarden() {
               ${item.id === 'day_off' && dayOff ? `<div style="font-size:12px;color:var(--primary);font-weight:600;margin-top:2px">✅ Уже активен сегодня</div>` : ''}
             </div>
             <div style="text-align:right">
-              <div style="font-weight:700;font-size:16px;color:var(--primary-dark)">🪙 ${item.cost}</div>
+              <div style="font-weight:700;font-size:16px;color:#B8860B"><span class="gcoin">🪙</span> ${item.cost}</div>
               ${!item.disabled && coins >= item.cost
                 ? `<button class="shop-btn" data-shop="${item.id}" data-cost="${item.cost}">Купить</button>`
                 : `<button class="shop-btn disabled" disabled>${coins < item.cost ? 'Мало монет' : 'Недоступно'}</button>`
@@ -2129,7 +2135,7 @@ function renderMore() {
           if (s.id === 'achievements') desc = `${unlocked.length}/${ACHIEVEMENTS.length} открыто`;
           if (s.id === 'shopping' && shopItems > 0) desc = `${shopItems} не куплено`;
           if (s.id === 'books' && readingBooks > 0) desc = `Читаю: ${readingBooks}`;
-          if (s.id === 'garden') desc = `🪙 ${state.data.coins?.balance || 0} монет`;
+          if (s.id === 'garden') desc = `🌕 ${state.data.coins?.balance || 0} монет`;
           return `
             <button class="hub-card" data-page="${s.id}">
               <div class="hub-card-icon">${s.icon}</div>
@@ -2569,7 +2575,7 @@ function openSkipHabitShop() {
   }
   openModal(`
     <h2>🎯 Закрыть привычку</h2>
-    <div class="muted" style="font-size:13px;margin-bottom:16px">Выбери привычку, которую хочешь засчитать за сегодня — стоит <b>15 🪙</b></div>
+    <div class="muted" style="font-size:13px;margin-bottom:16px">Выбери привычку, которую хочешь засчитать за сегодня — стоит <b>15 <span class="gcoin">🪙</span></b></div>
     <div id="skip-habit-list">
       ${habits.map(h => `
         <div class="habit-item" data-skip-habit="${h.id}" style="cursor:pointer;border-radius:10px;padding:12px;margin-bottom:8px;border:2px solid var(--border)">
@@ -3014,6 +3020,11 @@ function bindEvents() {
   document.getElementById('open-budget-settings')?.addEventListener('click', openBudgetSettings);
   document.getElementById('open-savings')?.addEventListener('click', openSavings);
 
+  // Garden harvest
+  document.querySelectorAll('[data-harvest]').forEach(btn => {
+    btn.addEventListener('click', () => harvestPlant(btn.dataset.harvest));
+  });
+
   // Garden shop
   document.querySelectorAll('[data-shop]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -3024,7 +3035,7 @@ function bindEvents() {
           <h2>🛋️ Выходной</h2>
           <div style="margin:16px 0;font-size:15px">Взять выходной от всех привычек?<br><br>
           Все привычки засчитаются как выполненные, стрик не сбросится.</div>
-          <div style="font-weight:700;font-size:18px;text-align:center;margin-bottom:16px">Стоит 40 🪙</div>
+          <div style="font-weight:700;font-size:18px;text-align:center;margin-bottom:16px">Стоит 40 <span class="gcoin">🪙</span></div>
           <button class="btn btn-primary btn-full" id="confirm-day-off">Взять выходной ✨</button>
         `);
       }
