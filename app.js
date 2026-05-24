@@ -142,7 +142,7 @@ const WORKOUT_TYPES = [
   { id: 'func',     name: 'Функционал',     icon: '💪' },
   { id: 'back',     name: 'Здоровая спина', icon: '💆' },
   { id: 'glutes',   name: '3Д ягодицы',    icon: '🍑' },
-  { id: 'stretch',  name: 'Стретчинг',      icon: '🤸' },
+  { id: 'stretch',  name: 'Растяжка',       icon: '🤸' },
   { id: 'walk',     name: 'Прогулка',       icon: '🚶' },
 ];
 
@@ -156,17 +156,43 @@ const PLANT_STAGES = [
 ];
 
 const ACHIEVEMENTS = [
+  // Habits
   { id: 'first_habit',   icon: '🌱', title: 'Первый росток',       desc: 'Выполни любую привычку впервые' },
   { id: 'week_streak',   icon: '🔥', title: 'Неделя силы',         desc: '7 дней стрик на любой привычке' },
-  { id: 'early_bird',    icon: '🌅', title: 'Ранняя пташка',       desc: 'Встань до 5:30 три раза' },
-  { id: 'sport_10',      icon: '💪', title: 'Спортсменка',         desc: 'Спорт 10 раз' },
-  { id: 'music_5h',      icon: '🎵', title: 'Музыкант',            desc: '5 часов практики (гитара + пианино)' },
-  { id: 'no_sugar_7',    icon: '🍫', title: 'Железная воля',       desc: '7 дней без сладкого (0 штук)' },
-  { id: 'savings',       icon: '💰', title: 'Копилка',             desc: 'Пополни накопления первый раз' },
-  { id: 'doctors_3',     icon: '🌿', title: 'Забочусь о себе',     desc: 'Сходи к 3 врачам' },
-  { id: 'cooking_7',     icon: '🍳', title: 'Шеф-повар',           desc: 'Освой 7 рецептов' },
-  { id: 'song_done',     icon: '🎤', title: 'Звезда сцены',        desc: 'Доведи песню до конца' },
   { id: 'full_day',      icon: '🌟', title: 'Идеальный день',      desc: 'Выполни все привычки за день' },
+  { id: 'month_sport',   icon: '🏅', title: 'Месяц спорта',        desc: '20 тренировок за месяц' },
+  // Sleep
+  { id: 'early_bird',    icon: '🌅', title: 'Ранняя пташка',       desc: 'Встань до 5:30 три раза' },
+  { id: 'sleep_week',    icon: '😴', title: 'Соня-молодец',        desc: '7 дней подряд по 6+ часов сна' },
+  { id: 'sleep_30',      icon: '🌙', title: 'Мастер сна',          desc: '30 ночей с 6+ часами сна' },
+  // Sport
+  { id: 'sport_10',      icon: '💪', title: 'Спортсменка',         desc: 'Спорт 10 раз' },
+  { id: 'sport_30',      icon: '🏆', title: 'Атлет',               desc: 'Спорт 30 раз' },
+  { id: 'stretch_5',     icon: '🤸', title: 'Гибкая как кошка',    desc: 'Растяжка 5 раз' },
+  // Finance
+  { id: 'savings',       icon: '💰', title: 'Копилка',             desc: 'Пополни накопления первый раз' },
+  { id: 'budget_hero',   icon: '🎯', title: 'Бюджет под контролем',desc: 'Не вышла за план ни в одной категории' },
+  // Cooking
+  { id: 'cooking_7',     icon: '🍳', title: 'Шеф-повар',           desc: 'Освой 7 рецептов' },
+  { id: 'cooking_20',    icon: '👩‍🍳', title: 'Мастер кулинарии',   desc: 'Освой 20 рецептов' },
+  { id: 'cooking_50',    icon: '🌮', title: 'Гурман',              desc: 'Освой 50 рецептов' },
+  { id: 'dessert_queen', icon: '🍰', title: 'Королева десертов',   desc: 'Освой все десерты' },
+  { id: 'my_recipe_5',   icon: '📖', title: 'Кулинарная книга',    desc: 'Запиши 5 своих рецептов' },
+  // Books
+  { id: 'first_book',    icon: '📚', title: 'Книжный червячок',    desc: 'Прочитай первую книгу' },
+  { id: 'books_5',       icon: '📖', title: 'Читательница',        desc: 'Прочитай 5 книг' },
+  { id: 'pages_1000',    icon: '🔖', title: '1000 страниц',        desc: 'Прочитай 1000 страниц суммарно' },
+  // Media
+  { id: 'first_watch',   icon: '🎬', title: 'Киноман',             desc: 'Посмотри первый фильм или сериал' },
+  { id: 'watched_10',    icon: '📺', title: 'Синефил',             desc: 'Посмотри 10 фильмов/сериалов' },
+  // Health & other
+  { id: 'doctors_3',     icon: '🌿', title: 'Забочусь о себе',     desc: 'Сходи к 3 врачам' },
+  { id: 'clean_4',       icon: '🧹', title: 'Чистюля',             desc: 'Делай уборку 4 выходных подряд' },
+  { id: 'shopping_done', icon: '🛒', title: 'Всё куплено!',        desc: 'Закрой весь список покупок' },
+  // Music & Garden
+  { id: 'music_5h',      icon: '🎵', title: 'Музыкант',            desc: '5 часов практики (гитара + пианино)' },
+  { id: 'song_done',     icon: '🎤', title: 'Звезда сцены',        desc: 'Доведи песню до конца' },
+  { id: 'no_sugar_7',    icon: '🍫', title: 'Железная воля',       desc: '7 дней без сладкого (0 штук)' },
   { id: 'garden_bloom',  icon: '🌸', title: 'Цветущий сад',        desc: 'Все растения на стадии 🌸 и выше' },
 ];
 
@@ -238,6 +264,7 @@ let editingMediaId = null;
 let editingShoppingId = null;
 let tempShoppingCat = 'food';
 let tempIncomeCat = 'salary';
+let planMonthOffset = 0; // 0=current, 1=next, -1=prev
 let tempBookStatus = 'want';
 let tempMediaStatus = 'want';
 let tempMediaType = 'movie';
@@ -443,8 +470,9 @@ function getMonthExpenses() {
 
 function totalSpent() { return getMonthExpenses().reduce((s, e) => s + e.amount, 0); }
 
-function getMonthPlanKey() {
+function getMonthPlanKey(offset) {
   const d = new Date();
+  d.setMonth(d.getMonth() + (offset ?? planMonthOffset));
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
 }
 function getMonthPlan() {
@@ -453,9 +481,13 @@ function getMonthPlan() {
 function getMonthIncome() {
   return (state.data.finance.income || []).filter(e => e.date.startsWith(getMonthPlanKey()));
 }
+function getExpensesForPlanMonth() {
+  const prefix = getMonthPlanKey();
+  return state.data.finance.expenses.filter(e => e.date.startsWith(prefix));
+}
 function getSpentByCategory() {
   const byCat = {};
-  for (const e of getMonthExpenses()) byCat[e.category] = (byCat[e.category] || 0) + e.amount;
+  for (const e of getExpensesForPlanMonth()) byCat[e.category] = (byCat[e.category] || 0) + e.amount;
   return byCat;
 }
 
@@ -525,8 +557,15 @@ function checkAchievements() {
   const doneDoctors = state.data.health.doctors.filter(d => d.status === 'done').length;
   if (doneDoctors >= 3) unlock('doctors_3');
 
-  // cooking_7
-  if (state.data.cooking.learned.length >= 7) unlock('cooking_7');
+  // cooking
+  const learnedCount = state.data.cooking.learned.length;
+  if (learnedCount >= 7)  unlock('cooking_7');
+  if (learnedCount >= 20) unlock('cooking_20');
+  if (learnedCount >= 50) unlock('cooking_50');
+  const dessertsTotal = COOKING_CATEGORIES.find(c => c.id === 'desserts')?.recipes.length || 0;
+  const dessertsDone  = (COOKING_CATEGORIES.find(c => c.id === 'desserts')?.recipes || []).filter(r => state.data.cooking.learned.includes(r.id)).length;
+  if (dessertsTotal > 0 && dessertsDone >= dessertsTotal) unlock('dessert_queen');
+  if ((state.data.cooking.myRecipes || []).length >= 5) unlock('my_recipe_5');
 
   // song_done
   if (state.data.goals.some(g => g.steps.every(s => s.done))) unlock('song_done');
@@ -541,6 +580,70 @@ function checkAchievements() {
 
   // garden_bloom: all non-uborka habits streak >= 7
   if (habits.filter(h => h.id !== 'uborka').every(h => calcStreak(h.id) >= 7)) unlock('garden_bloom');
+
+  // sleep_week: 7 consecutive nights 6+ hours
+  let sleepStreak = 0, sleepD = new Date();
+  for (let i = 0; i < 365; i++) {
+    const k = `${sleepD.getFullYear()}-${String(sleepD.getMonth()+1).padStart(2,'0')}-${String(sleepD.getDate()).padStart(2,'0')}`;
+    const day = all[k];
+    const slMin = day?.bedTime && day?.wakeTime ? calcSleepMin(day.bedTime, day.wakeTime) : null;
+    if (slMin !== null && slMin >= 360) sleepStreak++;
+    else if (i > 0) break;
+    sleepD.setDate(sleepD.getDate() - 1);
+  }
+  if (sleepStreak >= 7)  unlock('sleep_week');
+  const sleepGoodDays = Object.values(all).filter(d => {
+    const m = d?.bedTime && d?.wakeTime ? calcSleepMin(d.bedTime, d.wakeTime) : null;
+    return m !== null && m >= 360;
+  }).length;
+  if (sleepGoodDays >= 30) unlock('sleep_30');
+
+  // sport
+  const sportDays = Object.values(all).filter(d => d.habits?.sport).length;
+  if (sportDays >= 10) unlock('sport_10');
+  if (sportDays >= 30) unlock('sport_30');
+  const now2 = new Date();
+  const monthPfx = `${now2.getFullYear()}-${String(now2.getMonth()+1).padStart(2,'0')}`;
+  const monthSport = Object.entries(all).filter(([k,v]) => k.startsWith(monthPfx) && v.habits?.sport).length;
+  if (monthSport >= 20) unlock('month_sport');
+
+  // stretch_5
+  const stretchDays = Object.values(all).filter(d => d.workout?.type === 'stretch').length;
+  if (stretchDays >= 5) unlock('stretch_5');
+
+  // budget_hero: spent <= planned in all categories this month
+  const plan = getMonthPlan();
+  const spent = getSpentByCategory();
+  const planKeys = Object.keys(plan);
+  if (planKeys.length > 0 && planKeys.every(k => (spent[k] || 0) <= plan[k])) unlock('budget_hero');
+
+  // books
+  const doneBooks = (state.data.books || []).filter(b => b.status === 'done');
+  if (doneBooks.length >= 1) unlock('first_book');
+  if (doneBooks.length >= 5) unlock('books_5');
+  const totalPages = doneBooks.reduce((s, b) => s + (b.totalPages || 0), 0);
+  if (totalPages >= 1000) unlock('pages_1000');
+
+  // media
+  const watchedMedia = (state.data.media || []).filter(m => m.status === 'done');
+  if (watchedMedia.length >= 1)  unlock('first_watch');
+  if (watchedMedia.length >= 10) unlock('watched_10');
+
+  // clean_4: uborka done 4 weekends in a row
+  let cleanStreak = 0, cleanD = new Date();
+  // Find last Saturday
+  while (cleanD.getDay() !== 6) cleanD.setDate(cleanD.getDate() - 1);
+  for (let i = 0; i < 8; i++) {
+    const k = `${cleanD.getFullYear()}-${String(cleanD.getMonth()+1).padStart(2,'0')}-${String(cleanD.getDate()).padStart(2,'0')}`;
+    if (all[k]?.habits?.uborka) cleanStreak++;
+    else break;
+    cleanD.setDate(cleanD.getDate() - 7);
+  }
+  if (cleanStreak >= 4) unlock('clean_4');
+
+  // shopping_done: all items done at once
+  const shopItems = state.data.shopping?.items || [];
+  if (shopItems.length > 0 && shopItems.every(i => i.done)) unlock('shopping_done');
 }
 
 // ============================================================
@@ -741,11 +844,17 @@ function renderSleep() {
   const avgSleepMin = withSleep.length
     ? Math.round(withSleep.reduce((s, d) => s + calcSleepMin(d.data.bedTime, d.data.wakeTime), 0) / withSleep.length) : null;
 
+  // Streak = consecutive days with 6+ hours of sleep (going back from yesterday)
   let streak = 0;
-  for (let i = days.length - 1; i >= 0; i--) {
-    const t = days[i].data?.wakeTime;
-    if (t && t <= '06:30') streak++;
-    else if (days[i].key !== todayKey()) break;
+  const streakCheck = new Date();
+  for (let i = 0; i < 365; i++) {
+    const k = `${streakCheck.getFullYear()}-${String(streakCheck.getMonth()+1).padStart(2,'0')}-${String(streakCheck.getDate()).padStart(2,'0')}`;
+    const day = state.data.daily[k];
+    const slMin = day?.bedTime && day?.wakeTime ? calcSleepMin(day.bedTime, day.wakeTime) : null;
+    const slOk = slMin !== null && slMin >= 360;
+    if (slOk) { streak++; }
+    else if (k !== todayKey()) break;
+    streakCheck.setDate(streakCheck.getDate() - 1);
   }
 
   function minToStr(m) { return `${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`; }
@@ -759,7 +868,7 @@ function renderSleep() {
       </div>
 
       <div class="stats-row">
-        <div class="stat-box"><div class="stat-value">${streak}</div><div class="stat-label">🔥 Стрик</div></div>
+        <div class="stat-box"><div class="stat-value">${streak}</div><div class="stat-label">🔥 6ч+ подряд</div></div>
         <div class="stat-box"><div class="stat-value" style="font-size:18px">${avgWakeMin !== null ? minToStr(avgWakeMin) : '—'}</div><div class="stat-label">Ср. подъём</div></div>
         <div class="stat-box"><div class="stat-value" style="font-size:16px">${avgSleepMin !== null ? formatSleep(avgSleepMin) : '—'}</div><div class="stat-label">Ср. сон</div></div>
       </div>
@@ -959,18 +1068,26 @@ function renderFinanceOverview() {
 function renderFinancePlan() {
   const plan = getMonthPlan();
   const spentByCat = getSpentByCategory();
-  const totalSpentAmt = totalSpent();
+  const planMonthExps = getExpensesForPlanMonth();
+  const totalSpentAmt = planMonthExps.reduce((s, e) => s + e.amount, 0);
   const monthIncome = getMonthIncome().sort((a,b) => b.date.localeCompare(a.date));
   const totalIncomeAmt = monthIncome.reduce((s, e) => s + e.amount, 0);
   const balance = totalIncomeAmt - totalSpentAmt;
   const totalPlanned = CATEGORIES.reduce((s, c) => s + (plan[c.id] || 0), 0);
-  const now = new Date();
+  const planDate = new Date(); planDate.setMonth(planDate.getMonth() + planMonthOffset);
+  const planLabel = `${MONTH_NAMES[planDate.getMonth()]} ${planDate.getFullYear()}`;
 
   return `
+    <div class="plan-month-nav">
+      <button class="plan-nav-btn" id="plan-prev-month">‹</button>
+      <span class="plan-month-label">${planLabel}</span>
+      <button class="plan-nav-btn" id="plan-next-month">›</button>
+    </div>
+
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div class="card-title" style="margin:0">💼 Доходы — ${MONTH_NAMES[now.getMonth()]}</div>
-        <button class="btn btn-primary btn-sm" id="add-income">+ Добавить</button>
+        <div class="card-title" style="margin:0">💼 Доходы</div>
+        ${planMonthOffset === 0 ? `<button class="btn btn-primary btn-sm" id="add-income">+ Добавить</button>` : ''}
       </div>
       <div style="font-size:26px;font-weight:700;color:var(--success-text);margin-bottom:10px">${formatMoney(totalIncomeAmt)} ₸</div>
       ${monthIncome.length > 0 ? monthIncome.slice(0,5).map(e => {
@@ -1826,6 +1943,7 @@ function renderShopping() {
           <div class="shop-item-name">${item.name}</div>
         </div>
         <span class="priority-badge priority-${pr.id}" style="font-size:11px">${pr.icon}</span>
+        <button class="expense-edit-btn" data-shop-edit="${item.id}">✏️</button>
         <button class="expense-del-btn" data-shop-del="${item.id}">×</button>
       </div>
     `;
@@ -2299,9 +2417,9 @@ function openAddIncome() {
 
 function openSetMonthlyPlan() {
   const plan = getMonthPlan();
-  const now = new Date();
+  const d = new Date(); d.setMonth(d.getMonth() + planMonthOffset);
   openModal(`
-    <h2>📅 План на ${MONTH_NAMES[now.getMonth()]}</h2>
+    <h2>📅 План на ${MONTH_NAMES[d.getMonth()]}</h2>
     <div class="muted" style="font-size:13px;margin-bottom:16px">Задай плановые суммы расходов по категориям</div>
     <div style="max-height:55vh;overflow-y:auto;padding-right:4px">
       ${CATEGORIES.map(cat => `
@@ -2483,21 +2601,20 @@ function openEditMedia(id) {
   `);
 }
 
-function openAddShoppingItem() {
-  editingShoppingId = null;
-  tempShoppingCat = 'food';
-  tempPriority = 'medium';
-  openModal(`
-    <h2>Добавить в список 🛒</h2>
+function shopItemModalHtml(title, item) {
+  const cat = item?.category || tempShoppingCat;
+  const pri = item?.priority || tempPriority;
+  return `
+    <h2>${title}</h2>
     <div class="form-group">
       <label class="form-label">Что купить *</label>
-      <input type="text" class="form-input" id="shop-name" placeholder="Например: Молоко">
+      <input type="text" class="form-input" id="shop-name" placeholder="Например: Молоко" value="${item ? item.name.replace(/"/g,'&quot;') : ''}">
     </div>
     <div class="form-group">
       <label class="form-label">Категория</label>
       <div class="category-grid">
         ${SHOPPING_CATS.map(c => `
-          <button class="cat-btn ${c.id===tempShoppingCat?'selected':''}" data-shop-cat="${c.id}">
+          <button class="cat-btn ${c.id===cat?'selected':''}" data-shop-cat="${c.id}">
             <span class="cat-icon">${c.icon}</span>${c.name}
           </button>
         `).join('')}
@@ -2507,14 +2624,30 @@ function openAddShoppingItem() {
       <label class="form-label">Приоритет</label>
       <div class="priority-picker">
         ${PRIORITIES.map(p => `
-          <button class="priority-pick-btn ${p.id==='medium'?'selected':''} priority-pick-${p.id}" data-shop-priority="${p.id}">
+          <button class="priority-pick-btn ${p.id===pri?'selected':''} priority-pick-${p.id}" data-shop-priority="${p.id}">
             ${p.icon} ${p.label}
           </button>
         `).join('')}
       </div>
     </div>
-    <button class="btn btn-primary btn-full" id="save-shop-item">Добавить</button>
-  `);
+    <button class="btn btn-primary btn-full" id="save-shop-item">${item ? 'Сохранить' : 'Добавить'}</button>
+  `;
+}
+
+function openAddShoppingItem() {
+  editingShoppingId = null;
+  tempShoppingCat = 'food';
+  tempPriority = 'medium';
+  openModal(shopItemModalHtml('Добавить в список 🛒', null));
+}
+
+function openEditShoppingItem(id) {
+  const item = state.data.shopping.items.find(i => i.id === id);
+  if (!item) return;
+  editingShoppingId = id;
+  tempShoppingCat = item.category || 'food';
+  tempPriority = item.priority || 'medium';
+  openModal(shopItemModalHtml('Редактировать 🛒', item));
 }
 
 // ============================================================
@@ -2708,6 +2841,8 @@ function bindEvents() {
   });
 
   // Finance plan
+  document.getElementById('plan-prev-month')?.addEventListener('click', () => { planMonthOffset--; render(); });
+  document.getElementById('plan-next-month')?.addEventListener('click', () => { planMonthOffset++; render(); });
   document.getElementById('add-income')?.addEventListener('click', openAddIncome);
   document.getElementById('open-set-plan')?.addEventListener('click', openSetMonthlyPlan);
   document.querySelectorAll('[data-income-del]').forEach(btn => {
@@ -2773,6 +2908,9 @@ function bindEvents() {
 
   // Shopping
   document.getElementById('add-shop-item')?.addEventListener('click', openAddShoppingItem);
+  document.querySelectorAll('[data-shop-edit]').forEach(btn => {
+    btn.addEventListener('click', e => { e.stopPropagation(); openEditShoppingItem(btn.dataset.shopEdit); });
+  });
   document.querySelectorAll('[data-shop-toggle]').forEach(el => {
     el.addEventListener('click', () => {
       const item = state.data.shopping.items.find(i => i.id === el.dataset.shopToggle);
@@ -3066,7 +3204,13 @@ function bindModalEvents() {
   document.getElementById('save-shop-item')?.addEventListener('click', () => {
     const name = (document.getElementById('shop-name')?.value || '').trim();
     if (!name) { document.getElementById('shop-name')?.focus(); return; }
-    state.data.shopping.items.push({ id: uid(), name, category: tempShoppingCat, priority: tempPriority, done: false });
+    if (editingShoppingId) {
+      const item = state.data.shopping.items.find(i => i.id === editingShoppingId);
+      if (item) { item.name = name; item.category = tempShoppingCat; item.priority = tempPriority; }
+      editingShoppingId = null;
+    } else {
+      state.data.shopping.items.push({ id: uid(), name, category: tempShoppingCat, priority: tempPriority, done: false });
+    }
     save(); closeModal(); render();
   });
 

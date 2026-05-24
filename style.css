@@ -1424,3 +1424,36 @@ body {
 }
 .plan-balance-box.income  .plan-balance-val { color: var(--success-text); }
 .plan-balance-box.expense .plan-balance-val { color: #C62828; }
+
+/* ========== PLAN MONTH NAV ========== */
+.plan-month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 0 16px 12px;
+}
+.plan-month-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 140px;
+  text-align: center;
+}
+.plan-nav-btn {
+  background: var(--card-bg);
+  border: none;
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--primary);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  transition: all 0.15s;
+}
+.plan-nav-btn:active { background: var(--primary-light); }
