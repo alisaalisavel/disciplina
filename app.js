@@ -175,6 +175,12 @@ const TIME_HABITS = ['guitar', 'piano'];
 // habit that is a counter
 const COUNTER_HABIT = 'sugar';
 
+const INCOME_CATS = [
+  { id: 'salary',  name: 'Зарплата',       icon: '💼' },
+  { id: 'other',   name: 'Прочее',         icon: '💰' },
+  { id: 'debt_in', name: 'Долг (вернули)', icon: '🤝' },
+];
+
 const SHOPPING_CATS = [
   { id: 'food',     name: 'Продукты',  icon: '🛒' },
   { id: 'home',     name: 'Дом',       icon: '🏠' },
@@ -231,6 +237,7 @@ let editingBookId = null;
 let editingMediaId = null;
 let editingShoppingId = null;
 let tempShoppingCat = 'food';
+let tempIncomeCat = 'salary';
 let tempBookStatus = 'want';
 let tempMediaStatus = 'want';
 let tempMediaType = 'movie';
@@ -263,6 +270,7 @@ function defaultData() {
     daily: {},
     finance: {
       monthlyBudget: 0, savingsGoal: 0, savingsCurrent: 0, expenses: [],
+      income: [], monthlyPlans: {},
     },
     health: {
       doctors: [
@@ -292,6 +300,8 @@ function loadData() {
       if (!d.garden) d.garden = { unlockedAchievements: [] };
       if (!d.habits.archived) d.habits.archived = [];
       if (!d.tasks)   d.tasks = [];
+      if (!d.finance.income)       d.finance.income = [];
+      if (!d.finance.monthlyPlans) d.finance.monthlyPlans = {};
       if (!d.books)   d.books = [];
       if (!d.media)   d.media = [];
       if (!d.shopping) d.shopping = { items: [] };
@@ -432,6 +442,22 @@ function getMonthExpenses() {
 }
 
 function totalSpent() { return getMonthExpenses().reduce((s, e) => s + e.amount, 0); }
+
+function getMonthPlanKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+}
+function getMonthPlan() {
+  return state.data.finance.monthlyPlans?.[getMonthPlanKey()] || {};
+}
+function getMonthIncome() {
+  return (state.data.finance.income || []).filter(e => e.date.startsWith(getMonthPlanKey()));
+}
+function getSpentByCategory() {
+  const byCat = {};
+  for (const e of getMonthExpenses()) byCat[e.category] = (byCat[e.category] || 0) + e.amount;
+  return byCat;
+}
 
 function getCat(id) { return CATEGORIES.find(c => c.id === id) || CATEGORIES[CATEGORIES.length - 1]; }
 
@@ -860,9 +886,10 @@ function renderFinance() {
       </div>
       <div class="finance-tabs-wrap">
         <button class="finance-tab ${financeTab==='overview'?'active':''}" data-finance-tab="overview">📊 Обзор</button>
+        <button class="finance-tab ${financeTab==='plan'?'active':''}" data-finance-tab="plan">📅 План</button>
         <button class="finance-tab ${financeTab==='analytics'?'active':''}" data-finance-tab="analytics">📈 Аналитика</button>
       </div>
-      ${financeTab === 'overview' ? renderFinanceOverview() : renderFinanceAnalytics()}
+      ${financeTab === 'overview' ? renderFinanceOverview() : financeTab === 'plan' ? renderFinancePlan() : renderFinanceAnalytics()}
     </div>
   `;
 }
@@ -918,6 +945,107 @@ function renderFinanceOverview() {
         `; }).join('')}
       </div>
     ` : `<div class="empty-state" style="margin-top:16px"><div class="empty-icon">💸</div><p>Трат ещё нет.<br>Добавь первую!</p></div>`}
+  `;
+}
+
+function renderFinancePlan() {
+  const plan = getMonthPlan();
+  const spentByCat = getSpentByCategory();
+  const totalSpentAmt = totalSpent();
+  const monthIncome = getMonthIncome().sort((a,b) => b.date.localeCompare(a.date));
+  const totalIncomeAmt = monthIncome.reduce((s, e) => s + e.amount, 0);
+  const balance = totalIncomeAmt - totalSpentAmt;
+  const totalPlanned = CATEGORIES.reduce((s, c) => s + (plan[c.id] || 0), 0);
+  const now = new Date();
+
+  return `
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="card-title" style="margin:0">💼 Доходы — ${MONTH_NAMES[now.getMonth()]}</div>
+        <button class="btn btn-primary btn-sm" id="add-income">+ Добавить</button>
+      </div>
+      <div style="font-size:26px;font-weight:700;color:var(--success-text);margin-bottom:10px">${formatMoney(totalIncomeAmt)} ₸</div>
+      ${monthIncome.length > 0 ? monthIncome.slice(0,5).map(e => {
+        const cat = INCOME_CATS.find(c => c.id === e.category) || INCOME_CATS[1];
+        return `
+          <div class="expense-item">
+            <div class="expense-icon">${cat.icon}</div>
+            <div class="expense-info">
+              <div class="expense-note">${e.note || cat.name}</div>
+              <div class="expense-meta">${cat.name} · ${formatDate(e.date)}</div>
+            </div>
+            <div class="expense-amount" style="color:var(--success-text)">+${formatMoney(e.amount)} ₸</div>
+            <div class="expense-actions">
+              <button class="expense-del-btn" data-income-del="${e.id}">×</button>
+            </div>
+          </div>
+        `;
+      }).join('') : `<div class="muted" style="font-size:13px">Доходов пока нет</div>`}
+    </div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="card-title" style="margin:0">📋 План расходов</div>
+        <button class="btn btn-secondary btn-sm" id="open-set-plan">⚙️ Настроить</button>
+      </div>
+      ${totalPlanned === 0 && Object.keys(spentByCat).length === 0 ? `
+        <div class="muted" style="text-align:center;padding:16px 0;font-size:13px">
+          Нажми ⚙️ Настроить чтобы задать бюджет<br>по каждой категории на этот месяц
+        </div>
+      ` : `
+        <div class="plan-header-row">
+          <span class="plan-col-cat">Категория</span>
+          <span class="plan-col-num muted" style="font-size:11px">План</span>
+          <span class="plan-col-num muted" style="font-size:11px">Факт</span>
+          <span class="plan-col-num muted" style="font-size:11px">Остаток</span>
+        </div>
+        ${CATEGORIES.map(cat => {
+          const planned = plan[cat.id] || 0;
+          const spent   = spentByCat[cat.id] || 0;
+          if (!planned && !spent) return '';
+          const delta = planned - spent;
+          const over  = spent > planned && planned > 0;
+          const pct   = planned > 0 ? Math.min(100, Math.round(spent / planned * 100)) : 0;
+          return `
+            <div class="plan-row">
+              <span class="plan-col-cat">${cat.icon} ${cat.name}</span>
+              <span class="plan-col-num muted">${planned > 0 ? formatMoney(planned) : '—'}</span>
+              <span class="plan-col-num" style="font-weight:600">${spent > 0 ? formatMoney(spent) : '—'}</span>
+              <span class="plan-col-num" style="font-weight:700;color:${over ? '#C62828' : delta > 0 ? 'var(--success-text)' : 'var(--text-muted)'}">
+                ${planned > 0 ? (over ? `−${formatMoney(-delta)}` : `+${formatMoney(delta)}`) : '—'}
+              </span>
+            </div>
+            ${planned > 0 ? `<div class="progress-wrap" style="margin-bottom:6px;height:3px"><div class="progress-bar ${over?'danger':''}" style="width:${pct}%;height:3px;border-radius:2px"></div></div>` : ''}
+          `;
+        }).join('')}
+        <div class="plan-total-row">
+          <span class="plan-col-cat" style="font-weight:700">Итого</span>
+          <span class="plan-col-num muted">${totalPlanned > 0 ? formatMoney(totalPlanned) : '—'}</span>
+          <span class="plan-col-num" style="font-weight:700;color:var(--primary-dark)">${formatMoney(totalSpentAmt)}</span>
+          <span class="plan-col-num" style="font-weight:700;color:${totalPlanned>0&&totalSpentAmt>totalPlanned?'#C62828':'var(--success-text)'}">
+            ${totalPlanned > 0 ? (totalSpentAmt > totalPlanned ? `−${formatMoney(totalSpentAmt-totalPlanned)}` : `+${formatMoney(totalPlanned-totalSpentAmt)}`) : '—'}
+          </span>
+        </div>
+      `}
+    </div>
+
+    <div class="card">
+      <div class="card-title">Баланс месяца</div>
+      <div class="plan-balance-row">
+        <div class="plan-balance-box income">
+          <div class="plan-balance-label">Доходы</div>
+          <div class="plan-balance-val">+${formatMoney(totalIncomeAmt)}</div>
+        </div>
+        <div class="plan-balance-box expense">
+          <div class="plan-balance-label">Расходы</div>
+          <div class="plan-balance-val">−${formatMoney(totalSpentAmt)}</div>
+        </div>
+        <div class="plan-balance-box ${balance >= 0 ? 'income' : 'expense'}">
+          <div class="plan-balance-label">Остаток</div>
+          <div class="plan-balance-val">${balance >= 0 ? '+' : ''}${formatMoney(balance)}</div>
+        </div>
+      </div>
+    </div>
   `;
 }
 
@@ -2135,6 +2263,51 @@ function openEditMyRecipe(id) {
   `);
 }
 
+function openAddIncome() {
+  tempIncomeCat = 'salary';
+  openModal(`
+    <h2>Добавить доход 💰</h2>
+    <div class="form-group">
+      <label class="form-label">Сумма (₸) *</label>
+      <input type="number" class="form-input" id="income-amount" placeholder="500 000" inputmode="numeric">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Категория</label>
+      <div class="category-grid" style="grid-template-columns:repeat(3,1fr)">
+        ${INCOME_CATS.map(c => `
+          <button class="cat-btn ${c.id==='salary'?'selected':''}" data-income-cat="${c.id}">
+            <span class="cat-icon">${c.icon}</span>${c.name}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Заметка</label>
+      <input type="text" class="form-input" id="income-note" placeholder="Зарплата за май...">
+    </div>
+    <button class="btn btn-primary btn-full" id="save-income">Добавить</button>
+  `);
+}
+
+function openSetMonthlyPlan() {
+  const plan = getMonthPlan();
+  const now = new Date();
+  openModal(`
+    <h2>📅 План на ${MONTH_NAMES[now.getMonth()]}</h2>
+    <div class="muted" style="font-size:13px;margin-bottom:16px">Задай плановые суммы расходов по категориям</div>
+    <div style="max-height:55vh;overflow-y:auto;padding-right:4px">
+      ${CATEGORIES.map(cat => `
+        <div class="form-group" style="margin-bottom:10px">
+          <label class="form-label">${cat.icon} ${cat.name}</label>
+          <input type="number" class="form-input" id="plan-${cat.id}"
+            value="${plan[cat.id] || ''}" placeholder="0" inputmode="numeric">
+        </div>
+      `).join('')}
+    </div>
+    <button class="btn btn-primary btn-full" style="margin-top:8px" id="save-monthly-plan">Сохранить план</button>
+  `);
+}
+
 function openAddCustomDish(catId) {
   const cat = COOKING_CATEGORIES.find(c => c.id === catId);
   openModal(`
@@ -2526,6 +2699,17 @@ function bindEvents() {
     });
   });
 
+  // Finance plan
+  document.getElementById('add-income')?.addEventListener('click', openAddIncome);
+  document.getElementById('open-set-plan')?.addEventListener('click', openSetMonthlyPlan);
+  document.querySelectorAll('[data-income-del]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      state.data.finance.income = state.data.finance.income.filter(i => i.id !== btn.dataset.incomeDel);
+      save(); render();
+    });
+  });
+
   // Books
   document.getElementById('add-book')?.addEventListener('click', openAddBook);
   document.querySelectorAll('[data-books-tab]').forEach(btn => {
@@ -2773,6 +2957,34 @@ function bindModalEvents() {
     } else {
       state.data.cooking.myRecipes.push({ id: uid(), title, text, rating: tempRecipeRating });
     }
+    save(); closeModal(); render();
+  });
+
+  // Income category picker
+  document.querySelectorAll('[data-income-cat]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tempIncomeCat = btn.dataset.incomeCat;
+      document.querySelectorAll('[data-income-cat]').forEach(b => b.classList.toggle('selected', b.dataset.incomeCat === tempIncomeCat));
+    });
+  });
+
+  document.getElementById('save-income')?.addEventListener('click', () => {
+    const amount = parseFloat(document.getElementById('income-amount')?.value);
+    if (!amount || amount <= 0) { document.getElementById('income-amount')?.focus(); return; }
+    const note = (document.getElementById('income-note')?.value || '').trim();
+    state.data.finance.income.push({ id: uid(), date: todayKey(), amount, category: tempIncomeCat, note });
+    save(); closeModal(); render();
+  });
+
+  document.getElementById('save-monthly-plan')?.addEventListener('click', () => {
+    const key = getMonthPlanKey();
+    if (!state.data.finance.monthlyPlans) state.data.finance.monthlyPlans = {};
+    const plan = {};
+    CATEGORIES.forEach(cat => {
+      const val = parseFloat(document.getElementById(`plan-${cat.id}`)?.value) || 0;
+      if (val > 0) plan[cat.id] = val;
+    });
+    state.data.finance.monthlyPlans[key] = plan;
     save(); closeModal(); render();
   });
 

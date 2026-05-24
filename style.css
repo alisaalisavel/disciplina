@@ -1372,3 +1372,55 @@ body {
   border-color: var(--success);
 }
 .shop-item-name { font-size: 14px; font-weight: 500; flex: 1; }
+
+/* ========== FINANCE PLAN ========== */
+.plan-header-row, .plan-row {
+  display: grid;
+  grid-template-columns: 1fr 70px 70px 70px;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+}
+.plan-header-row {
+  border-bottom: 1.5px solid var(--border);
+  margin-bottom: 4px;
+  padding-bottom: 6px;
+}
+.plan-total-row {
+  display: grid;
+  grid-template-columns: 1fr 70px 70px 70px;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 0 4px;
+  border-top: 1.5px solid var(--border);
+  margin-top: 6px;
+}
+.plan-col-cat  { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.plan-col-num  { font-size: 12px; text-align: right; }
+
+.plan-balance-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+.plan-balance-box {
+  flex: 1;
+  text-align: center;
+  padding: 10px 6px;
+  border-radius: 10px;
+}
+.plan-balance-box.income  { background: var(--success-bg); }
+.plan-balance-box.expense { background: #FFF0F0; }
+.plan-balance-label {
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.plan-balance-box.income  .plan-balance-label { color: var(--success-text); }
+.plan-balance-box.expense .plan-balance-label { color: #C62828; }
+.plan-balance-val {
+  font-size: 14px;
+  font-weight: 700;
+}
+.plan-balance-box.income  .plan-balance-val { color: var(--success-text); }
+.plan-balance-box.expense .plan-balance-val { color: #C62828; }
