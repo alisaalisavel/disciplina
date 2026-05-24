@@ -531,11 +531,16 @@ function checkAchievements() {
   // song_done
   if (state.data.goals.some(g => g.steps.every(s => s.done))) unlock('song_done');
 
-  // full_day
-  if (Object.values(all).some(d => habits.every(h => d.habits?.[h.id]))) unlock('full_day');
+  // full_day (exclude uborka on weekdays)
+  if (Object.entries(all).some(([key, d]) => {
+    const dow = new Date(key + 'T12:00:00').getDay();
+    const isWknd = dow === 0 || dow === 6;
+    const dayHabits = habits.filter(h => h.id !== 'uborka' || isWknd);
+    return dayHabits.every(h => d.habits?.[h.id]);
+  })) unlock('full_day');
 
-  // garden_bloom: all habits streak >= 7
-  if (habits.every(h => calcStreak(h.id) >= 7)) unlock('garden_bloom');
+  // garden_bloom: all non-uborka habits streak >= 7
+  if (habits.filter(h => h.id !== 'uborka').every(h => calcStreak(h.id) >= 7)) unlock('garden_bloom');
 }
 
 // ============================================================
@@ -581,10 +586,13 @@ function renderMonthCalendar() {
     const dayData = state.data.daily[key];
     const isToday = d === now.getDate();
     const isFuture = new Date(year, month, d) > now;
+    const dow = new Date(year, month, d).getDay();
+    const isWeekendDay = dow === 0 || dow === 6;
+    const dayHabits = habits.filter(h => h.id !== 'uborka' || isWeekendDay);
     let level = 'empty';
     if (!isFuture && dayData) {
-      const done = habits.filter(h => dayData.habits?.[h.id]).length;
-      const pct = habits.length ? done / habits.length : 0;
+      const done = dayHabits.filter(h => dayData.habits?.[h.id]).length;
+      const pct = dayHabits.length ? done / dayHabits.length : 0;
       level = pct === 0 ? 'l0' : pct < 0.5 ? 'l1' : pct < 1 ? 'l2' : 'l3';
     } else if (!isFuture) level = 'l0';
     cells += `<div class="mcell mcell-${level} ${isToday ? 'mcell-today' : ''}">${d}</div>`;
