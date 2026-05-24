@@ -789,6 +789,13 @@ body {
   outline-offset: 1px;
   font-weight: 700;
 }
+.mcell-clickable {
+  cursor: pointer;
+}
+.mcell-clickable:active {
+  transform: scale(0.88);
+  opacity: 0.75;
+}
 
 /* ========== WATER BADGE ========== */
 .water-badge {

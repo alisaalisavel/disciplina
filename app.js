@@ -694,7 +694,8 @@ function renderMonthCalendar() {
       const pct = dayHabits.length ? done / dayHabits.length : 0;
       level = pct === 0 ? 'l0' : pct < 0.5 ? 'l1' : pct < 1 ? 'l2' : 'l3';
     } else if (!isFuture) level = 'l0';
-    cells += `<div class="mcell mcell-${level} ${isToday ? 'mcell-today' : ''}">${d}</div>`;
+    const clickable = !isFuture;
+    cells += `<div class="mcell mcell-${level} ${isToday ? 'mcell-today' : ''} ${clickable ? 'mcell-clickable' : ''}" ${clickable ? `data-day-key="${key}"` : ''}>${d}</div>`;
   }
 
   return `
@@ -2238,6 +2239,44 @@ function openAddDoctor() {
   `);
 }
 
+function openDayEditModal(key) {
+  const [y, m, d] = key.split('-').map(Number);
+  const date = new Date(y, m - 1, d);
+  const dow = date.getDay();
+  const isWeekendDay = dow === 0 || dow === 6;
+  const habits = state.data.habits.active.filter(h => h.id !== 'uborka' || isWeekendDay);
+  if (!state.data.daily[key]) {
+    state.data.daily[key] = { habits: {}, times: {}, sweets: 0, wakeTime: null, bedTime: null };
+  }
+  const dayData = state.data.daily[key];
+  const dayNames = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+  const monthNamesGen = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  const title = `${d} ${monthNamesGen[m-1]}, ${dayNames[dow]}`;
+  openModal(`
+    <div class="modal-title">📅 ${title}</div>
+    <div class="modal-subtitle" style="margin-bottom:14px;color:var(--text-secondary)">Отметь привычки за этот день</div>
+    <div id="day-edit-habits">
+      ${habits.map(h => {
+        const done = !!dayData.habits?.[h.id];
+        return `
+          <div class="habit-item ${done ? 'done' : ''}" data-past-habit="${h.id}" style="cursor:pointer;margin-bottom:8px">
+            <div class="habit-checkbox"></div>
+            <span class="habit-icon">${h.icon}</span>
+            <span class="habit-name">${h.name}</span>
+          </div>
+        `;
+      }).join('')}
+    </div>
+    <button class="btn btn-primary btn-full" style="margin-top:16px" id="save-day-edit" data-day-key="${key}">Сохранить</button>
+  `);
+  // bind toggles immediately after render
+  document.querySelectorAll('[data-past-habit]').forEach(el => {
+    el.addEventListener('click', () => {
+      el.classList.toggle('done');
+    });
+  });
+}
+
 function openLogWorkout(key) {
   editingWorkoutKey = key || null;
   const dayData = key ? (state.data.daily[key] || {}) : getTodayData();
@@ -2684,6 +2723,11 @@ function bindEvents() {
     });
   });
 
+  // Calendar — click past day to edit habits
+  document.querySelectorAll('.mcell[data-day-key]').forEach(el => {
+    el.addEventListener('click', () => openDayEditModal(el.dataset.dayKey));
+  });
+
   // Wake time — today page
   document.getElementById('save-wake')?.addEventListener('click', () => {
     const val = document.getElementById('wake-input')?.value;
@@ -2951,6 +2995,20 @@ function bindModalEvents() {
   document.getElementById('modal-save-wake')?.addEventListener('click', () => {
     const val = document.getElementById('modal-wake-input')?.value;
     if (val) { getTodayData().wakeTime = val; save(); closeModal(); render(); }
+  });
+
+  document.getElementById('save-day-edit')?.addEventListener('click', () => {
+    const btn = document.getElementById('save-day-edit');
+    const key = btn?.dataset.dayKey;
+    if (!key) return;
+    if (!state.data.daily[key]) {
+      state.data.daily[key] = { habits: {}, times: {}, sweets: 0, wakeTime: null, bedTime: null };
+    }
+    const dayData = state.data.daily[key];
+    document.querySelectorAll('[data-past-habit]').forEach(el => {
+      dayData.habits[el.dataset.pastHabit] = el.classList.contains('done');
+    });
+    save(); closeModal(); render();
   });
   document.getElementById('modal-save-bed')?.addEventListener('click', () => {
     const val = document.getElementById('modal-bed-input')?.value;
