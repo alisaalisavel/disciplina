@@ -539,10 +539,6 @@ function checkAchievements() {
   const earlyDays = Object.values(all).filter(d => d.wakeTime && d.wakeTime <= '05:30').length;
   if (earlyDays >= 3) unlock('early_bird');
 
-  // sport_10
-  const sportDays = Object.values(all).filter(d => d.habits?.sport).length;
-  if (sportDays >= 10) unlock('sport_10');
-
   // music_5h: 300 minutes total guitar + piano
   if ((totalHobbyMinutes('guitar') + totalHobbyMinutes('piano')) >= 300) unlock('music_5h');
 
