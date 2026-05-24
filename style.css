@@ -797,6 +797,59 @@ body {
   opacity: 0.75;
 }
 
+/* ========== COIN BADGE ========== */
+.coin-badge {
+  background: #FFF8E1;
+  color: #E65100;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+/* ========== DAY OFF BANNER ========== */
+.dayoff-banner {
+  background: linear-gradient(135deg, #F3E5F5, #FCE4EC);
+  color: var(--primary-dark);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+/* ========== GARDEN SHOP ========== */
+.shop-item-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  background: var(--surface2);
+  border-radius: 14px;
+  margin-bottom: 10px;
+  transition: opacity 0.2s;
+}
+.shop-item-card.disabled { opacity: 0.5; }
+.shop-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 6px;
+  white-space: nowrap;
+}
+.shop-btn.disabled, .shop-btn:disabled {
+  background: var(--border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
 /* ========== WATER BADGE ========== */
 .water-badge {
   background: #E3F2FD;

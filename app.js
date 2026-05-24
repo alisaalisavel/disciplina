@@ -147,12 +147,12 @@ const WORKOUT_TYPES = [
 ];
 
 const PLANT_STAGES = [
-  { min: 0,  emoji: '🪴', label: 'Пустой горшок' },
-  { min: 1,  emoji: '🌱', label: 'Семечко' },
-  { min: 3,  emoji: '🌿', label: 'Росток' },
-  { min: 7,  emoji: '🌸', label: 'Бутон' },
-  { min: 14, emoji: '🌺', label: 'Цветок' },
-  { min: 21, emoji: '🌳', label: 'Дерево' },
+  { min: 0,  emoji: '🪴', label: 'Пустой горшок', coins: 0 },
+  { min: 1,  emoji: '🌱', label: 'Семечко',        coins: 0 },
+  { min: 3,  emoji: '🌿', label: 'Росток',         coins: 1 },
+  { min: 7,  emoji: '🌸', label: 'Бутон',          coins: 2 },
+  { min: 14, emoji: '🌺', label: 'Цветок',         coins: 3 },
+  { min: 21, emoji: '🌳', label: 'Дерево',         coins: 5 },
 ];
 
 const ACHIEVEMENTS = [
@@ -274,13 +274,19 @@ let tempMediaType = 'movie';
 // DATA
 // ============================================================
 
+function tomorrowKey() {
+  const d = new Date(); d.setDate(d.getDate() + 1);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
 function defaultData() {
   return {
     habits: {
       active: [
-        { id: 'sleep_good', name: 'Сон 6+ ч',   icon: '🌙' },
-        { id: 'sport',      name: 'Тренировки', icon: '💪' },
-        { id: 'uborka',     name: 'Уборка',      icon: '🧹' },
+        { id: 'sleep_good', name: 'Сон 6+ ч',        icon: '🌙' },
+        { id: 'sport',      name: 'Тренировки',       icon: '💪' },
+        { id: 'uborka',     name: 'Уборка',           icon: '🧹' },
+        { id: 'guitar',     name: 'Гитара 30+ мин',   icon: '🎸', startDate: tomorrowKey() },
       ],
       queue: [
         { id: 'english', name: 'Английский', icon: '🇬🇧' },
@@ -291,7 +297,6 @@ function defaultData() {
       archived: [
         { id: 'sugar',  name: 'Меньше сладкого', icon: '🍫' },
         { id: 'wake',   name: 'Встала в 5:00',   icon: '🌅' },
-        { id: 'guitar', name: 'Гитара',           icon: '🎸' },
         { id: 'piano',  name: 'Пианино',          icon: '🎹' },
       ],
     },
@@ -312,6 +317,7 @@ function defaultData() {
     cooking: { learned: [], myRecipes: [], customDishes: [] },
     goals: [],
     garden: { unlockedAchievements: [] },
+    coins: { balance: 0, lastCollected: null },
     tasks: [],
     books: [],
     media: [],
@@ -326,6 +332,7 @@ function loadData() {
       const d = JSON.parse(raw);
       if (!d.goals)  d.goals = [];
       if (!d.garden) d.garden = { unlockedAchievements: [] };
+      if (!d.coins)  d.coins  = { balance: 0, lastCollected: null };
       if (!d.habits.archived) d.habits.archived = [];
       if (!d.tasks)   d.tasks = [];
       if (!d.finance.income)       d.finance.income = [];
@@ -358,13 +365,27 @@ function loadData() {
       const singing = d.habits.queue.find(h => h.id === 'singing');
       if (singing && singing.name === 'Пение') singing.name = 'Вокал';
 
-      // Migrate: archive sugar/wake/guitar/piano if still in active
-      for (const id of ['sugar', 'wake', 'guitar', 'piano']) {
+      // Migrate: archive sugar/wake/guitar/piano if still in active (old data)
+      for (const id of ['sugar', 'wake', 'piano']) {
         const idx = d.habits.active.findIndex(h => h.id === id);
         if (idx !== -1) {
           const [h] = d.habits.active.splice(idx, 1);
           if (!d.habits.archived.find(a => a.id === id)) d.habits.archived.push(h);
         }
+      }
+      // Also archive old guitar (no startDate = old version) to replace with new one
+      const oldGuitar = d.habits.active.find(h => h.id === 'guitar' && !h.startDate);
+      if (oldGuitar) {
+        const idx = d.habits.active.indexOf(oldGuitar);
+        d.habits.active.splice(idx, 1);
+        if (!d.habits.archived.find(a => a.id === 'guitar')) d.habits.archived.push(oldGuitar);
+      }
+      // Migrate: add guitar 30+ min habit from tomorrow (once)
+      if (!d.coins.guitarMigrated) {
+        if (!d.habits.active.find(h => h.id === 'guitar')) {
+          d.habits.active.push({ id: 'guitar', name: 'Гитара 30+ мин', icon: '🎸', startDate: tomorrowKey() });
+        }
+        d.coins.guitarMigrated = true;
       }
       return d;
     }
@@ -439,17 +460,49 @@ function formatSleep(m) {
 function calcStreak(habitId) {
   let streak = 0;
   const d = new Date();
-  for (let i = 0; i < 365; i++) {
+  const today = todayKey();
+  const isUborka = habitId === 'uborka';
+  let pastFirstRelevant = false;
+  for (let i = 0; i < 400; i++) {
+    const dow = d.getDay();
     const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    const day = state.data.daily[key];
-    const done = habitId === COUNTER_HABIT
-      ? (day?.sweets === 0 && day?.habits?.[habitId])
-      : day?.habits?.[habitId];
-    if (done) { streak++; }
-    else if (i > 0) break;
     d.setDate(d.getDate() - 1);
+    // Uborka only counts on weekends
+    if (isUborka && dow !== 0 && dow !== 6) continue;
+    const day = state.data.daily[key];
+    const done = day?.dayOff === true
+      || day?.skippedHabits?.includes(habitId)
+      || (habitId === COUNTER_HABIT
+        ? (day?.sweets === 0 && day?.habits?.[habitId])
+        : day?.habits?.[habitId]);
+    if (done) {
+      streak++;
+      pastFirstRelevant = true;
+    } else if (!pastFirstRelevant && key === today) {
+      // Today not yet done — don't break streak
+      pastFirstRelevant = true;
+    } else {
+      break;
+    }
   }
   return streak;
+}
+
+function collectCoins() {
+  if (!state.data.coins) state.data.coins = { balance: 0, lastCollected: null };
+  const today = todayKey();
+  if (state.data.coins.lastCollected === today) return;
+  let earned = 0;
+  const habits = state.data.habits.active.filter(h => !h.startDate || h.startDate <= today);
+  for (const h of habits) {
+    const streak = calcStreak(h.id);
+    let stage = PLANT_STAGES[0];
+    for (const s of PLANT_STAGES) { if (streak >= s.min) stage = s; }
+    earned += stage.coins;
+  }
+  state.data.coins.balance = (state.data.coins.balance || 0) + earned;
+  state.data.coins.lastCollected = today;
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data)); } catch(e) {}
 }
 
 function getLast7Days() {
@@ -648,6 +701,7 @@ function checkAchievements() {
 // ============================================================
 
 function render() {
+  collectCoins();
   document.getElementById('app').innerHTML = renderPage();
   const morePages = ['goals','health','garden','planner','cooking','achievements','books','media','shopping'];
   const activeNav = morePages.includes(state.page) ? 'more' : state.page;
@@ -688,12 +742,18 @@ function renderMonthCalendar() {
     const isFuture = new Date(year, month, d) > now;
     const dow = new Date(year, month, d).getDay();
     const isWeekendDay = dow === 0 || dow === 6;
-    const dayHabits = habits.filter(h => h.id !== 'uborka' || isWeekendDay);
+    const dayHabits = habits.filter(h =>
+      (h.id !== 'uborka' || isWeekendDay) && (!h.startDate || h.startDate <= key)
+    );
     let level = 'empty';
     if (!isFuture && dayData) {
-      const done = dayHabits.filter(h => dayData.habits?.[h.id]).length;
-      const pct = dayHabits.length ? done / dayHabits.length : 0;
-      level = pct === 0 ? 'l0' : pct < 0.5 ? 'l1' : pct < 1 ? 'l2' : 'l3';
+      if (dayData.dayOff) {
+        level = 'l3';
+      } else {
+        const done = dayHabits.filter(h => dayData.habits?.[h.id] || dayData.skippedHabits?.includes(h.id)).length;
+        const pct = dayHabits.length ? done / dayHabits.length : 0;
+        level = pct === 0 ? 'l0' : pct < 0.5 ? 'l1' : pct < 1 ? 'l2' : 'l3';
+      }
     } else if (!isFuture) level = 'l0';
     const clickable = !isFuture;
     cells += `<div class="mcell mcell-${level} ${isToday ? 'mcell-today' : ''} ${clickable ? 'mcell-clickable' : ''}" ${clickable ? `data-day-key="${key}"` : ''}>${d}</div>`;
@@ -718,9 +778,15 @@ function renderToday() {
   const td = getTodayData();
   const dow = new Date().getDay();
   const isWeekend = dow === 0 || dow === 6;
-  const habits = state.data.habits.active.filter(h => h.id !== 'uborka' || isWeekend);
+  const today = todayKey();
+  const habits = state.data.habits.active.filter(h =>
+    (h.id !== 'uborka' || isWeekend) && (!h.startDate || h.startDate <= today)
+  );
   const queue  = state.data.habits.queue;
-  const doneCount = habits.filter(h => td.habits[h.id]).length;
+  const dayOff = !!td.dayOff;
+  const doneCount = dayOff
+    ? habits.length
+    : habits.filter(h => td.habits[h.id] || td.skippedHabits?.includes(h.id)).length;
   const pct = habits.length ? Math.round(doneCount / habits.length * 100) : 0;
   const greetings = ['Привет!', 'Доброе утро!', 'Привет, солнышко!', 'Привет, красотка!'];
   const greeting = greetings[new Date().getDay() % greetings.length];
@@ -770,9 +836,12 @@ function renderToday() {
         <div class="progress-wrap" style="margin-bottom:16px">
           <div class="progress-bar" style="width:${pct}%"></div>
         </div>
+        ${dayOff ? `<div class="dayoff-banner">🛋️ Сегодня выходной — стрик сохранится ✨</div>` : ''}
         ${habits.map(h => {
-          const done = !!td.habits[h.id];
-          const streak = calcStreak(h.id);
+          const skipped  = td.skippedHabits?.includes(h.id);
+          const done     = dayOff || skipped || !!td.habits[h.id];
+          const locked   = dayOff || skipped;
+          const streak   = calcStreak(h.id);
           const isCounter = h.id === COUNTER_HABIT;
           const isTime    = TIME_HABITS.includes(h.id);
           const mins      = td.times?.[h.id] || 0;
@@ -792,13 +861,14 @@ function renderToday() {
           `;
 
           return `
-            <div class="habit-item ${done ? 'done' : ''}" data-habit="${h.id}">
+            <div class="habit-item ${done ? 'done' : ''}" ${!locked ? `data-habit="${h.id}"` : ''}>
               <div class="habit-checkbox"></div>
               <span class="habit-icon">${h.icon}</span>
               <span class="habit-name">${h.name}</span>
+              ${skipped ? `<span style="font-size:11px;margin-left:4px;color:var(--primary)">🎯 пропуск</span>` : ''}
               ${streak > 0 ? `<span class="habit-streak ${streak >= 7 ? 'hot' : ''}">🔥 ${streak}</span>` : ''}
             </div>
-            ${isTime && done ? `
+            ${isTime && done && !locked ? `
               <div class="time-track-row">
                 <span class="time-track-label">⏱ Сколько минут?</span>
                 <input type="number" class="time-track-input" data-habit="${h.id}" value="${mins}" min="0" max="300" inputmode="numeric" placeholder="0">
@@ -1588,19 +1658,44 @@ function renderCooking() {
 // ============================================================
 
 function renderGarden() {
-  const habits = state.data.habits.active;
+  const today = todayKey();
+  const habits = state.data.habits.active.filter(h => !h.startDate || h.startDate <= today);
   const drops = totalWaterDrops();
-  const unlocked = state.data.garden.unlockedAchievements;
+  const coins = state.data.coins?.balance || 0;
+  const td = getTodayData();
+  const dayOff = !!td.dayOff;
 
   const guitarMin = totalHobbyMinutes('guitar');
   const pianoMin  = totalHobbyMinutes('piano');
+
+  const shopItems = [
+    {
+      id: 'skip_habit',
+      icon: '🎯',
+      title: 'Закрыть привычку',
+      desc: 'Одна привычка засчитывается за сегодня',
+      cost: 15,
+      disabled: dayOff || habits.length === 0,
+    },
+    {
+      id: 'day_off',
+      icon: '🛋️',
+      title: 'Выходной',
+      desc: 'Все привычки = ✅, стрик сохранится',
+      cost: 40,
+      disabled: dayOff,
+    },
+  ];
 
   return `
     <div class="page">
       <div class="page-header">
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
           <div><h1>Мой сад 🌸</h1><div class="subtitle">Ухаживай за растениями каждый день</div></div>
-          <div class="water-badge big">💧 ${drops}</div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+            <div class="water-badge big">💧 ${drops}</div>
+            <div class="coin-badge">🪙 ${coins}</div>
+          </div>
         </div>
       </div>
 
@@ -1608,7 +1703,6 @@ function renderGarden() {
         ${habits.map(h => {
           const streak = calcStreak(h.id);
           const stage  = getPlantStage(streak);
-          const isCounter = h.id === COUNTER_HABIT;
           const isTime    = TIME_HABITS.includes(h.id);
           const mins      = isTime ? totalHobbyMinutes(h.id) : null;
           return `
@@ -1616,11 +1710,33 @@ function renderGarden() {
               <div class="plant-emoji">${stage.emoji}</div>
               <div class="plant-name">${h.icon} ${h.name}</div>
               <div class="plant-streak">${streak > 0 ? `🔥 ${streak} дн.` : 'Начни сегодня'}</div>
-              <div class="plant-stage">${stage.label}</div>
+              <div class="plant-stage">${stage.label} · ${stage.coins > 0 ? `+${stage.coins}🪙/день` : '—'}</div>
               ${mins !== null ? `<div class="plant-time">⏱ ${mins < 60 ? mins+'м' : Math.floor(mins/60)+'ч '+(mins%60?mins%60+'м':'')}</div>` : ''}
             </div>
           `;
         }).join('')}
+      </div>
+
+      <div class="card">
+        <div class="card-title">🏪 Магазин силы</div>
+        <div class="muted" style="font-size:13px;margin-bottom:12px">Монетки зарабатываются каждый день, когда ты ухаживаешь за растениями</div>
+        ${shopItems.map(item => `
+          <div class="shop-item-card ${item.disabled ? 'disabled' : ''}">
+            <div style="font-size:28px">${item.icon}</div>
+            <div style="flex:1">
+              <div style="font-weight:700;font-size:15px">${item.title}</div>
+              <div class="muted" style="font-size:12px">${item.desc}</div>
+              ${item.id === 'day_off' && dayOff ? `<div style="font-size:12px;color:var(--primary);font-weight:600;margin-top:2px">✅ Уже активен сегодня</div>` : ''}
+            </div>
+            <div style="text-align:right">
+              <div style="font-weight:700;font-size:16px;color:var(--primary-dark)">🪙 ${item.cost}</div>
+              ${!item.disabled && coins >= item.cost
+                ? `<button class="shop-btn" data-shop="${item.id}" data-cost="${item.cost}">Купить</button>`
+                : `<button class="shop-btn disabled" disabled>${coins < item.cost ? 'Мало монет' : 'Недоступно'}</button>`
+              }
+            </div>
+          </div>
+        `).join('')}
       </div>
 
       ${(guitarMin + pianoMin) > 0 ? `
@@ -2013,6 +2129,7 @@ function renderMore() {
           if (s.id === 'achievements') desc = `${unlocked.length}/${ACHIEVEMENTS.length} открыто`;
           if (s.id === 'shopping' && shopItems > 0) desc = `${shopItems} не куплено`;
           if (s.id === 'books' && readingBooks > 0) desc = `Читаю: ${readingBooks}`;
+          if (s.id === 'garden') desc = `🪙 ${state.data.coins?.balance || 0} монет`;
           return `
             <button class="hub-card" data-page="${s.id}">
               <div class="hub-card-icon">${s.icon}</div>
@@ -2021,6 +2138,15 @@ function renderMore() {
             </button>
           `;
         }).join('')}
+      </div>
+
+      <div class="card" style="margin-top:8px">
+        <div class="card-title">🔒 Резервная копия</div>
+        <div class="muted" style="font-size:13px;margin-bottom:14px">Сохрани данные — на случай если что-то пойдёт не так</div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-primary" style="flex:1" id="export-data">📤 Сохранить</button>
+          <button class="btn btn-secondary" style="flex:1" id="import-data">📥 Восстановить</button>
+        </div>
       </div>
     </div>
   `;
@@ -2426,6 +2552,83 @@ function openEditMyRecipe(id) {
   `);
 }
 
+function openSkipHabitShop() {
+  const today = todayKey();
+  const dow = new Date().getDay();
+  const isWeekend = dow === 0 || dow === 6;
+  const td = getTodayData();
+  const habits = state.data.habits.active.filter(h =>
+    (h.id !== 'uborka' || isWeekend) &&
+    (!h.startDate || h.startDate <= today) &&
+    !td.habits[h.id] &&
+    !td.skippedHabits?.includes(h.id)
+  );
+  if (habits.length === 0) {
+    openModal(`<h2>🎯 Закрыть привычку</h2><div class="muted" style="margin-top:12px">Все привычки на сегодня уже выполнены!</div>`);
+    return;
+  }
+  openModal(`
+    <h2>🎯 Закрыть привычку</h2>
+    <div class="muted" style="font-size:13px;margin-bottom:16px">Выбери привычку, которую хочешь засчитать за сегодня — стоит <b>15 🪙</b></div>
+    <div id="skip-habit-list">
+      ${habits.map(h => `
+        <div class="habit-item" data-skip-habit="${h.id}" style="cursor:pointer;border-radius:10px;padding:12px;margin-bottom:8px;border:2px solid var(--border)">
+          <span class="habit-icon">${h.icon}</span>
+          <span class="habit-name">${h.name}</span>
+        </div>
+      `).join('')}
+    </div>
+  `);
+  document.querySelectorAll('[data-skip-habit]').forEach(el => {
+    el.addEventListener('click', () => {
+      const habitId = el.dataset.skipHabit;
+      if (!state.data.coins) state.data.coins = { balance: 0, lastCollected: null };
+      state.data.coins.balance = Math.max(0, (state.data.coins.balance || 0) - 15);
+      const td2 = getTodayData();
+      if (!td2.skippedHabits) td2.skippedHabits = [];
+      td2.skippedHabits.push(habitId);
+      save(); closeModal(); render();
+    });
+  });
+}
+
+function buyDayOff() {
+  if (!state.data.coins) state.data.coins = { balance: 0, lastCollected: null };
+  state.data.coins.balance = Math.max(0, (state.data.coins.balance || 0) - 40);
+  const td = getTodayData();
+  td.dayOff = true;
+  save(); closeModal(); render();
+}
+
+function exportData() {
+  const json = JSON.stringify(state.data, null, 2);
+  try {
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `disciplina-backup-${todayKey()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch(e) {
+    // Fallback: copy to clipboard
+    navigator.clipboard?.writeText(json).then(() => {
+      openModal(`<h2>📋 Данные скопированы</h2><div class="muted" style="margin-top:12px">JSON скопирован в буфер обмена. Вставь в заметки или на почту для хранения.</div>`);
+    });
+  }
+}
+
+function openImportModal() {
+  openModal(`
+    <h2>📥 Восстановить данные</h2>
+    <div class="muted" style="font-size:13px;margin-bottom:16px">Вставь JSON из резервной копии</div>
+    <textarea id="import-json" style="width:100%;height:180px;border-radius:10px;border:1.5px solid var(--border);padding:10px;font-size:12px;font-family:monospace;resize:vertical;box-sizing:border-box" placeholder='{"habits":...}'></textarea>
+    <button class="btn btn-primary btn-full" style="margin-top:12px" id="do-import">Восстановить</button>
+  `);
+}
+
 function openAddIncome() {
   editingIncomeId = null;
   tempIncomeCat = 'salary';
@@ -2811,6 +3014,27 @@ function bindEvents() {
   document.getElementById('open-budget-settings')?.addEventListener('click', openBudgetSettings);
   document.getElementById('open-savings')?.addEventListener('click', openSavings);
 
+  // Garden shop
+  document.querySelectorAll('[data-shop]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.shop;
+      if (id === 'skip_habit') openSkipHabitShop();
+      else if (id === 'day_off') {
+        openModal(`
+          <h2>🛋️ Выходной</h2>
+          <div style="margin:16px 0;font-size:15px">Взять выходной от всех привычек?<br><br>
+          Все привычки засчитаются как выполненные, стрик не сбросится.</div>
+          <div style="font-weight:700;font-size:18px;text-align:center;margin-bottom:16px">Стоит 40 🪙</div>
+          <button class="btn btn-primary btn-full" id="confirm-day-off">Взять выходной ✨</button>
+        `);
+      }
+    });
+  });
+
+  // Backup
+  document.getElementById('export-data')?.addEventListener('click', exportData);
+  document.getElementById('import-data')?.addEventListener('click', openImportModal);
+
   // Hub navigation
   document.querySelectorAll('.hub-card[data-page]').forEach(card => {
     card.addEventListener('click', () => {
@@ -3030,6 +3254,19 @@ function bindModalEvents() {
   document.getElementById('modal-save-wake')?.addEventListener('click', () => {
     const val = document.getElementById('modal-wake-input')?.value;
     if (val) { getTodayData().wakeTime = val; save(); closeModal(); render(); }
+  });
+
+  document.getElementById('confirm-day-off')?.addEventListener('click', buyDayOff);
+
+  document.getElementById('do-import')?.addEventListener('click', () => {
+    const json = document.getElementById('import-json')?.value.trim();
+    if (!json) return;
+    try {
+      const d = JSON.parse(json);
+      if (!d.habits || !d.daily) { alert('Неверный формат файла'); return; }
+      state.data = d;
+      save(); closeModal(); render();
+    } catch { alert('Ошибка: неверный JSON'); }
   });
 
   document.getElementById('save-day-edit')?.addEventListener('click', () => {
