@@ -253,6 +253,7 @@ let financeAnalyticsPeriod = 'month';
 let tempPriority = 'medium';
 let editingTaskId = null;
 let editingExpenseId = null;
+let editingIncomeId = null;
 let cookingTab = 'dishes';
 let editingMyRecipeId = null;
 let tempRecipeRating = 0;
@@ -1084,7 +1085,7 @@ function renderFinancePlan() {
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
         <div class="card-title" style="margin:0">💼 Доходы</div>
-        ${planMonthOffset === 0 ? `<button class="btn btn-primary btn-sm" id="add-income">+ Добавить</button>` : ''}
+        <button class="btn btn-primary btn-sm" id="add-income">+ Добавить</button>
       </div>
       <div style="font-size:26px;font-weight:700;color:var(--success-text);margin-bottom:10px">${formatMoney(totalIncomeAmt)} ₸</div>
       ${monthIncome.length > 0 ? monthIncome.slice(0,5).map(e => {
@@ -1098,6 +1099,7 @@ function renderFinancePlan() {
             </div>
             <div class="expense-amount" style="color:var(--success-text)">+${formatMoney(e.amount)} ₸</div>
             <div class="expense-actions">
+              <button class="expense-edit-btn" data-income-edit="${e.id}">✏️</button>
               <button class="expense-del-btn" data-income-del="${e.id}">×</button>
             </div>
           </div>
@@ -2425,6 +2427,7 @@ function openEditMyRecipe(id) {
 }
 
 function openAddIncome() {
+  editingIncomeId = null;
   tempIncomeCat = 'salary';
   openModal(`
     <h2>Добавить доход 💰</h2>
@@ -2447,6 +2450,35 @@ function openAddIncome() {
       <input type="text" class="form-input" id="income-note" placeholder="Зарплата за май...">
     </div>
     <button class="btn btn-primary btn-full" id="save-income">Добавить</button>
+  `);
+}
+
+function openEditIncome(id) {
+  const item = state.data.finance.income.find(e => e.id === id);
+  if (!item) return;
+  editingIncomeId = id;
+  tempIncomeCat = item.category || 'salary';
+  openModal(`
+    <h2>Редактировать доход ✏️</h2>
+    <div class="form-group">
+      <label class="form-label">Сумма (₸) *</label>
+      <input type="number" class="form-input" id="income-amount" value="${item.amount}" inputmode="numeric">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Категория</label>
+      <div class="category-grid" style="grid-template-columns:repeat(3,1fr)">
+        ${INCOME_CATS.map(c => `
+          <button class="cat-btn ${c.id===tempIncomeCat?'selected':''}" data-income-cat="${c.id}">
+            <span class="cat-icon">${c.icon}</span>${c.name}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Заметка</label>
+      <input type="text" class="form-input" id="income-note" value="${item.note||''}" placeholder="Зарплата за май...">
+    </div>
+    <button class="btn btn-primary btn-full" id="save-income">Сохранить</button>
   `);
 }
 
@@ -2885,6 +2917,9 @@ function bindEvents() {
   document.getElementById('plan-next-month')?.addEventListener('click', () => { planMonthOffset++; render(); });
   document.getElementById('add-income')?.addEventListener('click', openAddIncome);
   document.getElementById('open-set-plan')?.addEventListener('click', openSetMonthlyPlan);
+  document.querySelectorAll('[data-income-edit]').forEach(btn => {
+    btn.addEventListener('click', () => openEditIncome(btn.dataset.incomeEdit));
+  });
   document.querySelectorAll('[data-income-del]').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
@@ -3172,7 +3207,19 @@ function bindModalEvents() {
     const amount = parseFloat(document.getElementById('income-amount')?.value);
     if (!amount || amount <= 0) { document.getElementById('income-amount')?.focus(); return; }
     const note = (document.getElementById('income-note')?.value || '').trim();
-    state.data.finance.income.push({ id: uid(), date: todayKey(), amount, category: tempIncomeCat, note });
+    if (editingIncomeId) {
+      const item = state.data.finance.income.find(e => e.id === editingIncomeId);
+      if (item) { item.amount = amount; item.category = tempIncomeCat; item.note = note; }
+      editingIncomeId = null;
+    } else {
+      // Use a date within the currently viewed plan month
+      const planDate = new Date();
+      planDate.setMonth(planDate.getMonth() + planMonthOffset);
+      const dateStr = planMonthOffset === 0
+        ? todayKey()
+        : `${planDate.getFullYear()}-${String(planDate.getMonth()+1).padStart(2,'0')}-01`;
+      state.data.finance.income.push({ id: uid(), date: dateStr, amount, category: tempIncomeCat, note });
+    }
     save(); closeModal(); render();
   });
 
