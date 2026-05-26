@@ -1,5 +1,5 @@
-const CACHE = 'disciplina-v10';
-const ASSETS = ['/', '/index.html', '/style.css', '/app.js', '/manifest.json', '/icon.svg', '/icons/event.png'];
+const CACHE = 'disciplina-v11';
+const ASSETS = ['/', '/index.html', '/style.css', '/app.js', '/manifest.json', '/icon.svg', '/icons/event.png', '/icons/сон.png', '/icons/тренировки.png', '/icons/финансы.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(() => {})));
