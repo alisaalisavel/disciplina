@@ -1726,7 +1726,7 @@ function renderGarden() {
           <div><h1>Мой сад 🌸</h1><div class="subtitle">Ухаживай за растениями каждый день</div></div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
             <div class="water-badge big">💧 ${drops}</div>
-            <div class="coin-badge"><span class="gcoin">⭐</span> ${coins}</div>
+            <div class="coin-badge"><img src="icons/coin.png" class="coin-img" alt=""> ${coins}</div>
           </div>
         </div>
       </div>
@@ -1746,8 +1746,8 @@ function renderGarden() {
               ${mins !== null ? `<div class="plant-time">⏱ ${mins < 60 ? mins+'м' : Math.floor(mins/60)+'ч '+(mins%60?mins%60+'м':'')}</div>` : ''}
               ${stage.coins > 0
                 ? canHarvest(h.id, streak)
-                  ? `<button class="harvest-btn" data-harvest="${h.id}">Собрать +${stage.coins} <span class="gcoin">⭐</span></button>`
-                  : `<div class="harvested-badge">✅ +${stage.coins} <span class="gcoin">⭐</span> собрано</div>`
+                  ? `<button class="harvest-btn" data-harvest="${h.id}">Собрать +${stage.coins} <img src="icons/coin.png" class="coin-img" alt=""></button>`
+                  : `<div class="harvested-badge">✅ +${stage.coins} <img src="icons/coin.png" class="coin-img" alt=""> собрано</div>`
                 : ''
               }
             </div>
@@ -1767,7 +1767,7 @@ function renderGarden() {
               ${item.id === 'day_off' && dayOff ? `<div style="font-size:12px;color:var(--primary);font-weight:600;margin-top:2px">✅ Уже активен сегодня</div>` : ''}
             </div>
             <div style="text-align:right">
-              <div style="font-weight:700;font-size:16px;color:#B8860B"><span class="gcoin">⭐</span> ${item.cost}</div>
+              <div style="font-weight:700;font-size:16px;color:#B8860B"><img src="icons/coin.png" class="coin-img" alt=""> ${item.cost}</div>
               ${!item.disabled && coins >= item.cost
                 ? `<button class="shop-btn" data-shop="${item.id}" data-cost="${item.cost}">Купить</button>`
                 : `<button class="shop-btn disabled" disabled>${coins < item.cost ? 'Мало монет' : 'Недоступно'}</button>`
@@ -1836,7 +1836,7 @@ function renderAchievements() {
                   <div class="achievement-title">${a.title}</div>
                   <div class="achievement-desc">${a.desc}</div>
                 </div>
-                <div style="font-size:12px;font-weight:700;color:#B8860B;white-space:nowrap">+${a.stars} <span class="gcoin">⭐</span></div>
+                <div style="font-size:12px;font-weight:700;color:#B8860B;white-space:nowrap">+${a.stars} <img src="icons/coin.png" class="coin-img" alt=""></div>
               </div>
             `).join('')}
           </div>
@@ -1854,7 +1854,7 @@ function renderAchievements() {
                   <div class="achievement-title">${a.title}</div>
                   <div class="achievement-desc">${a.desc}</div>
                 </div>
-                <div style="font-size:12px;color:var(--text-muted);white-space:nowrap">+${a.stars} <span class="gcoin">⭐</span></div>
+                <div style="font-size:12px;color:var(--text-muted);white-space:nowrap">+${a.stars} <img src="icons/coin.png" class="coin-img" alt=""></div>
               </div>
             `).join('')}
           </div>
@@ -2609,7 +2609,7 @@ function openSkipHabitShop() {
   }
   openModal(`
     <h2>🎯 Закрыть привычку</h2>
-    <div class="muted" style="font-size:13px;margin-bottom:16px">Выбери привычку, которую хочешь засчитать за сегодня — стоит <b>15 <span class="gcoin">⭐</span></b></div>
+    <div class="muted" style="font-size:13px;margin-bottom:16px">Выбери привычку, которую хочешь засчитать за сегодня — стоит <b>15 <img src="icons/coin.png" class="coin-img" alt=""></b></div>
     <div id="skip-habit-list">
       ${habits.map(h => `
         <div class="habit-item" data-skip-habit="${h.id}" style="cursor:pointer;border-radius:10px;padding:12px;margin-bottom:8px;border:2px solid var(--border)">
@@ -3069,7 +3069,7 @@ function bindEvents() {
           <h2>🛋️ Выходной</h2>
           <div style="margin:16px 0;font-size:15px">Взять выходной от всех привычек?<br><br>
           Все привычки засчитаются как выполненные, стрик не сбросится.</div>
-          <div style="font-weight:700;font-size:18px;text-align:center;margin-bottom:16px">Стоит 40 <span class="gcoin">⭐</span></div>
+          <div style="font-weight:700;font-size:18px;text-align:center;margin-bottom:16px">Стоит 40 <img src="icons/coin.png" class="coin-img" alt=""></div>
           <button class="btn btn-primary btn-full" id="confirm-day-off">Взять выходной ✨</button>
         `);
       }
