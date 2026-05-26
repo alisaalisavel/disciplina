@@ -554,15 +554,6 @@ function getPlantStage(streak) {
   return stage;
 }
 
-function totalWaterDrops() {
-  let drops = 0;
-  for (const key in state.data.daily) {
-    const day = state.data.daily[key];
-    const habits = state.data.habits.active;
-    drops += habits.filter(h => day.habits?.[h.id]).length;
-  }
-  return drops;
-}
 
 function totalHobbyMinutes(habitId) {
   let total = 0;
@@ -822,18 +813,11 @@ function renderToday() {
   ];
   const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
   const greeting = greetings[dayOfYear % greetings.length];
-  const drops = totalWaterDrops();
-
   return `
     <div class="page">
       <div class="page-header">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <div>
-            <h1>${greeting} 🌸</h1>
-            <div class="subtitle">${fullDateStr()}</div>
-          </div>
-          <div class="water-badge">💧 ${drops}</div>
-        </div>
+        <h1>${greeting} 🌸</h1>
+        <div class="subtitle">${fullDateStr()}</div>
       </div>
 
       <div class="card wake-card">
@@ -1692,7 +1676,6 @@ function renderCooking() {
 function renderGarden() {
   const today = todayKey();
   const habits = state.data.habits.active.filter(h => !h.startDate || h.startDate <= today);
-  const drops = totalWaterDrops();
   const coins = state.data.coins?.balance || 0;
   const td = getTodayData();
   const dayOff = !!td.dayOff;
@@ -1724,10 +1707,7 @@ function renderGarden() {
       <div class="page-header">
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
           <div><h1>Мой сад 🌸</h1><div class="subtitle">Ухаживай за растениями каждый день</div></div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-            <div class="water-badge big">💧 ${drops}</div>
-            <div class="coin-badge"><img src="icons/coin.png" class="coin-img" alt=""> ${coins}</div>
-          </div>
+          <div class="coin-badge"><img src="icons/coin.png" class="coin-img" alt=""> ${coins}</div>
         </div>
       </div>
 
