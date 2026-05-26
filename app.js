@@ -1707,6 +1707,14 @@ function renderGarden() {
       disabled: dayOff || habits.length === 0,
     },
     {
+      id: 'yesterday_habit',
+      icon: '⏪',
+      title: 'Вернуть вчера',
+      desc: 'Закрыть привычку за вчерашний день',
+      cost: 20,
+      disabled: false,
+    },
+    {
       id: 'day_off',
       icon: '🛋️',
       title: 'Выходной',
@@ -2638,6 +2646,53 @@ function openSkipHabitShop() {
   });
 }
 
+function yesterdayKey() {
+  const d = new Date(); d.setDate(d.getDate() - 1);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function openYesterdayHabitShop() {
+  const yday = yesterdayKey();
+  const ydDate = new Date(); ydDate.setDate(ydDate.getDate() - 1);
+  const dow = ydDate.getDay();
+  const isWeekend = dow === 0 || dow === 6;
+  const yd = state.data.daily[yday] || {};
+  const habits = state.data.habits.active.filter(h =>
+    (h.id !== 'uborka' || isWeekend) &&
+    (!h.startDate || h.startDate <= yday) &&
+    !yd.habits?.[h.id] &&
+    !yd.skippedHabits?.includes(h.id) &&
+    !yd.dayOff
+  );
+  if (habits.length === 0) {
+    openModal(`<h2>⏪ Вернуть вчера</h2><div class="muted" style="margin-top:12px">Все вчерашние привычки уже закрыты!</div>`);
+    return;
+  }
+  openModal(`
+    <h2>⏪ Вернуть вчера</h2>
+    <div class="muted" style="font-size:13px;margin-bottom:16px">Выбери привычку, которую хочешь засчитать за вчера — стоит <b>20 <img src="icons/coin.png" class="coin-img" alt=""></b></div>
+    <div id="yesterday-habit-list">
+      ${habits.map(h => `
+        <div class="habit-item" data-yday-habit="${h.id}" style="cursor:pointer;border-radius:10px;padding:12px;margin-bottom:8px;border:2px solid var(--border)">
+          <span class="habit-icon">${h.icon}</span>
+          <span class="habit-name">${h.name}</span>
+        </div>
+      `).join('')}
+    </div>
+  `);
+  document.querySelectorAll('[data-yday-habit]').forEach(el => {
+    el.addEventListener('click', () => {
+      const habitId = el.dataset.ydayHabit;
+      if (!state.data.coins) state.data.coins = { balance: 0, harvested: {} };
+      state.data.coins.balance = Math.max(0, (state.data.coins.balance || 0) - 20);
+      if (!state.data.daily[yday]) state.data.daily[yday] = { habits: {}, tasks: [] };
+      if (!state.data.daily[yday].habits) state.data.daily[yday].habits = {};
+      state.data.daily[yday].habits[habitId] = true;
+      save(); closeModal(); render();
+    });
+  });
+}
+
 function buyDayOff() {
   if (!state.data.coins) state.data.coins = { balance: 0, lastCollected: null };
   state.data.coins.balance = Math.max(0, (state.data.coins.balance || 0) - 40);
@@ -3070,6 +3125,7 @@ function bindEvents() {
     btn.addEventListener('click', () => {
       const id = btn.dataset.shop;
       if (id === 'skip_habit') openSkipHabitShop();
+      else if (id === 'yesterday_habit') openYesterdayHabitShop();
       else if (id === 'day_off') {
         openModal(`
           <h2>🛋️ Выходной</h2>
