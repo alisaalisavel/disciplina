@@ -2141,15 +2141,15 @@ function renderShopping() {
 
 function renderMore() {
   const sections = [
-    { id: 'goals',        icon: '🎵', title: 'Музыка',        desc: 'Песни и прогресс' },
-    { id: 'cooking',      icon: '🍳', title: 'Кулинария',     desc: 'Рецепты и уровни' },
-    { id: 'books',        icon: '📚', title: 'Книги',         desc: 'Читаю и хочу прочитать' },
-    { id: 'media',        icon: '🎬', title: 'Кино & Сериалы', desc: 'Смотрю и хочу' },
-    { id: 'shopping',     icon: '🛒', title: 'Список покупок', desc: '' },
-    { id: 'health',       icon: '🌿', title: 'Здоровье',      desc: 'Врачи и визиты' },
-    { id: 'planner',      icon: '📋', title: 'Планер',        desc: '' },
-    { id: 'garden',       icon: '🌱', title: 'Сад',           desc: 'Растения' },
-    { id: 'achievements', icon: '🏆', title: 'Достижения',    desc: 'Коллекция ачивок' },
+    { id: 'goals',        img: 'music.png',              title: 'Музыка',          desc: 'Песни и прогресс' },
+    { id: 'cooking',      img: 'chocolate-cake.png',     title: 'Кулинария',       desc: 'Рецепты и уровни' },
+    { id: 'books',        img: 'open-book.png',          title: 'Книги',           desc: 'Читаю и хочу прочитать' },
+    { id: 'media',        img: 'movie-clapper-open.png', title: 'Кино & Сериалы',  desc: 'Смотрю и хочу' },
+    { id: 'shopping',     img: 'trolley.png',            title: 'Список покупок',  desc: '' },
+    { id: 'health',       img: 'heartbeat.png',          title: 'Здоровье',        desc: 'Врачи и визиты' },
+    { id: 'planner',      img: 'writing-tool.png',       title: 'Планер',          desc: '' },
+    { id: 'garden',       img: 'flowers.png',            title: 'Сад',             desc: 'Растения' },
+    { id: 'achievements', img: 'award.png',              title: 'Достижения',      desc: 'Коллекция ачивок' },
   ];
   const tasks = state.data.tasks || [];
   const activeTasks = tasks.filter(t => !t.done).length;
@@ -2172,7 +2172,7 @@ function renderMore() {
           if (s.id === 'garden') desc = `🌕 ${state.data.coins?.balance || 0} монет`;
           return `
             <button class="hub-card" data-page="${s.id}">
-              <div class="hub-card-icon">${s.icon}</div>
+              <div class="hub-card-icon"><img src="icons/${s.img}" class="hub-custom-icon" alt=""></div>
               <div class="hub-card-title">${s.title}</div>
               ${desc ? `<div class="hub-card-desc">${desc}</div>` : ''}
             </button>
