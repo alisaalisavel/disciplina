@@ -118,6 +118,8 @@ body {
 }
 
 .nav-icon { font-size: 22px; line-height: 1; transition: transform 0.2s; }
+.nav-custom-icon { width: 24px; height: 24px; object-fit: contain; display: block; opacity: 0.55; transition: opacity 0.2s; }
+.nav-btn.active .nav-custom-icon { opacity: 1; }
 .nav-label { font-size: 10px; font-weight: 500; color: var(--text-muted); }
 
 .nav-btn.active .nav-label { color: var(--primary-dark); font-weight: 700; }
