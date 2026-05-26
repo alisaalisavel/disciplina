@@ -157,43 +157,43 @@ const PLANT_STAGES = [
 
 const ACHIEVEMENTS = [
   // Habits
-  { id: 'first_habit',   icon: '🌱', title: 'Первый росток',       desc: 'Выполни любую привычку впервые' },
-  { id: 'week_streak',   icon: '🔥', title: 'Неделя силы',         desc: '7 дней стрик на любой привычке' },
-  { id: 'full_day',      icon: '🌟', title: 'Идеальный день',      desc: 'Выполни все привычки за день' },
-  { id: 'month_sport',   icon: '🏅', title: 'Месяц спорта',        desc: '20 тренировок за месяц' },
+  { id: 'first_habit',   icon: '🌱', title: 'Первый росток',       desc: 'Выполни любую привычку впервые',           stars: 5  },
+  { id: 'week_streak',   icon: '🔥', title: 'Неделя силы',         desc: '7 дней стрик на любой привычке',           stars: 15 },
+  { id: 'full_day',      icon: '🌟', title: 'Идеальный день',      desc: 'Выполни все привычки за день',             stars: 5  },
+  { id: 'month_sport',   icon: '🏅', title: 'Месяц спорта',        desc: '20 тренировок за месяц',                   stars: 30 },
   // Sleep
-  { id: 'early_bird',    icon: '🌅', title: 'Ранняя пташка',       desc: 'Встань до 5:30 три раза' },
-  { id: 'sleep_week',    icon: '😴', title: 'Соня-молодец',        desc: '7 дней подряд по 6+ часов сна' },
-  { id: 'sleep_30',      icon: '🌙', title: 'Мастер сна',          desc: '30 ночей с 6+ часами сна' },
+  { id: 'early_bird',    icon: '🌅', title: 'Ранняя пташка',       desc: 'Встань до 5:30 три раза',                  stars: 15 },
+  { id: 'sleep_week',    icon: '😴', title: 'Соня-молодец',        desc: '7 дней подряд по 6+ часов сна',            stars: 15 },
+  { id: 'sleep_30',      icon: '🌙', title: 'Мастер сна',          desc: '30 ночей с 6+ часами сна',                 stars: 30 },
   // Sport
-  { id: 'sport_10',      icon: '💪', title: 'Спортсменка',         desc: 'Спорт 10 раз' },
-  { id: 'sport_30',      icon: '🏆', title: 'Атлет',               desc: 'Спорт 30 раз' },
-  { id: 'stretch_5',     icon: '🤸', title: 'Гибкая как кошка',    desc: 'Растяжка 5 раз' },
+  { id: 'sport_10',      icon: '💪', title: 'Спортсменка',         desc: 'Спорт 10 раз',                             stars: 15 },
+  { id: 'sport_30',      icon: '🏆', title: 'Атлет',               desc: 'Спорт 30 раз',                             stars: 50 },
+  { id: 'stretch_5',     icon: '🤸', title: 'Гибкая как кошка',    desc: 'Растяжка 5 раз',                           stars: 5  },
   // Finance
-  { id: 'savings',       icon: '💰', title: 'Копилка',             desc: 'Пополни накопления первый раз' },
-  { id: 'budget_hero',   icon: '🎯', title: 'Бюджет под контролем',desc: 'Не вышла за план ни в одной категории' },
+  { id: 'savings',       icon: '💰', title: 'Копилка',             desc: 'Пополни накопления первый раз',            stars: 5  },
+  { id: 'budget_hero',   icon: '🎯', title: 'Бюджет под контролем',desc: 'Не вышла за план ни в одной категории',    stars: 30 },
   // Cooking
-  { id: 'cooking_7',     icon: '🍳', title: 'Шеф-повар',           desc: 'Освой 7 рецептов' },
-  { id: 'cooking_20',    icon: '👩‍🍳', title: 'Мастер кулинарии',   desc: 'Освой 20 рецептов' },
-  { id: 'cooking_50',    icon: '🌮', title: 'Гурман',              desc: 'Освой 50 рецептов' },
-  { id: 'dessert_queen', icon: '🍰', title: 'Королева десертов',   desc: 'Освой все десерты' },
-  { id: 'my_recipe_5',   icon: '📖', title: 'Кулинарная книга',    desc: 'Запиши 5 своих рецептов' },
+  { id: 'cooking_7',     icon: '🍳', title: 'Шеф-повар',           desc: 'Освой 7 рецептов',                         stars: 15 },
+  { id: 'cooking_20',    icon: '👩‍🍳', title: 'Мастер кулинарии',   desc: 'Освой 20 рецептов',                        stars: 30 },
+  { id: 'cooking_50',    icon: '🌮', title: 'Гурман',              desc: 'Освой 50 рецептов',                        stars: 50 },
+  { id: 'dessert_queen', icon: '🍰', title: 'Королева десертов',   desc: 'Освой все десерты',                        stars: 30 },
+  { id: 'my_recipe_5',   icon: '📖', title: 'Кулинарная книга',    desc: 'Запиши 5 своих рецептов',                  stars: 15 },
   // Books
-  { id: 'first_book',    icon: '📚', title: 'Книжный червячок',    desc: 'Прочитай первую книгу' },
-  { id: 'books_5',       icon: '📖', title: 'Читательница',        desc: 'Прочитай 5 книг' },
-  { id: 'pages_1000',    icon: '🔖', title: '1000 страниц',        desc: 'Прочитай 1000 страниц суммарно' },
+  { id: 'first_book',    icon: '📚', title: 'Книжный червячок',    desc: 'Прочитай первую книгу',                    stars: 5  },
+  { id: 'books_5',       icon: '📖', title: 'Читательница',        desc: 'Прочитай 5 книг',                          stars: 15 },
+  { id: 'pages_1000',    icon: '🔖', title: '1000 страниц',        desc: 'Прочитай 1000 страниц суммарно',           stars: 50 },
   // Media
-  { id: 'first_watch',   icon: '🎬', title: 'Киноман',             desc: 'Посмотри первый фильм или сериал' },
-  { id: 'watched_10',    icon: '📺', title: 'Синефил',             desc: 'Посмотри 10 фильмов/сериалов' },
+  { id: 'first_watch',   icon: '🎬', title: 'Киноман',             desc: 'Посмотри первый фильм или сериал',         stars: 5  },
+  { id: 'watched_10',    icon: '📺', title: 'Синефил',             desc: 'Посмотри 10 фильмов/сериалов',             stars: 15 },
   // Health & other
-  { id: 'doctors_3',     icon: '🌿', title: 'Забочусь о себе',     desc: 'Сходи к 3 врачам' },
-  { id: 'clean_4',       icon: '🧹', title: 'Чистюля',             desc: 'Делай уборку 4 выходных подряд' },
-  { id: 'shopping_done', icon: '🛒', title: 'Всё куплено!',        desc: 'Закрой весь список покупок' },
+  { id: 'doctors_3',     icon: '🌿', title: 'Забочусь о себе',     desc: 'Сходи к 3 врачам',                         stars: 15 },
+  { id: 'clean_4',       icon: '🧹', title: 'Чистюля',             desc: 'Делай уборку 4 выходных подряд',           stars: 15 },
+  { id: 'shopping_done', icon: '🛒', title: 'Всё куплено!',        desc: 'Закрой весь список покупок',               stars: 5  },
   // Music & Garden
-  { id: 'music_5h',      icon: '🎵', title: 'Музыкант',            desc: '5 часов практики (гитара + пианино)' },
-  { id: 'song_done',     icon: '🎤', title: 'Звезда сцены',        desc: 'Доведи песню до конца' },
-  { id: 'no_sugar_7',    icon: '🍫', title: 'Железная воля',       desc: '7 дней без сладкого (0 штук)' },
-  { id: 'garden_bloom',  icon: '🌸', title: 'Цветущий сад',        desc: 'Все растения на стадии 🌸 и выше' },
+  { id: 'music_5h',      icon: '🎵', title: 'Музыкант',            desc: '5 часов практики (гитара + пианино)',      stars: 30 },
+  { id: 'song_done',     icon: '🎤', title: 'Звезда сцены',        desc: 'Доведи песню до конца',                    stars: 50 },
+  { id: 'no_sugar_7',    icon: '🍫', title: 'Железная воля',       desc: '7 дней без сладкого (0 штук)',             stars: 30 },
+  { id: 'garden_bloom',  icon: '🌸', title: 'Цветущий сад',        desc: 'Все растения на стадии 🌸 и выше',         stars: 30 },
 ];
 
 // habits that track time in minutes
@@ -580,7 +580,16 @@ function daysUntil(dateStr) {
 
 function checkAchievements() {
   const unlocked = state.data.garden.unlockedAchievements;
-  const unlock = (id) => { if (!unlocked.includes(id)) unlocked.push(id); };
+  const unlock = (id) => {
+    if (!unlocked.includes(id)) {
+      unlocked.push(id);
+      const ach = ACHIEVEMENTS.find(a => a.id === id);
+      if (ach?.stars) {
+        if (!state.data.coins) state.data.coins = { balance: 0, harvested: {} };
+        state.data.coins.balance = (state.data.coins.balance || 0) + ach.stars;
+      }
+    }
+  };
   const all = state.data.daily;
   const habits = state.data.habits.active;
 
@@ -1800,10 +1809,11 @@ function renderAchievements() {
             ${done.map(a => `
               <div class="achievement-item done">
                 <div class="achievement-icon">${a.icon}</div>
-                <div>
+                <div style="flex:1">
                   <div class="achievement-title">${a.title}</div>
                   <div class="achievement-desc">${a.desc}</div>
                 </div>
+                <div style="font-size:12px;font-weight:700;color:#B8860B;white-space:nowrap">+${a.stars} <span class="gcoin">⭐</span></div>
               </div>
             `).join('')}
           </div>
@@ -1817,10 +1827,11 @@ function renderAchievements() {
             ${locked.map(a => `
               <div class="achievement-item">
                 <div class="achievement-icon">🔒</div>
-                <div>
+                <div style="flex:1">
                   <div class="achievement-title">${a.title}</div>
                   <div class="achievement-desc">${a.desc}</div>
                 </div>
+                <div style="font-size:12px;color:var(--text-muted);white-space:nowrap">+${a.stars} <span class="gcoin">⭐</span></div>
               </div>
             `).join('')}
           </div>
