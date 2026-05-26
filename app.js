@@ -2169,7 +2169,7 @@ function renderMore() {
           if (s.id === 'achievements') desc = `${unlocked.length}/${ACHIEVEMENTS.length} открыто`;
           if (s.id === 'shopping' && shopItems > 0) desc = `${shopItems} не куплено`;
           if (s.id === 'books' && readingBooks > 0) desc = `Читаю: ${readingBooks}`;
-          if (s.id === 'garden') desc = `🌕 ${state.data.coins?.balance || 0} монет`;
+          if (s.id === 'garden') desc = `<img src="icons/coin.png" class="coin-img" alt=""> ${state.data.coins?.balance || 0} монет`;
           return `
             <button class="hub-card" data-page="${s.id}">
               <div class="hub-card-icon"><img src="icons/${s.img}" class="hub-custom-icon" alt=""></div>
