@@ -818,6 +818,7 @@ function renderToday() {
     'Привет, пушистик! 🌿',
     'Привет, солнечная! 🌻',
     'Доброе утро, нежность! 🕊️',
+    'Салют, бейба! 🫡',
   ];
   const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
   const greeting = greetings[dayOfYear % greetings.length];
