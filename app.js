@@ -1711,28 +1711,40 @@ function renderGarden() {
         </div>
       </div>
 
-      <div class="garden-grid">
-        ${habits.map(h => {
-          const streak = calcStreak(h.id);
-          const stage  = getPlantStage(streak);
-          const isTime    = TIME_HABITS.includes(h.id);
-          const mins      = isTime ? totalHobbyMinutes(h.id) : null;
-          return `
-            <div class="plant-pot">
-              <div class="plant-emoji">${stage.emoji}</div>
-              <div class="plant-name">${h.icon} ${h.name}</div>
-              <div class="plant-streak">${streak > 0 ? `🔥 ${streak} дн.` : 'Начни сегодня'}</div>
-              <div class="plant-stage">${stage.label}</div>
-              ${mins !== null ? `<div class="plant-time">⏱ ${mins < 60 ? mins+'м' : Math.floor(mins/60)+'ч '+(mins%60?mins%60+'м':'')}</div>` : ''}
-              ${stage.coins > 0
-                ? canHarvest(h.id, streak)
-                  ? `<button class="harvest-btn" data-harvest="${h.id}">Собрать +${stage.coins} <img src="icons/coin.png" class="coin-img" alt=""></button>`
-                  : `<div class="harvested-badge">✅ +${stage.coins} <img src="icons/coin.png" class="coin-img" alt=""> собрано</div>`
-                : ''
-              }
-            </div>
-          `;
-        }).join('')}
+      <div class="garden-scene">
+        <div class="garden-sky">
+          <div class="garden-cloud gc1">☁️</div>
+          <div class="garden-cloud gc2">☁️</div>
+          <div class="garden-cloud gc3">☁️</div>
+        </div>
+        <div class="garden-ground">
+          ${habits.map((h, i) => {
+            const streak = calcStreak(h.id);
+            const stage  = getPlantStage(streak);
+            const doneToday = dayOff || !!td.habits?.[h.id] || td.skippedHabits?.includes(h.id);
+            const isTime = TIME_HABITS.includes(h.id);
+            const mins   = isTime ? totalHobbyMinutes(h.id) : null;
+            const harvestable = stage.coins > 0 && canHarvest(h.id, streak);
+            return `
+              <div class="garden-plant-wrap" style="animation-delay:${i * 0.4}s">
+                ${harvestable ? `<div class="coin-float">+${stage.coins} <img src="icons/coin.png" class="coin-img" alt=""></div>` : ''}
+                <div class="garden-plant-emoji ${doneToday ? 'happy' : 'sad'}" style="animation-delay:${i * 0.4}s">${stage.emoji}</div>
+                <div class="garden-plant-base">
+                  <div class="garden-plant-name">${h.name}</div>
+                  <div class="garden-plant-streak">${streak > 0 ? `🔥 ${streak} дн.` : '—'}</div>
+                  ${mins !== null ? `<div class="garden-plant-streak">⏱ ${mins < 60 ? mins+'м' : Math.floor(mins/60)+'ч '+(mins%60?mins%60+'м':'')}</div>` : ''}
+                  ${stage.coins > 0
+                    ? harvestable
+                      ? `<button class="harvest-btn" data-harvest="${h.id}">Собрать +${stage.coins} <img src="icons/coin.png" class="coin-img" alt=""></button>`
+                      : `<div class="harvested-badge">✅ собрано</div>`
+                    : `<div class="harvested-badge">Расти дальше 🌱</div>`
+                  }
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        <div class="garden-grass-strip"></div>
       </div>
 
       <div class="card">
