@@ -797,8 +797,30 @@ function renderToday() {
     ? habits.length
     : habits.filter(h => td.habits[h.id] || td.skippedHabits?.includes(h.id)).length;
   const pct = habits.length ? Math.round(doneCount / habits.length * 100) : 0;
-  const greetings = ['Привет!', 'Доброе утро!', 'Привет, солнышко!', 'Привет, красотка!'];
-  const greeting = greetings[new Date().getDay() % greetings.length];
+  const greetings = [
+    'Приветики, красотка! 🌸',
+    'Доброе утро, солнышко! ☀️',
+    'Привет, умничка! 💕',
+    'Привет, милашка! 🩷',
+    'Доброе утро, звёздочка! ⭐',
+    'Привет, лапочка! 🌷',
+    'Привет, красавица! 💅',
+    'Доброе утро, котик! 🐱',
+    'Привет, душечка! 🫧',
+    'Привет, принцесса! 👑',
+    'Доброе утро, цветочек! 🌺',
+    'Привет, зайка! 🐰',
+    'Привет, чудо моё! ✨',
+    'Доброе утро, богиня! 🌙',
+    'Привет, супергёрл! 💪🩷',
+    'Привет, любимая! 💗',
+    'Доброе утро, блестяшка! 🌟',
+    'Привет, пушистик! 🌿',
+    'Привет, солнечная! 🌻',
+    'Доброе утро, нежность! 🕊️',
+  ];
+  const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  const greeting = greetings[dayOfYear % greetings.length];
   const drops = totalWaterDrops();
 
   return `
