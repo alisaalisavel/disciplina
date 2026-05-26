@@ -33,6 +33,7 @@ const CATEGORIES = [
   { id: 'cosmetics',     name: 'Косметика/уход',           icon: '💄' },
   { id: 'work',          name: 'Работа (кофе и прочее)',   icon: '☕' },
   { id: 'debts',         name: 'Долги',                    icon: '💸' },
+  { id: 'sport',         name: 'Тренировки',               icon: '💪' },
   { id: 'other',         name: 'Другое',                   icon: '📦' },
 ];
 
@@ -217,7 +218,6 @@ const COUNTER_HABIT = 'sugar';
 
 const INCOME_CATS = [
   { id: 'salary',   name: 'Зарплата',       icon: '💼' },
-  { id: 'workout',  name: 'Тренировки',     icon: '💪' },
   { id: 'other',    name: 'Прочее',         icon: '💰' },
   { id: 'debt_in',  name: 'Долг (вернули)', icon: '🤝' },
 ];
