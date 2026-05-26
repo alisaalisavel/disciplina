@@ -216,9 +216,10 @@ const TIME_HABITS = ['guitar', 'piano'];
 const COUNTER_HABIT = 'sugar';
 
 const INCOME_CATS = [
-  { id: 'salary',  name: 'Зарплата',       icon: '💼' },
-  { id: 'other',   name: 'Прочее',         icon: '💰' },
-  { id: 'debt_in', name: 'Долг (вернули)', icon: '🤝' },
+  { id: 'salary',   name: 'Зарплата',       icon: '💼' },
+  { id: 'workout',  name: 'Тренировки',     icon: '💪' },
+  { id: 'other',    name: 'Прочее',         icon: '💰' },
+  { id: 'debt_in',  name: 'Долг (вернули)', icon: '🤝' },
 ];
 
 const SHOPPING_CATS = [
