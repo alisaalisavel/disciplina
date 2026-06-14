@@ -1584,7 +1584,10 @@ function renderHealth() {
             ${v.diagnosis ? `<div style="font-size:13px;margin-top:4px"><span style="color:var(--text-muted)">Диагноз:</span> <b>${v.diagnosis}</b></div>` : ''}
             ${v.prescription ? `<div style="font-size:13px;margin-top:4px"><span style="color:var(--text-muted)">Назначили:</span> ${v.prescription}</div>` : ''}
             ${v.notes ? `<div style="font-size:13px;margin-top:4px;color:var(--text-muted);font-style:italic">${v.notes}</div>` : ''}
-            ${v.photo ? `<div style="margin-top:8px"><img src="${v.photo}" style="max-width:100%;border-radius:8px;max-height:200px;object-fit:cover" data-visit-photo="${v.id}"></div>` : ''}
+            ${(v.photos?.length || (v.photo ? 1 : 0)) > 0 ? `
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+                ${(v.photos || (v.photo ? [v.photo] : [])).map(src => `<img src="${src}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:2px solid var(--border)" onclick="this.style.maxWidth=this.style.maxWidth?'':'100%'">`).join('')}
+              </div>` : ''}
           </div>
         `).join('')}
       </div>
@@ -2514,14 +2517,21 @@ function visitFormHtml(v = {}) {
       <textarea class="form-input" id="visit-notes" rows="2" placeholder="Прочее, важное...">${v.notes || ''}</textarea>
     </div>
     <div class="form-group">
-      <label class="form-label">Фото (рецепт, диагноз)</label>
-      <input type="file" class="form-input" id="visit-photo-input" accept="image/*" style="padding:8px">
-      ${v.photo ? `<img src="${v.photo}" id="visit-photo-preview" style="max-width:100%;border-radius:8px;margin-top:8px;max-height:150px;object-fit:cover">` : `<div id="visit-photo-preview"></div>`}
+      <label class="form-label">Фото (рецепты, документы — можно несколько)</label>
+      <input type="file" class="form-input" id="visit-photo-input" accept="image/*" multiple style="padding:8px">
+      <div id="visit-photos-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+        ${(v.photos || []).map((src, i) => `
+          <div style="position:relative;display:inline-block">
+            <img src="${src}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:2px solid var(--border)">
+            <button type="button" data-rm-photo="${i}" style="position:absolute;top:-6px;right:-6px;background:#ff6b6b;color:white;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0">×</button>
+          </div>
+        `).join('')}
+      </div>
     </div>
   `;
 }
 
-function collectVisitData(existingPhoto = null) {
+function collectVisitData(photos) {
   return {
     doctorName:   document.getElementById('visit-doctor')?.value.trim() || '',
     clinic:       document.getElementById('visit-clinic')?.value.trim() || '',
@@ -2530,31 +2540,57 @@ function collectVisitData(existingPhoto = null) {
     diagnosis:    document.getElementById('visit-diagnosis')?.value.trim() || '',
     prescription: document.getElementById('visit-prescription')?.value.trim() || '',
     notes:        document.getElementById('visit-notes')?.value.trim() || '',
-    photo:        existingPhoto,
+    photos,
   };
 }
 
-let _visitPhotoData = null;
+let _visitPhotos = [];
+
+function renderVisitPhotoPreview() {
+  const container = document.getElementById('visit-photos-preview');
+  if (!container) return;
+  container.innerHTML = _visitPhotos.map((src, i) => `
+    <div style="position:relative;display:inline-block">
+      <img src="${src}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:2px solid var(--border)">
+      <button type="button" data-rm-photo="${i}" style="position:absolute;top:-6px;right:-6px;background:#ff6b6b;color:white;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0">×</button>
+    </div>
+  `).join('');
+  container.querySelectorAll('[data-rm-photo]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      _visitPhotos.splice(parseInt(btn.dataset.rmPhoto), 1);
+      renderVisitPhotoPreview();
+    });
+  });
+}
 
 function bindVisitPhotoInput() {
-  _visitPhotoData = null;
   const inp = document.getElementById('visit-photo-input');
   if (!inp) return;
+  // bind remove buttons on existing photos
+  document.getElementById('visit-photos-preview')?.querySelectorAll('[data-rm-photo]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      _visitPhotos.splice(parseInt(btn.dataset.rmPhoto), 1);
+      renderVisitPhotoPreview();
+    });
+  });
   inp.addEventListener('change', () => {
-    const file = inp.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      _visitPhotoData = e.target.result;
-      const prev = document.getElementById('visit-photo-preview');
-      if (prev) { prev.tagName === 'IMG' ? prev.src = _visitPhotoData : prev.innerHTML = `<img src="${_visitPhotoData}" style="max-width:100%;border-radius:8px;margin-top:8px;max-height:150px;object-fit:cover">`; }
-    };
-    reader.readAsDataURL(file);
+    const files = Array.from(inp.files);
+    let loaded = 0;
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        _visitPhotos.push(e.target.result);
+        loaded++;
+        if (loaded === files.length) renderVisitPhotoPreview();
+      };
+      reader.readAsDataURL(file);
+    });
+    inp.value = '';
   });
 }
 
 function openAddVisit() {
-  _visitPhotoData = null;
+  _visitPhotos = [];
   openModal(`
     <h2>📋 Новая запись</h2>
     ${visitFormHtml()}
@@ -2562,7 +2598,7 @@ function openAddVisit() {
   `);
   bindVisitPhotoInput();
   document.getElementById('save-visit')?.addEventListener('click', () => {
-    const data = collectVisitData(_visitPhotoData);
+    const data = collectVisitData([..._visitPhotos]);
     if (!data.doctorName) return;
     if (!state.data.health.visits) state.data.health.visits = [];
     state.data.health.visits.push({ id: uid(), ...data });
@@ -2573,7 +2609,9 @@ function openAddVisit() {
 function openEditVisit(id) {
   const v = state.data.health.visits?.find(x => x.id === id);
   if (!v) return;
-  _visitPhotoData = v.photo || null;
+  // migrate old single photo to array
+  if (!v.photos) v.photos = v.photo ? [v.photo] : [];
+  _visitPhotos = [...v.photos];
   openModal(`
     <h2>📋 Редактировать запись</h2>
     ${visitFormHtml(v)}
@@ -2581,9 +2619,10 @@ function openEditVisit(id) {
   `);
   bindVisitPhotoInput();
   document.getElementById('save-visit')?.addEventListener('click', () => {
-    const data = collectVisitData(_visitPhotoData !== null ? _visitPhotoData : v.photo);
+    const data = collectVisitData([..._visitPhotos]);
     if (!data.doctorName) return;
     Object.assign(v, data);
+    delete v.photo; // remove old field if present
     save(); closeModal(); render();
   });
 }
