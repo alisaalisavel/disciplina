@@ -281,6 +281,7 @@ let editingShoppingId = null;
 let tempShoppingCat = 'food';
 let tempIncomeCat = 'salary';
 let planMonthOffset = 0; // 0=current, 1=next, -1=prev
+let calendarMonthOffset = 0; // 0=current, -1=prev month, etc.
 let tempBookStatus = 'want';
 let tempMediaStatus = 'want';
 let tempMediaType = 'movie';
@@ -327,7 +328,8 @@ function defaultData() {
         { id: 'd3', name: 'Гинеколог',   specialty: 'Женское здоровье', icon: '🌸', status: 'needed' },
         { id: 'd4', name: 'Дерматолог',  specialty: 'Кожа',             icon: '✨', status: 'needed' },
         { id: 'd5', name: 'Офтальмолог', specialty: 'Зрение',           icon: '👁', status: 'needed' },
-      ]
+      ],
+      visits: [],
     },
     cooking: { learned: [], myRecipes: [], customDishes: [] },
     goals: [],
@@ -357,6 +359,7 @@ function loadData() {
       if (!d.media)   d.media = [];
       if (!d.shopping) d.shopping = { items: [] };
       if (!d.shopping.items) d.shopping.items = [];
+      if (!d.health.visits) d.health.visits = [];
       if (!d.cooking) d.cooking = { learned: [], myRecipes: [], customDishes: [] };
       if (!d.cooking.myRecipes)   d.cooking.myRecipes = [];
       if (!d.cooking.customDishes) d.cooking.customDishes = [];
@@ -743,17 +746,19 @@ function renderPage() {
 
 function renderMonthCalendar() {
   const now = new Date();
-  const year = now.getFullYear(), month = now.getMonth();
+  const base = new Date(now.getFullYear(), now.getMonth() + calendarMonthOffset, 1);
+  const year = base.getFullYear(), month = base.getMonth();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const habits = state.data.habits.active;
   const firstDow = (new Date(year, month, 1).getDay() + 6) % 7;
+  const isCurrentMonth = calendarMonthOffset === 0;
 
   let cells = '';
   for (let i = 0; i < firstDow; i++) cells += `<div class="mcell mcell-empty"></div>`;
   for (let d = 1; d <= daysInMonth; d++) {
     const key = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const dayData = state.data.daily[key];
-    const isToday = d === now.getDate();
+    const isToday = isCurrentMonth && d === now.getDate();
     const isFuture = new Date(year, month, d) > now;
     const dow = new Date(year, month, d).getDay();
     const isWeekendDay = dow === 0 || dow === 6;
@@ -774,11 +779,48 @@ function renderMonthCalendar() {
     cells += `<div class="mcell mcell-${level} ${isToday ? 'mcell-today' : ''} ${clickable ? 'mcell-clickable' : ''}" ${clickable ? `data-day-key="${key}"` : ''}>${d}</div>`;
   }
 
+  // Monthly summary for past months
+  let summaryHtml = '';
+  if (!isCurrentMonth) {
+    const allDays = [];
+    for (let d = 1; d <= daysInMonth; d++) {
+      const key = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      allDays.push(key);
+    }
+    const pastDays = allDays.filter(k => k < todayKey());
+    const totalDays = pastDays.length;
+    let perfectDays = 0, dayOffCount = 0, totalDone = 0, totalPossible = 0;
+    for (const key of pastDays) {
+      const dayData = state.data.daily[key];
+      const dow = new Date(key).getDay();
+      const isWeekendDay = dow === 0 || dow === 6;
+      const dayHabits = habits.filter(h => (h.id !== 'uborka' || isWeekendDay) && (!h.startDate || h.startDate <= key));
+      if (!dayHabits.length) continue;
+      if (dayData?.dayOff) { dayOffCount++; perfectDays++; continue; }
+      const done = dayHabits.filter(h => dayData?.habits?.[h.id] || dayData?.skippedHabits?.includes(h.id)).length;
+      totalDone += done; totalPossible += dayHabits.length;
+      if (done === dayHabits.length) perfectDays++;
+    }
+    const pct = totalPossible > 0 ? Math.round(totalDone / totalPossible * 100) : 0;
+    summaryHtml = `
+      <div style="margin-top:12px;padding:10px 12px;background:var(--surface2);border-radius:var(--radius-sm);display:flex;gap:16px;justify-content:space-around;text-align:center">
+        <div><div style="font-size:18px;font-weight:700;color:var(--primary-dark)">${pct}%</div><div class="muted" style="font-size:11px">выполнено</div></div>
+        <div><div style="font-size:18px;font-weight:700;color:var(--primary-dark)">${perfectDays}</div><div class="muted" style="font-size:11px">идеальных дней</div></div>
+        ${dayOffCount > 0 ? `<div><div style="font-size:18px;font-weight:700;color:var(--text-muted)">${dayOffCount}</div><div class="muted" style="font-size:11px">выходных</div></div>` : ''}
+      </div>
+    `;
+  }
+
   return `
     <div class="card">
-      <div class="card-title">${MONTH_NAMES[month]} ${now.getFullYear()}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <button class="btn btn-secondary btn-sm" id="cal-prev" style="padding:4px 10px;font-size:16px">‹</button>
+        <div class="card-title" style="margin:0">${MONTH_NAMES[month]} ${year}</div>
+        <button class="btn btn-secondary btn-sm" id="cal-next" style="padding:4px 10px;font-size:16px" ${isCurrentMonth ? 'disabled style="opacity:0.3"' : ''}>›</button>
+      </div>
       <div class="month-dow">${['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(l=>`<div class="dow-label">${l}</div>`).join('')}</div>
       <div class="month-grid">${cells}</div>
+      ${summaryHtml}
       <div class="chart-legend" style="margin-top:10px">
         <div class="legend-dot" style="background:var(--border)"></div> Нет данных
         <div class="legend-dot" style="background:var(--primary-light);margin-left:8px"></div> &lt;50%
@@ -1484,19 +1526,21 @@ function renderWorkout() {
 }
 
 function renderHealth() {
-  const { doctors } = state.data.health;
+  const { doctors, visits = [] } = state.data.health;
   const needed = doctors.filter(d=>d.status==='needed').length;
   const scheduled = doctors.filter(d=>d.status==='scheduled').length;
   const done = doctors.filter(d=>d.status==='done').length;
+  const sortedVisits = [...visits].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
   return `
     <div class="page">
-      <div class="page-header"><h1>Здоровье 🌿</h1><div class="subtitle">Твои врачи</div></div>
+      <div class="page-header"><h1>Здоровье 🌿</h1><div class="subtitle">Врачи и визиты</div></div>
       <div class="stats-row">
         <div class="stat-box"><div class="stat-value danger-text">${needed}</div><div class="stat-label">Нужно</div></div>
         <div class="stat-box"><div class="stat-value" style="color:#BF360C">${scheduled}</div><div class="stat-label">Записана</div></div>
         <div class="stat-box"><div class="stat-value success-text">${done}</div><div class="stat-label">Сходила ✓</div></div>
       </div>
+
       <div class="card">
         <div class="card-title">Врачи — нажми чтобы изменить статус</div>
         ${doctors.map(d => `
@@ -1510,8 +1554,40 @@ function renderHealth() {
             <button class="doctor-delete-btn" data-doctor-del="${d.id}" title="Удалить">×</button>
           </div>
         `).join('')}
+        <button class="btn btn-secondary btn-full" style="margin-top:10px" id="add-doctor">+ Добавить врача</button>
       </div>
-      <button class="btn btn-secondary btn-full" id="add-doctor">+ Добавить врача</button>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div class="card-title" style="margin:0">📋 Журнал визитов</div>
+          <button class="btn btn-primary btn-sm" id="add-visit">+ Запись</button>
+        </div>
+        ${sortedVisits.length === 0 ? `
+          <div class="empty-state" style="padding:20px 0">
+            <div class="empty-icon">🏥</div>
+            <p>Здесь будут твои записи о визитах к врачу</p>
+          </div>
+        ` : sortedVisits.map(v => `
+          <div class="visit-card" style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:10px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
+              <div>
+                <div style="font-weight:700;font-size:15px">${v.doctorName || 'Врач'}${v.specialty ? ` · <span style="font-weight:400;color:var(--text-muted)">${v.specialty}</span>` : ''}</div>
+                ${v.clinic ? `<div class="muted" style="font-size:12px">🏥 ${v.clinic}</div>` : ''}
+                ${v.date ? `<div class="muted" style="font-size:12px">📅 ${formatDate(v.date)}</div>` : ''}
+              </div>
+              <div style="display:flex;gap:4px">
+                <button class="expense-edit-btn" data-visit-edit="${v.id}">✏️</button>
+                <button class="expense-del-btn" data-visit-del="${v.id}">×</button>
+              </div>
+            </div>
+            ${v.complaints ? `<div style="font-size:13px;margin-top:6px"><span style="color:var(--text-muted)">Жалобы:</span> ${v.complaints}</div>` : ''}
+            ${v.diagnosis ? `<div style="font-size:13px;margin-top:4px"><span style="color:var(--text-muted)">Диагноз:</span> <b>${v.diagnosis}</b></div>` : ''}
+            ${v.prescription ? `<div style="font-size:13px;margin-top:4px"><span style="color:var(--text-muted)">Назначили:</span> ${v.prescription}</div>` : ''}
+            ${v.notes ? `<div style="font-size:13px;margin-top:4px;color:var(--text-muted);font-style:italic">${v.notes}</div>` : ''}
+            ${v.photo ? `<div style="margin-top:8px"><img src="${v.photo}" style="max-width:100%;border-radius:8px;max-height:200px;object-fit:cover" data-visit-photo="${v.id}"></div>` : ''}
+          </div>
+        `).join('')}
+      </div>
     </div>
   `;
 }
@@ -1987,7 +2063,7 @@ function renderBooks() {
             </div>
           </div>
         ` : ''}
-        ${b.status === 'done' && b.totalPages > 0 ? `<div class="muted" style="font-size:12px;margin-top:4px">📄 ${b.totalPages} стр.</div>` : ''}
+        ${(b.status === 'done' || b.status === 'want') && b.totalPages > 0 ? `<div class="muted" style="font-size:12px;margin-top:4px">📄 ${b.totalPages} стр.</div>` : ''}
       </div>
     `;
   }
@@ -2405,6 +2481,111 @@ function openSavings() {
     </div>
     <button class="btn btn-primary btn-full" id="save-savings">Сохранить</button>
   `);
+}
+
+function visitFormHtml(v = {}) {
+  return `
+    <div class="form-group">
+      <label class="form-label">Врач / специальность *</label>
+      <input type="text" class="form-input" id="visit-doctor" placeholder="Терапевт, Гинеколог..." value="${v.doctorName || ''}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Клиника / место</label>
+      <input type="text" class="form-input" id="visit-clinic" placeholder="Название клиники..." value="${v.clinic || ''}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Дата</label>
+      <input type="date" class="form-input" id="visit-date" value="${v.date || todayKey()}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Жалобы</label>
+      <textarea class="form-input" id="visit-complaints" rows="2" placeholder="С чем пришла...">${v.complaints || ''}</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Диагноз</label>
+      <input type="text" class="form-input" id="visit-diagnosis" placeholder="Что поставили..." value="${v.diagnosis || ''}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Назначили / выписали</label>
+      <textarea class="form-input" id="visit-prescription" rows="2" placeholder="Лекарства, процедуры...">${v.prescription || ''}</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Заметки</label>
+      <textarea class="form-input" id="visit-notes" rows="2" placeholder="Прочее, важное...">${v.notes || ''}</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Фото (рецепт, диагноз)</label>
+      <input type="file" class="form-input" id="visit-photo-input" accept="image/*" style="padding:8px">
+      ${v.photo ? `<img src="${v.photo}" id="visit-photo-preview" style="max-width:100%;border-radius:8px;margin-top:8px;max-height:150px;object-fit:cover">` : `<div id="visit-photo-preview"></div>`}
+    </div>
+  `;
+}
+
+function collectVisitData(existingPhoto = null) {
+  return {
+    doctorName:   document.getElementById('visit-doctor')?.value.trim() || '',
+    clinic:       document.getElementById('visit-clinic')?.value.trim() || '',
+    date:         document.getElementById('visit-date')?.value || todayKey(),
+    complaints:   document.getElementById('visit-complaints')?.value.trim() || '',
+    diagnosis:    document.getElementById('visit-diagnosis')?.value.trim() || '',
+    prescription: document.getElementById('visit-prescription')?.value.trim() || '',
+    notes:        document.getElementById('visit-notes')?.value.trim() || '',
+    photo:        existingPhoto,
+  };
+}
+
+let _visitPhotoData = null;
+
+function bindVisitPhotoInput() {
+  _visitPhotoData = null;
+  const inp = document.getElementById('visit-photo-input');
+  if (!inp) return;
+  inp.addEventListener('change', () => {
+    const file = inp.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      _visitPhotoData = e.target.result;
+      const prev = document.getElementById('visit-photo-preview');
+      if (prev) { prev.tagName === 'IMG' ? prev.src = _visitPhotoData : prev.innerHTML = `<img src="${_visitPhotoData}" style="max-width:100%;border-radius:8px;margin-top:8px;max-height:150px;object-fit:cover">`; }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function openAddVisit() {
+  _visitPhotoData = null;
+  openModal(`
+    <h2>📋 Новая запись</h2>
+    ${visitFormHtml()}
+    <button class="btn btn-primary btn-full" id="save-visit">Сохранить</button>
+  `);
+  bindVisitPhotoInput();
+  document.getElementById('save-visit')?.addEventListener('click', () => {
+    const data = collectVisitData(_visitPhotoData);
+    if (!data.doctorName) return;
+    if (!state.data.health.visits) state.data.health.visits = [];
+    state.data.health.visits.push({ id: uid(), ...data });
+    save(); closeModal(); render();
+  });
+}
+
+function openEditVisit(id) {
+  const v = state.data.health.visits?.find(x => x.id === id);
+  if (!v) return;
+  _visitPhotoData = v.photo || null;
+  openModal(`
+    <h2>📋 Редактировать запись</h2>
+    ${visitFormHtml(v)}
+    <button class="btn btn-primary btn-full" id="save-visit">Сохранить</button>
+  `);
+  bindVisitPhotoInput();
+  document.getElementById('save-visit')?.addEventListener('click', () => {
+    const data = collectVisitData(_visitPhotoData !== null ? _visitPhotoData : v.photo);
+    if (!data.doctorName) return;
+    Object.assign(v, data);
+    save(); closeModal(); render();
+  });
 }
 
 function openAddDoctor() {
@@ -3064,6 +3245,8 @@ function bindEvents() {
   document.querySelectorAll('.mcell[data-day-key]').forEach(el => {
     el.addEventListener('click', () => openDayEditModal(el.dataset.dayKey));
   });
+  document.getElementById('cal-prev')?.addEventListener('click', () => { calendarMonthOffset--; render(); });
+  document.getElementById('cal-next')?.addEventListener('click', () => { if (calendarMonthOffset < 0) { calendarMonthOffset++; render(); } });
 
   // Wake time — today page
   document.getElementById('save-wake')?.addEventListener('click', () => {
@@ -3209,6 +3392,18 @@ function bindEvents() {
     });
   });
   document.getElementById('add-doctor')?.addEventListener('click', openAddDoctor);
+
+  // Health visits
+  document.getElementById('add-visit')?.addEventListener('click', openAddVisit);
+  document.querySelectorAll('[data-visit-edit]').forEach(btn => {
+    btn.addEventListener('click', () => openEditVisit(btn.dataset.visitEdit));
+  });
+  document.querySelectorAll('[data-visit-del]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.data.health.visits = state.data.health.visits.filter(v => v.id !== btn.dataset.visitDel);
+      save(); render();
+    });
+  });
 
   // Goals: song steps
   document.querySelectorAll('.recipe-item[data-goal]').forEach(el => {
