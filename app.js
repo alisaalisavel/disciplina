@@ -222,455 +222,715 @@ const INCOME_CATS = [
   { id: 'debt_in',  name: 'Долг (вернули)', icon: '🤝' },
 ];
 
-const ENGLISH_A1 = [
+const ENGLISH_PROGRAM = [
+  // ── WEEK 1 ──────────────────────────────────────────────────────────────
   {
-    id: 'greetings', icon: '👋', title: 'Знакомство',
-    subtitle: 'Приветствия, прощания и как представиться',
-    rules: [
-      { heading: 'Приветствия по времени суток', examples: [
-        'Hello / Hi — Привет (всегда подходит)',
-        'Good morning — Доброе утро (до 12:00)',
-        'Good afternoon — Добрый день (12:00–18:00)',
-        'Good evening — Добрый вечер (после 18:00)',
-      ]},
-      { heading: 'Как представиться', examples: [
-        "My name is Anna. — Меня зовут Анна.",
-        "I'm Anna. — Я Анна. (сокращённо, разговорно)",
-        "What's your name? — Как тебя зовут?",
-      ]},
-      { heading: 'Полезные фразы', examples: [
-        'Nice to meet you! — Приятно познакомиться!',
-        'How are you? — Как дела?',
-        "I'm fine, thank you! — Всё хорошо, спасибо!",
-        'And you? — А у тебя?',
-        'Goodbye! / Bye! — Пока!',
-        'See you later! — До скорого!',
-        'See you tomorrow! — До завтра!',
-      ]},
+    week: 1, icon: '📰', theme: 'Артикли: a / the',
+    tip: 'Твоя главная ошибка из теста. Разберём раз и навсегда!',
+    sessions: [
+      {
+        n: 1, day: 'Вторник', title: 'Правило + Happy (Pharrell Williams)',
+        grammar: {
+          title: 'Артикли: A / THE / ∅',
+          blocks: [
+            { heading: 'A / AN — впервые или «какой-то»',
+              examples: ['I have **a** cat. — У меня есть кот (неважно какой)','She is **a** doctor. — Она врач (одна из многих)','I want **an** apple. — Хочу яблоко (любое)'],
+              note: '💡 AN перед гласными: an apple, an hour, an idea' },
+            { heading: 'THE — конкретный, единственный, оба знают',
+              examples: ['Close **the** door. — Закрой дверь (ту что рядом)','**The** sun is hot. — Солнце горячее (оно одно)','I liked **the** film. — Фильм понравился (тот что смотрели)'] },
+            { heading: '∅ Без артикля — имена, страны, языки, общее',
+              examples: ['I live in **Kazakhstan**. — Страны без артикля','I love **music**. — Музыка в целом','She speaks **English**. — Языки без артикля'],
+              note: '💡 Инструменты: play **the** guitar, play **the** piano (твоя ошибка в тесте 😄)' },
+          ]
+        },
+        song: {
+          title: 'Happy', artist: 'Pharrell Williams',
+          link: 'https://youtu.be/ZbZSe6N_BXs',
+          intro: '🎵 Суперпростые слова, Present Simple, много артиклей. Послушай сначала!',
+          lines: [
+            { line: "It might seem crazy what I'm about to say", ru: 'Может казаться безумным то, что я скажу' },
+            { line: "I'm a hot air balloon that could go to space", ru: 'Я воздушный шар, который мог бы улететь в космос' },
+            { line: "Because I'm happy", ru: 'Потому что я счастлив' },
+            { line: "Clap along if you feel like happiness is the truth", ru: 'Хлопай, если чувствуешь что счастье — это правда' },
+          ],
+          notes: [
+            '**a** hot air balloon — впервые упомянули → A',
+            '**the** truth — истина одна, конкретная → THE',
+            '**happiness** — счастье в общем смысле → без артикля',
+            "I'm **happy** — прилагательное, артикль не нужен",
+          ]
+        },
+        exercises: [
+          { q: 'She is ___ doctor.', opts: ['a','the','—'], ans: 'a', tip: 'Профессия, говорим впервые → A' },
+          { q: 'I love ___ music.', opts: ['a','the','—'], ans: '—', tip: 'Музыка в общем смысле → без артикля' },
+          { q: 'Open ___ window, please.', opts: ['a','the','—'], ans: 'the', tip: 'Конкретное окно, оба видят его → THE' },
+          { q: 'I want to visit ___ France.', opts: ['a','the','—'], ans: '—', tip: 'Страны без артикля' },
+          { q: 'I saw ___ dog. ___ dog was huge!', opts: ['a / the','the / a','a / a'], ans: 'a / the', tip: 'Первый раз → A, второй раз уже знаем → THE' },
+          { q: '___ sun is very bright today.', opts: ['A','The','—'], ans: 'The', tip: 'Солнце одно на всех → THE' },
+          { q: 'She plays ___ piano beautifully.', opts: ['a','the','—'], ans: 'the', tip: 'Инструменты: play THE piano/guitar' },
+        ],
+        prompt: 'Напиши 3 предложения о себе используя a / the / без артикля.\nНапример: I have a cat. The cat is grey. I love music.'
+      },
+      {
+        n: 2, day: 'Четверг', title: 'Friends + закрепление',
+        dialogue: {
+          source: '📺 Friends — Season 1, Episode 1',
+          intro: 'Лучший сериал для учёбы. Речь живая, разговорная. Следи за артиклями!',
+          lines: [
+            { who: 'Monica', text: "There's nothing to tell! It's just some guy I work with!", ru: 'Нечего рассказывать! Просто какой-то парень с работы!' },
+            { who: 'Rachel', text: "C'mon, you're going out with the guy!", ru: 'Да ладно, ты встречаешься с ЭТИМ парнем!' },
+            { who: 'Chandler', text: 'So does he have a hump? A hump and a hairpiece?', ru: 'Так у него есть горб? Горб и парик?' },
+          ],
+          notes: [
+            '**some** guy — какой-то парень, неопределённо → some (≈ A)',
+            '**the** guy — Rachel уже знает о ком речь → THE',
+            '**a** hump, **a** hairpiece — называем впервые → A',
+            "There's = There is — «есть» в значении существования",
+          ]
+        },
+        exercises: [
+          { q: 'I have ___ idea!', opts: ['a','the','—'], ans: 'a', tip: 'Идея упомянута впервые → A' },
+          { q: 'Can you pass me ___ salt?', opts: ['a','the','—'], ans: 'the', tip: 'Конкретная солонка на столе → THE' },
+          { q: 'She works in ___ hospital.', opts: ['a','the','—'], ans: 'a', tip: 'Одна из многих больниц → A' },
+          { q: 'He plays ___ guitar in a band.', opts: ['a','the','—'], ans: 'the', tip: 'Инструменты: play THE guitar' },
+          { q: 'I visited ___ Italy last summer.', opts: ['a','the','—'], ans: '—', tip: 'Страны без артикля' },
+        ],
+        prompt: 'Переведи: «У меня есть сестра. Она врач. Она работает в больнице. Её муж играет на гитаре.»'
+      }
     ],
     vocab: [
-      {en:'hello',ru:'привет'},{en:'goodbye',ru:'пока'},{en:'name',ru:'имя'},
-      {en:'nice',ru:'приятный / хорошо'},{en:'meet',ru:'встречать, знакомиться'},
-      {en:'fine',ru:'в порядке, хорошо'},{en:'thank you',ru:'спасибо'},
-      {en:'please',ru:'пожалуйста'},{en:'sorry',ru:'извините / прости'},
-      {en:'excuse me',ru:'простите (чтобы привлечь внимание)'},{en:'yes',ru:'да'},
-      {en:'no',ru:'нет'},{en:'morning',ru:'утро'},{en:'afternoon',ru:'день'},
-      {en:'evening',ru:'вечер'},{en:'night',ru:'ночь'},
+      { en: 'article', ru: 'артикль', ex: 'Use "the" before specific nouns.' },
+      { en: 'specific', ru: 'конкретный', ex: 'I want the specific book you mentioned.' },
+      { en: 'general', ru: 'в общем / общий', ex: 'I love music in general.' },
+      { en: 'mention', ru: 'упоминать', ex: 'She mentioned a great café.' },
+      { en: 'instrument', ru: 'музыкальный инструмент', ex: 'She plays the violin.' },
+      { en: 'unique', ru: 'уникальный', ex: 'The sun is unique.' },
+      { en: 'introduce', ru: 'представлять', ex: "Let me introduce a new topic." },
+      { en: 'band', ru: 'группа (музыкальная)', ex: 'She plays guitar in a band.' },
+      { en: 'truth', ru: 'правда / истина', ex: 'Happiness is the truth.' },
+      { en: 'certain', ru: 'определённый / уверенный', ex: "I'm certain about this." },
     ]
   },
+
+  // ── WEEK 2 ──────────────────────────────────────────────────────────────
   {
-    id: 'alphabet', icon: '🔤', title: 'Алфавит',
-    subtitle: 'Буквы и их произношение',
-    rules: [
-      { heading: 'Английский алфавит — 26 букв', examples: [
-        'A [эй]   B [би]   C [си]   D [ди]   E [и]   F [эф]',
-        'G [джи]  H [эйч]  I [ай]   J [джей] K [кей] L [эл]',
-        'M [эм]   N [эн]   O [оу]   P [пи]   Q [кью] R [ар]',
-        'S [эс]   T [ти]   U [ю]    V [ви]   W [дабл-ю] X [экс]',
-        'Y [уай]  Z [зи / зэд]',
-      ]},
-      { heading: 'Гласные звуки — запомни!', examples: [
-        'A, E, I, O, U — гласные буквы',
-        'cat [кэт] — краткое А',
-        'cake [кейк] — долгое А (звук "эй")',
-        'bed [бэд] — краткое Е',
-        'see [си] — долгое Е (звук "и")',
-        'hit [хит] — краткое I',
-        'bike [байк] — долгое I (звук "ай")',
-      ]},
-      { heading: 'Как читать — основные правила', examples: [
-        'ch = [ч]: chair, chocolate, cheese',
-        'sh = [ш]: she, shop, fish',
-        'th = [з/с]: the [зэ], think [синк]',
-        'ck = [к]: back, black, clock',
-        'wh = [в/х]: what [вот], who [ху]',
-      ]},
+    week: 2, icon: '🔗', theme: 'Инфинитив: want TO, like TO',
+    tip: 'В тесте написала "I want drink water" — не хватило TO. Чиним!',
+    sessions: [
+      {
+        n: 1, day: 'Вторник', title: 'Правило + Perfect (Ed Sheeran)',
+        grammar: {
+          title: 'Глагол + TO + инфинитив',
+          blocks: [
+            { heading: 'Want / need / would like + TO',
+              examples: ['I want **to** drink water. ✅','She needs **to** study.','I\'d like **to** travel.'],
+              note: '⚠️ Без TO — ОШИБКА: ~~I want drink~~ → I want **to** drink' },
+            { heading: 'Like / love / hate + TO или -ING (оба верны!)',
+              examples: ['I like **to** read. = I like **reading**. ✅','She loves **to** dance. = She loves **dancing**. ✅','He hates **waking** up early.'] },
+            { heading: 'Plan / decide / forget + TO',
+              examples: ['I plan **to** visit London.','She decided **to** learn English.','Don\'t forget **to** call me!'] },
+          ]
+        },
+        song: {
+          title: 'Perfect', artist: 'Ed Sheeran',
+          link: 'https://youtu.be/2Vv-BfVoq4g',
+          intro: '🎵 Романтическая, простые слова. Ищи TO в тексте!',
+          lines: [
+            { line: "I found a love for me", ru: 'Я нашёл любовь для себя' },
+            { line: "Darling, just dive right in, follow my lead", ru: 'Дорогая, просто нырни, следуй за мной' },
+            { line: "I never knew you were the someone waiting for me", ru: 'Я не знал, что ты тот человек, который ждёт меня' },
+            { line: "Baby, I'm dancing in the dark with you between my arms", ru: 'Малышка, я танцую в темноте, а ты у меня в объятиях' },
+          ],
+          notes: [
+            '**a** love — любовь как понятие, впервые → A',
+            '**follow** my lead — инфинитив после and/or без TO',
+            '**dancing** — Present Continuous: прямо сейчас',
+            '**the** someone — конкретный человек → THE',
+          ]
+        },
+        exercises: [
+          { q: 'I want ___ learn English.', opts: ['to','—','for'], ans: 'to', tip: 'want + TO + глагол' },
+          { q: 'She decided ___ move to London.', opts: ['to','—','for'], ans: 'to', tip: 'decide + TO + глагол' },
+          { q: 'Don\'t forget ___ call me!', opts: ['to','—','for'], ans: 'to', tip: 'forget + TO + глагол' },
+          { q: 'I need ___ sleep. I\'m so tired.', opts: ['to','—','for'], ans: 'to', tip: 'need + TO + глагол' },
+          { q: 'I love ___ in the morning. (выбери оба верных)', opts: ['to run','running','both ✓'], ans: 'both ✓', tip: 'love + TO / -ing — оба варианта правильны!' },
+          { q: 'She plans ___ visit her family.', opts: ['to','—','for'], ans: 'to', tip: 'plan + TO + глагол' },
+        ],
+        prompt: 'Напиши 3 вещи которые хочешь сделать этим летом.\nНапример: I want to travel to Turkey. I would like to learn to swim.'
+      },
+      {
+        n: 2, day: 'Четверг', title: 'Friends + закрепление',
+        dialogue: {
+          source: '📺 Friends — Season 1, Episode 1',
+          intro: 'Ищи глаголы с TO и без. Обрати внимание на сокращения!',
+          lines: [
+            { who: 'Ross', text: "I just want to be married again.", ru: 'Я просто хочу снова быть женатым.' },
+            { who: 'Rachel', text: "I just want a diet Coke.", ru: 'Я просто хочу диетическую Колу.' },
+            { who: 'Chandler', text: "I just don't want to be the guy who needs to explain why he's wearing a wedding dress.", ru: 'Я не хочу быть тем парнем, которому нужно объяснять, почему он в свадебном платье.' },
+          ],
+          notes: [
+            'want **to** be — хочу быть → want + TO + глагол',
+            'want **a** diet Coke — хочу купить → want + существительное (без TO!)',
+            "don't want **to** be — не хочу → отрицание + TO",
+            "**who** — который (относительное местоимение)",
+          ]
+        },
+        exercises: [
+          { q: 'She wants ___ a pizza.', opts: ['to eat','eat','eating'], ans: 'to eat', tip: 'want + TO + глагол' },
+          { q: 'I like ___ in the morning.', opts: ['to run','run','runs'], ans: 'to run', tip: 'like + TO (или -ing)' },
+          { q: 'He decided ___ the job.', opts: ['to take','take','taking'], ans: 'to take', tip: 'decide + TO + глагол' },
+          { q: 'Please don\'t forget ___ the door.', opts: ['to lock','lock','locking'], ans: 'to lock', tip: 'forget + TO + глагол' },
+          { q: 'I love ___ coffee. (оба варианта?)', opts: ['drinking','to drink','both ✓'], ans: 'both ✓', tip: 'love + TO / -ing — оба варианта правильны!' },
+        ],
+        prompt: 'Расскажи о планах на ближайший месяц. 3-4 предложения с want to / plan to / would like to.'
+      }
     ],
     vocab: [
-      {en:'letter',ru:'буква'},{en:'word',ru:'слово'},{en:'sound',ru:'звук'},
-      {en:'vowel',ru:'гласная'},{en:'consonant',ru:'согласная'},
-      {en:'alphabet',ru:'алфавит'},{en:'spell',ru:'произносить по буквам'},
-      {en:'pronounce',ru:'произносить'},{en:'read',ru:'читать'},
-      {en:'write',ru:'писать'},{en:'listen',ru:'слушать'},{en:'speak',ru:'говорить'},
+      { en: 'want', ru: 'хотеть', ex: 'I want to learn English.' },
+      { en: 'need', ru: 'нуждаться / нужно', ex: 'I need to sleep more.' },
+      { en: 'plan', ru: 'планировать / план', ex: 'She plans to visit Rome.' },
+      { en: 'decide', ru: 'решать', ex: 'He decided to change his job.' },
+      { en: 'forget', ru: 'забывать', ex: "Don't forget to call me!" },
+      { en: 'travel', ru: 'путешествовать', ex: 'I love to travel.' },
+      { en: 'improve', ru: 'улучшать', ex: 'I want to improve my English.' },
+      { en: 'achieve', ru: 'достигать', ex: 'She plans to achieve her goals.' },
+      { en: 'dream', ru: 'мечтать / мечта', ex: 'I dream of travelling the world.' },
+      { en: 'goal', ru: 'цель', ex: 'My goal is to speak English fluently.' },
     ]
   },
+
+  // ── WEEK 3 ──────────────────────────────────────────────────────────────
   {
-    id: 'tobe', icon: '✅', title: 'Глагол "to be"',
-    subtitle: 'am / is / are — главный глагол английского',
-    rules: [
-      { heading: 'Таблица глагола to be', examples: [
-        'I am — я есть / я (I am = I\'m)',
-        'You are — ты есть / ты (You are = You\'re)',
-        'He is — он есть / он (He is = He\'s)',
-        'She is — она есть / она (She is = She\'s)',
-        'It is — это есть / оно (It is = It\'s)',
-        'We are — мы есть / мы (We are = We\'re)',
-        'They are — они есть / они (They are = They\'re)',
-      ]},
-      { heading: 'Утвердительные предложения', examples: [
-        "I'm happy. — Я счастлива.",
-        "She's a doctor. — Она врач.",
-        "We're friends. — Мы друзья.",
-        "It's cold today. — Сегодня холодно.",
-      ]},
-      { heading: 'Отрицание — добавь NOT', examples: [
-        "I'm not tired. — Я не устала.",
-        "He isn't here. — Его здесь нет. (is not = isn't)",
-        "They aren't ready. — Они не готовы. (are not = aren't)",
-      ]},
-      { heading: 'Вопросы — поставь to be ВПЕРЁД', examples: [
-        "Are you okay? — Ты в порядке?",
-        "Is she a student? — Она студентка?",
-        "Am I late? — Я опоздала?",
-        "Yes, I am. / No, I'm not. — Да / Нет.",
-      ]},
+    week: 3, icon: '🕐', theme: 'Present Simple — правила',
+    tip: 'Каждый день, привычки, факты. Самое важное время для разговора!',
+    sessions: [
+      {
+        n: 1, day: 'Вторник', title: 'Правило + Here Comes The Sun',
+        grammar: {
+          title: 'Present Simple — настоящее простое',
+          blocks: [
+            { heading: 'Когда использовать',
+              examples: ['Привычки: I **wake up** at 7 every day.','Факты: Water **boils** at 100°C.','Расписание: The train **leaves** at 9.'] },
+            { heading: 'Правило для он/она/оно — добавь S',
+              examples: ['I work → She **works**','I go → He **goes** (-o/-s/-ch/-sh → +es)','I have → She **has** (исключение!)','I do → He **does** (исключение!)','I watch → She **watches**'],
+              note: '⚠️ I/you/we/they → без S. He/she/it → с S.' },
+            { heading: 'Отрицание — DON\'T / DOESN\'T + NOT',
+              examples: ["I **don't** like coffee.","She **doesn't** eat meat. (не ~~doesn't eats~~!)","They **don't** work on Sunday."] },
+            { heading: 'Вопросы — DO / DOES вперёд',
+              examples: ['**Do** you speak English?','**Does** she live here?','Where **do** you work?'] },
+          ]
+        },
+        song: {
+          title: 'Here Comes The Sun', artist: 'The Beatles',
+          link: 'https://youtu.be/KQetemT1sWc',
+          intro: '🎵 Классика! Простые слова, много Present Simple. Замечай глаголы.',
+          lines: [
+            { line: "Here comes the sun", ru: 'Вот и солнце' },
+            { line: "Here comes the sun, and I say it's all right", ru: 'Вот и солнце, и я говорю — всё хорошо' },
+            { line: "Little darling, it's been a long cold lonely winter", ru: 'Солнышко, была долгая холодная одинокая зима' },
+            { line: "Little darling, the smile is returning to their faces", ru: 'Солнышко, улыбка возвращается на их лица' },
+          ],
+          notes: [
+            'Here **comes** — Present Simple (3е лицо → +S)',
+            'I **say** — Present Simple, 1е лицо → без S',
+            "it's **all right** — всё хорошо (фраза на каждый день!)",
+            "**the** smile — конкретная улыбка → THE",
+          ]
+        },
+        exercises: [
+          { q: 'She ___ to work every day.', opts: ['drive','drives','is driving'], ans: 'drives', tip: 'She = 3е лицо → +S' },
+          { q: 'They ___ play football on weekends.', opts: ["don't","doesn't","not"], ans: "don't", tip: 'They → do not = don\'t' },
+          { q: '___ she speak French?', opts: ['Do','Does','Is'], ans: 'Does', tip: 'She → Does в вопросе' },
+          { q: 'He ___ TV every evening.', opts: ['watch','watchs','watches'], ans: 'watches', tip: 'watch → watches (-ch → +es)' },
+          { q: 'I ___ coffee. I prefer tea.', opts: ["don't drink","doesn't drink","not drink"], ans: "don't drink", tip: 'I → do not = don\'t' },
+          { q: 'Water ___ at 100 degrees.', opts: ['boil','boils','is boiling'], ans: 'boils', tip: 'Факт + 3е лицо → boils' },
+          { q: 'Where ___ she work?', opts: ['do','does','is'], ans: 'does', tip: 'She → Does в вопросе' },
+        ],
+        prompt: 'Расскажи о своём обычном дне. 4-5 предложений.\nНапример: I wake up at 8. I don\'t eat breakfast. I work from home...'
+      },
+      {
+        n: 2, day: 'Четверг', title: 'Friends + закрепление',
+        dialogue: {
+          source: '📺 Friends — Season 1, Episode 1',
+          intro: 'Present Simple везде! Обрати внимание на do/does в вопросах.',
+          lines: [
+            { who: 'Monica', text: "What does he do?", ru: 'Кем он работает?' },
+            { who: 'Phoebe', text: "He's a doctor. He works at a hospital downtown.", ru: 'Он врач. Работает в больнице в центре.' },
+            { who: 'Joey', text: "Does he make a lot of money?", ru: 'Он много зарабатывает?' },
+            { who: 'Monica', text: "I don't know! I don't ask people about their salary!", ru: 'Не знаю! Я не спрашиваю людей об их зарплате!' },
+          ],
+          notes: [
+            "**does** he do — вопрос с does (he = 3е лицо)",
+            "**works** — 3е лицо → +s",
+            "**Does** he make — вопрос с Does",
+            "**don't** know, **don't** ask — I → don't",
+          ]
+        },
+        exercises: [
+          { q: 'He ___ like spicy food.', opts: ["don't","doesn't","not"], ans: "doesn't", tip: 'He → does not = doesn\'t' },
+          { q: '___ you like travelling?', opts: ['Do','Does','Are'], ans: 'Do', tip: 'You → Do в вопросе' },
+          { q: 'She ___ three languages.', opts: ['speak','speaks','speaking'], ans: 'speaks', tip: 'She → +s → speaks' },
+          { q: 'I ___ at 7 am every day.', opts: ['wake up','wakes up','waking up'], ans: 'wake up', tip: 'I → без S' },
+          { q: 'My sister ___ yoga every morning.', opts: ['do','does','is'], ans: 'does', tip: 'My sister (she) → does yoga' },
+        ],
+        prompt: 'Задай 3 вопроса воображаемому другу о его жизни.\nНапример: Do you like pizza? Does your sister speak English? Where do you work?'
+      }
     ],
     vocab: [
-      {en:'happy',ru:'счастливый / счастлива'},{en:'sad',ru:'грустный'},
-      {en:'tired',ru:'уставший'},{en:'hungry',ru:'голодный'},
-      {en:'ready',ru:'готовый'},{en:'busy',ru:'занятой'},
-      {en:'young',ru:'молодой'},{en:'old',ru:'старый'},
-      {en:'big',ru:'большой'},{en:'small',ru:'маленький'},
-      {en:'beautiful',ru:'красивый'},{en:'tall',ru:'высокий'},
-      {en:'student',ru:'студент'},{en:'doctor',ru:'врач'},
-      {en:'friend',ru:'друг / подруга'},{en:'here',ru:'здесь'},
+      { en: 'every day', ru: 'каждый день', ex: 'I exercise every day.' },
+      { en: 'usually', ru: 'обычно', ex: 'I usually wake up at 7.' },
+      { en: 'always', ru: 'всегда', ex: 'She always drinks coffee in the morning.' },
+      { en: 'never', ru: 'никогда', ex: "I never eat junk food." },
+      { en: 'sometimes', ru: 'иногда', ex: 'I sometimes work late.' },
+      { en: 'often', ru: 'часто', ex: 'He often visits his parents.' },
+      { en: 'rarely', ru: 'редко', ex: 'She rarely watches TV.' },
+      { en: 'habit', ru: 'привычка', ex: 'Exercise is a good habit.' },
+      { en: 'schedule', ru: 'расписание', ex: 'What is your daily schedule?' },
+      { en: 'routine', ru: 'распорядок / рутина', ex: 'My morning routine takes an hour.' },
     ]
   },
+
+  // ── WEEK 4 ──────────────────────────────────────────────────────────────
   {
-    id: 'numbers', icon: '🔢', title: 'Числа и время',
-    subtitle: 'Числа 1–100, возраст, который час',
-    rules: [
-      { heading: 'Числа 1–20', examples: [
-        '1 one, 2 two, 3 three, 4 four, 5 five',
-        '6 six, 7 seven, 8 eight, 9 nine, 10 ten',
-        '11 eleven, 12 twelve, 13 thirteen, 14 fourteen, 15 fifteen',
-        '16 sixteen, 17 seventeen, 18 eighteen, 19 nineteen, 20 twenty',
-      ]},
-      { heading: 'Числа 21–100', examples: [
-        '21 twenty-one, 22 twenty-two... 30 thirty',
-        '40 forty, 50 fifty, 60 sixty',
-        '70 seventy, 80 eighty, 90 ninety, 100 one hundred',
-      ]},
-      { heading: 'Возраст — How old are you?', examples: [
-        'How old are you? — Сколько тебе лет?',
-        "I'm 25 (years old). — Мне 25 лет.",
-        'She is 30 years old. — Ей 30 лет.',
-      ]},
-      { heading: 'Который час — What time is it?', examples: [
-        "What time is it? — Который час?",
-        "It's 3 o'clock. — Три часа.",
-        "It's 3:30 / half past three. — Половина четвёртого.",
-        "It's 3:15 / quarter past three. — Четверть четвёртого.",
-        "It's 3:45 / quarter to four. — Без четверти четыре.",
-      ]},
+    week: 4, icon: '🔄', theme: 'Present Simple vs Continuous',
+    tip: 'В тесте написала "listening" вместо "listen". Сейчас поймёшь разницу!',
+    sessions: [
+      {
+        n: 1, day: 'Вторник', title: 'Правило + Shape of You',
+        grammar: {
+          title: 'Simple vs Continuous — когда что?',
+          blocks: [
+            { heading: 'Present Simple — привычка, всегда',
+              examples: ['I **listen** to music every day. (привычка)','She **works** at a café. (постоянно)','He **doesn\'t** like horror films. (всегда)'],
+              note: '🔑 Маркеры: every day, always, usually, never, often' },
+            { heading: 'Present Continuous — прямо сейчас, временно',
+              examples: ['I **am listening** to music now. (в эту минуту)','She **is working** from home this week. (временно)','They **are having** lunch. (прямо сейчас)'],
+              note: '🔑 Маркеры: now, right now, at the moment, today, this week' },
+            { heading: 'Как образовать Continuous',
+              examples: ['I am + -ing → I **am eating**','She is + -ing → She **is running**','They are + -ing → They **are watching**'],
+              note: '⚠️ Только Simple (без -ing): like, love, hate, know, understand, want, need' },
+          ]
+        },
+        song: {
+          title: 'Shape of You', artist: 'Ed Sheeran',
+          link: 'https://youtu.be/JGwWNGJdvx8',
+          intro: '🎵 Оба времени в одной песне! Ищи разницу.',
+          lines: [
+            { line: "I'm in love with the shape of you", ru: 'Я влюблён в твой облик' },
+            { line: "We push and pull like magnets do", ru: 'Мы притягиваемся и отталкиваемся, как магниты' },
+            { line: "Although my heart is falling too", ru: 'Хотя моё сердце тоже падает' },
+            { line: "I'm in love with your body", ru: 'Я влюблён в тебя' },
+          ],
+          notes: [
+            "**I'm in love** — состояние прямо сейчас (Continuous форма)",
+            "magnets **do** — Present Simple (магниты всегда так)",
+            "**falling** — в процессе прямо сейчас → Continuous",
+            "**your** body — притяжательное, без артикля",
+          ]
+        },
+        exercises: [
+          { q: 'I ___ to music every morning. (привычка)', opts: ['listen','am listening','listening'], ans: 'listen', tip: 'Каждое утро = привычка → Simple' },
+          { q: 'Shhh! She ___ on the phone right now.', opts: ['talks','is talking','talk'], ans: 'is talking', tip: 'Прямо сейчас → Continuous' },
+          { q: 'He usually ___ coffee, but today he ___ tea.', opts: ['drinks / is drinking','is drinking / drinks','drink / drink'], ans: 'drinks / is drinking', tip: 'Обычно (Simple) + сегодня временно (Continuous)' },
+          { q: 'I ___ you! This is so confusing.', opts: ["don't understand","am not understanding","not understand"], ans: "don't understand", tip: 'understand — только Simple, никогда Continuous' },
+          { q: 'Look! It ___ outside!', opts: ['rains','is raining','rain'], ans: 'is raining', tip: 'Look! = прямо сейчас → Continuous' },
+          { q: 'She ___ yoga every Tuesday.', opts: ['does','is doing','do'], ans: 'does', tip: 'Every Tuesday = расписание → Simple' },
+        ],
+        prompt: 'Опиши что делаешь ПРЯМО СЕЙЧАС и что делаешь КАЖДЫЙ ДЕНЬ.\nНапример: Right now I am sitting at home and studying English. Every day I wake up at 8...'
+      },
+      {
+        n: 2, day: 'Четверг', title: 'Friends + закрепление',
+        dialogue: {
+          source: '📺 Friends — Season 2, Episode 5',
+          intro: 'Continuous в разговоре. Следи за am/is/are + -ing!',
+          lines: [
+            { who: 'Joey', text: "What are you doing?", ru: 'Что ты делаешь?' },
+            { who: 'Chandler', text: "I'm trying to get ready, but Monica keeps coming in here!", ru: 'Пытаюсь собраться, но Моника постоянно врывается!' },
+            { who: 'Monica', text: "I'm just checking if you need anything.", ru: 'Просто проверяю, нужно ли тебе что-нибудь.' },
+            { who: 'Chandler', text: "I need you to stop doing that!", ru: 'Мне нужно чтобы ты перестала это делать!' },
+          ],
+          notes: [
+            "What **are** you **doing**? — прямо сейчас → Continuous",
+            "I**'m trying** — в процессе → Continuous",
+            "**keeps** coming — keeps + -ing = продолжает делать",
+            "I**'m** just **checking** — временное действие → Continuous",
+          ]
+        },
+        exercises: [
+          { q: "Why ___ you ___ ? (crying, прямо сейчас)", opts: ['do / cry','are / crying','do / crying'], ans: 'are / crying', tip: 'Прямо сейчас → are + crying' },
+          { q: "She ___ English at university. (постоянно)", opts: ['is studying','studies','study'], ans: 'studies', tip: 'Постоянно → Simple → studies' },
+          { q: "___ you listening to me right now?", opts: ['Do','Are','Is'], ans: 'Are', tip: 'Right now → Continuous → Are you...?' },
+          { q: "I ___ what you mean.", opts: ["understand","am understanding","understands"], ans: "understand", tip: 'understand — только Simple' },
+          { q: "They ___ a new series this month. (временно)", opts: ['watch','are watching','watches'], ans: 'are watching', tip: 'This month = временно → Continuous' },
+        ],
+        prompt: 'Представь что пишешь другу. Расскажи что происходит прямо сейчас и что обычно происходит в это время дня.'
+      }
     ],
     vocab: [
-      {en:'number',ru:'число, цифра'},{en:'time',ru:'время'},
-      {en:'hour',ru:'час'},{en:'minute',ru:'минута'},
-      {en:'o\'clock',ru:'ровно (в ... часов)'},{en:'half past',ru:'половина'},
-      {en:'quarter past',ru:'четверть (после часа)'},{en:'quarter to',ru:'без четверти'},
-      {en:'age',ru:'возраст'},{en:'year',ru:'год'},{en:'day',ru:'день'},
-      {en:'week',ru:'неделя'},{en:'month',ru:'месяц'},{en:'today',ru:'сегодня'},
-      {en:'tomorrow',ru:'завтра'},{en:'yesterday',ru:'вчера'},
+      { en: 'right now', ru: 'прямо сейчас', ex: "I'm studying right now." },
+      { en: 'at the moment', ru: 'в данный момент', ex: "She's working at the moment." },
+      { en: 'temporary', ru: 'временный', ex: "It's a temporary situation." },
+      { en: 'permanent', ru: 'постоянный', ex: "This is my permanent address." },
+      { en: 'currently', ru: 'в настоящее время', ex: "I'm currently learning French." },
+      { en: 'action', ru: 'действие', ex: "The action happens now." },
+      { en: 'state', ru: 'состояние', ex: "Love is a state, not an action." },
+      { en: 'process', ru: 'процесс', ex: "Learning is a long process." },
+      { en: 'concentrate', ru: 'концентрироваться', ex: "I can't concentrate when it's noisy." },
+      { en: 'interrupt', ru: 'перебивать', ex: "Please don't interrupt me." },
     ]
   },
+
+  // ── WEEK 5 ──────────────────────────────────────────────────────────────
   {
-    id: 'family', icon: '👨‍👩‍👧', title: 'Семья',
-    subtitle: 'Члены семьи, have/has, мой / моя / мои',
-    rules: [
-      { heading: 'Члены семьи', examples: [
-        'mother / mom — мама',
-        'father / dad — папа',
-        'sister — сестра',
-        'brother — брат',
-        'grandmother / grandma — бабушка',
-        'grandfather / grandpa — дедушка',
-        'daughter — дочь',
-        'son — сын',
-        'husband — муж',
-        'wife — жена',
-        'aunt — тётя',
-        'uncle — дядя',
-      ]},
-      { heading: 'Глагол HAVE / HAS — иметь', examples: [
-        'I / You / We / They → have',
-        'He / She / It → has',
-        'I have a sister. — У меня есть сестра.',
-        'She has two brothers. — У неё два брата.',
-        "I don't have a pet. — У меня нет питомца.",
-      ]},
-      { heading: 'Притяжательные местоимения', examples: [
-        'my — мой/моя (my sister — моя сестра)',
-        'your — твой/ваш',
-        'his — его (his name — его имя)',
-        'her — её (her mother — её мама)',
-        'our — наш',
-        'their — их',
-      ]},
+    week: 5, icon: '📍', theme: 'Предлоги: in / on / at',
+    tip: '"Playing IN piano" → должно быть "playing THE piano". Предлоги — особая история!',
+    sessions: [
+      {
+        n: 1, day: 'Вторник', title: 'Правило + Stand By Me',
+        grammar: {
+          title: 'Предлоги места и времени',
+          blocks: [
+            { heading: 'IN / ON / AT — место',
+              examples: ['**in** — внутри: in the box, in Kazakhstan, in the room','**on** — на поверхности: on the table, on the wall, on the floor','**at** — конкретная точка: at home, at work, at the airport'] },
+            { heading: 'IN / ON / AT — время',
+              examples: ['**in** — месяц, год, сезон: in May, in 2025, in summer, in the morning','**on** — день, дата: on Monday, on June 15, on my birthday','**at** — точное время: at 7 pm, at noon, at Christmas, at night'] },
+            { heading: 'Особые случаи — запомни!',
+              examples: ['play **the** guitar / piano — (не in, не on!)','arrive **at** the airport / station','arrive **in** the city / country','**on** the bus / train / plane','**in** a taxi / car'],
+              note: '💡 На работе: **at** work. Дома: **at** home.' },
+          ]
+        },
+        song: {
+          title: 'Stand By Me', artist: 'Ben E. King',
+          link: 'https://youtu.be/hwZNL7QVJjE',
+          intro: '🎵 Классика 60-х, простые слова, много предлогов.',
+          lines: [
+            { line: "When the night has come and the land is dark", ru: 'Когда наступила ночь и земля темна' },
+            { line: "And the moon is the only light we'll see", ru: 'И луна — единственный свет, который мы увидим' },
+            { line: "No, I won't be afraid, just as long as you stand by me", ru: 'Я не буду бояться, пока ты рядом со мной' },
+            { line: "Stand by me, oh stand by me", ru: 'Будь рядом со мной' },
+          ],
+          notes: [
+            "**by** me — рядом со мной (предлог близости)",
+            "**the** moon, **the** land — единственные → THE",
+            "**the** only light — the + only всегда вместе",
+            "won't = will not — не буду (будущее время)",
+          ]
+        },
+        exercises: [
+          { q: 'I live ___ Kazakhstan.', opts: ['in','on','at'], ans: 'in', tip: 'Страна → in' },
+          { q: 'The keys are ___ the table.', opts: ['in','on','at'], ans: 'on', tip: 'На поверхности → on' },
+          { q: 'She arrives ___ the airport at 5.', opts: ['in','on','at'], ans: 'at', tip: 'Конкретная точка → at' },
+          { q: 'I was born ___ 2004.', opts: ['in','on','at'], ans: 'in', tip: 'Год → in' },
+          { q: 'The meeting is ___ Monday.', opts: ['in','on','at'], ans: 'on', tip: 'День недели → on' },
+          { q: 'See you ___ 7 pm!', opts: ['in','on','at'], ans: 'at', tip: 'Точное время → at' },
+          { q: 'She plays ___ piano every evening.', opts: ['the','in','on'], ans: 'the', tip: 'Инструменты: play THE piano!' },
+        ],
+        prompt: 'Расскажи о себе используя предлоги. Когда родилась? Где живёшь? Где работаешь?\nНапример: I was born in 2004. I live in Almaty. I wake up at 8 in the morning.'
+      },
+      {
+        n: 2, day: 'Четверг', title: 'Friends + закрепление',
+        dialogue: {
+          source: '📺 Friends — Season 1, Episode 4',
+          intro: 'Предлоги встречаются в каждом предложении. Отмечай их!',
+          lines: [
+            { who: 'Rachel', text: "So, I'm gonna get on a plane and fly to Greece for a week.", ru: 'Значит, я сяду в самолёт и полечу в Грецию на неделю.' },
+            { who: 'Monica', text: "At Christmas? You're going at Christmas?!", ru: 'На Рождество? Ты едешь на Рождество?!' },
+            { who: 'Rachel', text: "My dad has a house in Athens. We go every year in December.", ru: 'У папы дом в Афинах. Ездим туда каждый год в декабре.' },
+          ],
+          notes: [
+            "**on** a plane — в самолёте → on (транспорт)",
+            "**to** Greece — направление → to",
+            "**for** a week — на неделю (продолжительность) → for",
+            "**at** Christmas — праздники → at",
+            "**in** Athens / **in** December — город и месяц → in",
+          ]
+        },
+        exercises: [
+          { q: "I'm ___ the bus right now.", opts: ['in','on','at'], ans: 'on', tip: 'Общественный транспорт → on the bus' },
+          { q: 'She called me ___ midnight.', opts: ['in','on','at'], ans: 'at', tip: 'Точный момент → at midnight' },
+          { q: 'We met ___ a party.', opts: ['in','on','at'], ans: 'at', tip: 'Мероприятие-точка → at a party' },
+          { q: 'I go to the gym ___ Tuesdays.', opts: ['in','on','at'], ans: 'on', tip: 'Дни недели → on Tuesdays' },
+          { q: 'He works ___ a big company.', opts: ['in','on','at'], ans: 'at', tip: 'Место работы → at a company' },
+        ],
+        prompt: 'Опиши свой обычный вторник используя in/on/at.\nНапример: On Tuesdays I wake up at 7 in the morning. I have English class at 6 pm...'
+      }
     ],
     vocab: [
-      {en:'family',ru:'семья'},{en:'mother',ru:'мама'},{en:'father',ru:'папа'},
-      {en:'sister',ru:'сестра'},{en:'brother',ru:'брат'},
-      {en:'grandmother',ru:'бабушка'},{en:'grandfather',ru:'дедушка'},
-      {en:'daughter',ru:'дочь'},{en:'son',ru:'сын'},
-      {en:'husband',ru:'муж'},{en:'wife',ru:'жена'},
-      {en:'aunt',ru:'тётя'},{en:'uncle',ru:'дядя'},
-      {en:'cousin',ru:'двоюродный брат/сестра'},{en:'pet',ru:'питомец'},
-      {en:'dog',ru:'собака'},{en:'cat',ru:'кошка'},
+      { en: 'airport', ru: 'аэропорт', ex: 'I arrive at the airport at 10.' },
+      { en: 'station', ru: 'вокзал / станция', ex: 'Meet me at the station.' },
+      { en: 'midnight', ru: 'полночь', ex: 'The party starts at midnight.' },
+      { en: 'noon', ru: 'полдень', ex: "Let's meet at noon." },
+      { en: 'surface', ru: 'поверхность', ex: 'Put it on the surface.' },
+      { en: 'direction', ru: 'направление', ex: 'Which direction should I go?' },
+      { en: 'location', ru: 'местонахождение', ex: "What's your location?" },
+      { en: 'neighborhood', ru: 'район', ex: 'I live in a quiet neighborhood.' },
+      { en: 'downtown', ru: 'центр города', ex: 'She works downtown.' },
+      { en: 'border', ru: 'граница', ex: 'We crossed the border at midnight.' },
     ]
   },
+
+  // ── WEEK 6 ──────────────────────────────────────────────────────────────
   {
-    id: 'myday', icon: '🌅', title: 'Мой день',
-    subtitle: 'Распорядок дня — Present Simple',
-    rules: [
-      { heading: 'Present Simple — что делаю каждый день', examples: [
-        'Используется для привычек, расписания, фактов.',
-        'I wake up at 7. — Я просыпаюсь в 7.',
-        'She works every day. — Она работает каждый день.',
-        'We eat dinner at 7 pm. — Мы ужинаем в 7 вечера.',
-      ]},
-      { heading: 'Правило: он/она/оно → добавь -S', examples: [
-        'I eat → She eats',
-        'I go → He goes',
-        'I have → She has (исключение!)',
-        'I do → He does (исключение!)',
-        'I watch → She watches (-ch, -sh, -s → +es)',
-      ]},
-      { heading: 'Отрицание — DON\'T / DOESN\'T', examples: [
-        "I don't like coffee. — Я не люблю кофе.",
-        "She doesn't eat meat. — Она не ест мясо.",
-        "They don't work on Sunday. — Они не работают в воскресенье.",
-      ]},
-      { heading: 'Вопросы — DO / DOES', examples: [
-        'Do you like pizza? — Ты любишь пиццу? Yes, I do. / No, I don\'t.',
-        'Does she speak English? — Она говорит по-английски?',
-        'What do you do? — Чем ты занимаешься? (работа/профессия)',
-        'Where do you live? — Где ты живёшь?',
-      ]},
+    week: 6, icon: '❓', theme: 'Вопросы: What / Where / When / Who / How',
+    tip: 'Умение задавать вопросы = умение разговаривать!',
+    sessions: [
+      {
+        n: 1, day: 'Вторник', title: 'Правило + Someone Like You',
+        grammar: {
+          title: 'Вопросительные слова',
+          blocks: [
+            { heading: 'Вопросительные слова',
+              examples: ['**What** — что / какой: What do you do?','**Where** — где / куда: Where do you live?','**When** — когда: When does she arrive?','**Who** — кто: Who is that?','**How** — как: How are you?','**Why** — почему: Why are you late?','**Which** — который из: Which dress do you prefer?'] },
+            { heading: 'How + прилагательное',
+              examples: ['How **old** are you? — Сколько тебе лет?','How **much** does it cost? — Сколько стоит?','How **many** people? — Сколько человек?','How **long** does it take? — Сколько времени?','How **far** is it? — Как далеко?'] },
+            { heading: 'Порядок слов в вопросе',
+              examples: ['Вопр. слово + do/does/is/are + подлежащее + глагол','Where **do** you **live**? (не: Where you live?)','What **does** she **do**? (не: What she does?)'],
+              note: '⚠️ Вспомогательный глагол всегда между вопр. словом и подлежащим!' },
+          ]
+        },
+        song: {
+          title: 'Someone Like You', artist: 'Adele',
+          link: 'https://youtu.be/hLQl3WQQoQ0',
+          intro: '🎵 Красивая, эмоциональная. Много разговорных фраз.',
+          lines: [
+            { line: "I heard that you're settled down", ru: 'Я слышала, что ты устроился' },
+            { line: "That you found a girl and you're married now", ru: 'Что нашёл девушку и теперь женат' },
+            { line: "I hate to turn up out of the blue", ru: 'Ненавижу появляться вот так, без предупреждения' },
+            { line: "Never mind, I'll find someone like you", ru: 'Ничего, я найду кого-то похожего на тебя' },
+          ],
+          notes: [
+            "out of the **blue** — неожиданно (идиома!)",
+            "**Never mind** — ничего страшного (фраза на каждый день)",
+            "someone **like** you — кто-то похожий на тебя",
+            "**I heard that** — я слышала что (that как союз)",
+          ]
+        },
+        exercises: [
+          { q: '___ do you live?', opts: ['What','Where','When'], ans: 'Where', tip: 'Место → Where' },
+          { q: '___ does the film start?', opts: ['Where','Why','When'], ans: 'When', tip: 'Время → When' },
+          { q: '___ is that woman? Is she your sister?', opts: ['What','Who','How'], ans: 'Who', tip: 'Человек → Who' },
+          { q: '___ much does it cost?', opts: ['How','What','Which'], ans: 'How', tip: 'How much = сколько стоит' },
+          { q: '___ do you usually do in the evenings?', opts: ['Where','What','When'], ans: 'What', tip: 'Действие → What' },
+          { q: '___ old is she?', opts: ['What','How','Who'], ans: 'How', tip: 'How old = сколько лет' },
+        ],
+        prompt: 'Придумай 5 вопросов которые ты бы задала иностранцу при знакомстве.\nНапример: Where are you from? What do you do? How old are you?'
+      },
+      {
+        n: 2, day: 'Четверг', title: 'Friends + закрепление',
+        dialogue: {
+          source: '📺 Friends — Season 3, Episode 2',
+          intro: 'Обрати внимание на порядок слов в вопросах!',
+          lines: [
+            { who: 'Ross', text: "Where have you been? I called you like ten times!", ru: 'Где ты была? Я звонил раз десять!' },
+            { who: 'Rachel', text: "Why do you always do that? You never trust me!", ru: 'Почему ты всегда так делаешь? Ты мне никогда не доверяешь!' },
+            { who: 'Ross', text: "Who were you with?! What were you doing?!", ru: 'С кем ты была?! Что ты делала?!' },
+            { who: 'Rachel', text: "How dare you! I was at work!", ru: 'Как ты смеешь! Я была на работе!' },
+          ],
+          notes: [
+            "**Where** have you been — Where + вспом.глагол + подлежащее",
+            "**Why** do you always — Why + do + подлежащее",
+            "**Who** were you with — Who + вспом.глагол",
+            "How **dare** you! — Как ты смеешь! (восклицание)",
+          ]
+        },
+        exercises: [
+          { q: '___ do you prefer — tea or coffee?', opts: ['What','Which','How'], ans: 'Which', tip: 'Выбор из вариантов → Which' },
+          { q: '___ are you so sad today?', opts: ['What','Who','Why'], ans: 'Why', tip: 'Причина → Why' },
+          { q: '___ long does it take to get there?', opts: ['What','How','Which'], ans: 'How', tip: 'How long = сколько времени' },
+          { q: '___ does your mother work?', opts: ['Where','When','Which'], ans: 'Where', tip: 'Место работы → Where' },
+          { q: '___ is your favourite season?', opts: ['Who','What','How'], ans: 'What', tip: 'Вещь/понятие → What' },
+        ],
+        prompt: 'Ты берёшь интервью у знаменитости. Напиши 5 вопросов.\nНапример: Where do you live? How many languages do you speak? Why did you become an actress?'
+      }
     ],
     vocab: [
-      {en:'wake up',ru:'просыпаться'},{en:'get up',ru:'вставать'},
-      {en:'shower',ru:'душ / принимать душ'},{en:'breakfast',ru:'завтрак'},
-      {en:'lunch',ru:'обед'},{en:'dinner',ru:'ужин'},
-      {en:'work',ru:'работать / работа'},{en:'study',ru:'учиться / изучать'},
-      {en:'go to bed',ru:'ложиться спать'},{en:'sleep',ru:'спать'},
-      {en:'always',ru:'всегда'},{en:'usually',ru:'обычно'},
-      {en:'sometimes',ru:'иногда'},{en:'never',ru:'никогда'},
-      {en:'every day',ru:'каждый день'},{en:'weekend',ru:'выходные'},
+      { en: 'question', ru: 'вопрос', ex: 'Do you have any questions?' },
+      { en: 'answer', ru: 'ответ / отвечать', ex: 'Please answer my question.' },
+      { en: 'reason', ru: 'причина', ex: "What's the reason for your choice?" },
+      { en: 'choice', ru: 'выбор', ex: 'It was a difficult choice.' },
+      { en: 'prefer', ru: 'предпочитать', ex: 'I prefer tea to coffee.' },
+      { en: 'wonder', ru: 'интересоваться', ex: 'I wonder where she is.' },
+      { en: 'curious', ru: 'любопытный', ex: "I'm curious about your plans." },
+      { en: 'opinion', ru: 'мнение', ex: "What's your opinion?" },
+      { en: 'explain', ru: 'объяснять', ex: 'Can you explain this rule?' },
+      { en: 'describe', ru: 'описывать', ex: 'Describe your city in 3 words.' },
     ]
   },
+
+  // ── WEEK 7 ──────────────────────────────────────────────────────────────
   {
-    id: 'food', icon: '🍕', title: 'Еда и напитки',
-    subtitle: 'Что люблю есть — I like / I don\'t like',
-    rules: [
-      { heading: 'I like / I don\'t like', examples: [
-        'I like pizza. — Мне нравится пицца.',
-        "I don't like onions. — Я не люблю лук.",
-        'She loves chocolate! — Она обожает шоколад!',
-        'He hates fish. — Он терпеть не может рыбу.',
-        'I prefer tea to coffee. — Я предпочитаю чай кофе.',
-      ]},
-      { heading: 'В кафе / ресторане', examples: [
-        "Can I have a coffee, please? — Можно мне кофе?",
-        "I'd like a glass of water. — Я бы хотела стакан воды.",
-        "What do you recommend? — Что вы рекомендуете?",
-        "The bill, please. — Счёт, пожалуйста.",
-        "It's delicious! — Это вкусно!",
-      ]},
-      { heading: 'Исчисляемое и неисчисляемое — A / SOME', examples: [
-        'a coffee, a sandwich — (можно посчитать)',
-        'some water, some bread — (нельзя посчитать)',
-        'some apples — (несколько яблок)',
-        "I don't have any milk. — У меня нет молока. (any в отриц.)",
-      ]},
+    week: 7, icon: '⏪', theme: 'Past Simple — прошедшее время',
+    tip: 'Ты уже знаешь "ate"! Это Past Simple. Учим всю систему.',
+    sessions: [
+      {
+        n: 1, day: 'Вторник', title: 'Правило + Yesterday (Beatles)',
+        grammar: {
+          title: 'Past Simple — что было вчера',
+          blocks: [
+            { heading: 'Правильные глаголы — добавь -ED',
+              examples: ['work → **worked**: I worked yesterday.','visit → **visited**: She visited Paris.','play → **played**: He played guitar all night.'],
+              note: '💡 Глагол на -e: like → **liked**, dance → **danced**' },
+            { heading: 'Неправильные — учи как слова!',
+              examples: ['go → **went** / eat → **ate** ✅ / see → **saw**','come → **came** / have → **had** / get → **got**','make → **made** / say → **said** / find → **found**'] },
+            { heading: 'Отрицание — DIDN\'T',
+              examples: ["I **didn't** go to the party.","She **didn't** eat breakfast.","⚠️ После didn't — инфинитив: didn't ~~works~~ → didn't **work**"] },
+            { heading: 'Вопросы — DID',
+              examples: ['**Did** you go to school?','Where **did** she go?','**Did** he call? Yes, he did. / No, he didn\'t.'] },
+          ]
+        },
+        song: {
+          title: 'Yesterday', artist: 'The Beatles',
+          link: 'https://youtu.be/NrgmdOz227I',
+          intro: '🎵 Самая узнаваемая песня в мире! Почти всё в прошедшем времени.',
+          lines: [
+            { line: "Yesterday, all my troubles seemed so far away", ru: 'Вчера все мои проблемы казались такими далёкими' },
+            { line: "Now it looks as though they're here to stay", ru: 'Теперь кажется, что они пришли надолго' },
+            { line: "I said something wrong, now I long for yesterday", ru: 'Я сказал что-то не то, теперь тоскую по вчерашнему' },
+            { line: "Yesterday came suddenly", ru: 'Вчерашний день наступил внезапно' },
+          ],
+          notes: [
+            "**seemed** — Past Simple от seem (казаться)",
+            "**said** — неправильный: say → **said**",
+            "**came** — неправильный: come → **came**",
+            "now it **looks** — Present Simple! (сейчас, в данный момент)",
+          ]
+        },
+        exercises: [
+          { q: 'She ___ to Paris last year.', opts: ['go','went','goed'], ans: 'went', tip: 'go → went (неправильный)' },
+          { q: 'I ___ TV all evening yesterday.', opts: ['watched','watch','was watching'], ans: 'watched', tip: 'Вчера вечером = Past Simple → watched' },
+          { q: 'He ___ to the party. He was sick.', opts: ["didn't came","didn't come","doesn't come"], ans: "didn't come", tip: "didn't + инфинитив (не came!)" },
+          { q: '___ you see that film?', opts: ['Did','Does','Were'], ans: 'Did', tip: 'Вопрос Past Simple → Did' },
+          { q: 'We ___ a great time at the concert!', opts: ['have','had','haved'], ans: 'had', tip: 'have → had (неправильный)' },
+          { q: 'She ___ me yesterday.', opts: ['called','call','was called'], ans: 'called', tip: 'Правильный глагол → called' },
+        ],
+        prompt: 'Расскажи о прошлых выходных. Что делала, куда ходила, что ела?\nНапример: Last weekend I went to a café with my friend. We had lunch and talked for hours...'
+      },
+      {
+        n: 2, day: 'Четверг', title: 'Friends + неправильные глаголы',
+        dialogue: {
+          source: '📺 Friends — Season 1, Episode 2',
+          intro: 'Прошлое в разговоре. Ищи глаголы с -ed и неправильные!',
+          lines: [
+            { who: 'Monica', text: "I had the most amazing date last night!", ru: 'У меня было потрясающее свидание прошлой ночью!' },
+            { who: 'Rachel', text: "Oh! Where did you go? What did he say?", ru: 'Ой! Куда вы ходили? Что он сказал?' },
+            { who: 'Monica', text: "We went to that Italian place downtown. He ordered for me, in Italian!", ru: 'Мы пошли в итальянский ресторан. Он заказал для меня по-итальянски!' },
+            { who: 'Phoebe', text: "Oh, that is so romantic! Did you kiss him?", ru: 'О, это так романтично! Ты его поцеловала?' },
+          ],
+          notes: [
+            "**had** — неправильный: have → had",
+            "Where **did** you go — вопрос Past Simple → did",
+            "**went** — неправильный: go → went",
+            "**ordered** — правильный: order → ordered",
+          ]
+        },
+        exercises: [
+          { q: 'She ___ me last night.', opts: ['call','called','calls'], ans: 'called', tip: 'Past Simple → called' },
+          { q: 'They ___ a new flat last month.', opts: ['find','founded','found'], ans: 'found', tip: 'find → found (неправильный)' },
+          { q: 'I ___ breakfast this morning.', opts: ["didn't had","didn't have","hadn't"], ans: "didn't have", tip: "didn't + инфинитив → didn't have" },
+          { q: 'Where ___ you go last weekend?', opts: ['did','does','were'], ans: 'did', tip: 'Past Simple вопрос → Did' },
+          { q: 'He ___ a lot at the party.', opts: ['drink','drank','drinked'], ans: 'drank', tip: 'drink → drank (неправильный)' },
+        ],
+        prompt: 'Неправильные глаголы недели: go→went, eat→ate, see→saw, come→came, have→had, get→got, make→made, say→said, find→found, drink→drank.\nНапиши предложение с каждым!'
+      }
     ],
     vocab: [
-      {en:'apple',ru:'яблоко'},{en:'bread',ru:'хлеб'},{en:'meat',ru:'мясо'},
-      {en:'fish',ru:'рыба'},{en:'chicken',ru:'курица'},{en:'rice',ru:'рис'},
-      {en:'pasta',ru:'паста'},{en:'salad',ru:'салат'},{en:'soup',ru:'суп'},
-      {en:'coffee',ru:'кофе'},{en:'tea',ru:'чай'},{en:'water',ru:'вода'},
-      {en:'juice',ru:'сок'},{en:'milk',ru:'молоко'},{en:'sugar',ru:'сахар'},
-      {en:'delicious',ru:'вкусный'},{en:'hungry',ru:'голодный'},{en:'thirsty',ru:'хочу пить'},
+      { en: 'yesterday', ru: 'вчера', ex: 'I went to the gym yesterday.' },
+      { en: 'last week', ru: 'на прошлой неделе', ex: 'She called me last week.' },
+      { en: 'ago', ru: 'назад', ex: 'I met him two years ago.' },
+      { en: 'suddenly', ru: 'внезапно', ex: 'She suddenly started to cry.' },
+      { en: 'immediately', ru: 'немедленно / сразу', ex: 'Call me immediately!' },
+      { en: 'already', ru: 'уже', ex: 'I already ate breakfast.' },
+      { en: 'finally', ru: 'наконец', ex: 'We finally arrived.' },
+      { en: 'unfortunately', ru: 'к сожалению', ex: 'Unfortunately, I missed the train.' },
+      { en: 'luckily', ru: 'к счастью', ex: 'Luckily, I found my keys.' },
+      { en: 'amazing', ru: 'потрясающий', ex: 'We had an amazing trip!' },
     ]
   },
+
+  // ── WEEK 8 ──────────────────────────────────────────────────────────────
   {
-    id: 'clothes', icon: '👗', title: 'Цвета и одежда',
-    subtitle: 'Описание внешности и того, что на тебе',
-    rules: [
-      { heading: 'Цвета', examples: [
-        'red — красный, blue — синий, green — зелёный',
-        'yellow — жёлтый, orange — оранжевый, pink — розовый',
-        'purple — фиолетовый, white — белый, black — чёрный',
-        'grey — серый, brown — коричневый, beige — бежевый',
-      ]},
-      { heading: 'Прилагательное ПЕРЕД существительным', examples: [
-        'a red dress — красное платье',
-        'black shoes — чёрные туфли',
-        'a beautiful pink bag — красивая розовая сумка',
-        '⚠️ Прилагательное не меняется: red dress / red shoes (не reds!)',
-      ]},
-      { heading: 'Что на тебе сейчас — Present Continuous', examples: [
-        "I'm wearing a white T-shirt. — На мне белая футболка.",
-        "She's wearing jeans and a jacket. — На ней джинсы и куртка.",
-        "What are you wearing? — Что на тебе надето?",
-      ]},
+    week: 8, icon: '✈️', theme: 'Путешествия — базовая лексика',
+    tip: 'Твоя цель — путешествия! Аэропорт, гостиница, ресторан.',
+    sessions: [
+      {
+        n: 1, day: 'Вторник', title: 'Фразы + Leaving on a Jet Plane',
+        grammar: {
+          title: 'Путешествия: фразы и лексика',
+          blocks: [
+            { heading: 'В аэропорту',
+              examples: ["Where is the check-in desk? — Где стойка регистрации?","Can I have a window seat? — Можно место у окна?","My luggage is lost. — Мой багаж потерялся.","The flight is delayed. — Рейс задерживается."] },
+            { heading: 'В гостинице',
+              examples: ["I have a reservation. — У меня есть бронь.","Can I check in, please? — Можно заселиться?","What time is check-out? — Во сколько выезд?","Could I have a room with a view? — Можно номер с видом?"] },
+            { heading: 'В ресторане / кафе',
+              examples: ["A table for two, please. — Столик на двоих.","Can I see the menu? — Можно меню?","I'll have the pasta. — Я возьму пасту.","Could I have the bill? — Можно счёт?","It's delicious! — Это вкусно!"] },
+          ]
+        },
+        song: {
+          title: 'Leaving on a Jet Plane', artist: 'John Denver',
+          link: 'https://youtu.be/DT67ojsXaJM',
+          intro: '🎵 Классика о путешествиях. Простые слова, глаголы движения.',
+          lines: [
+            { line: "All my bags are packed, I'm ready to go", ru: 'Все сумки собраны, я готова ехать' },
+            { line: "I'm standin' here outside your door", ru: 'Стою здесь, у твоей двери' },
+            { line: "So kiss me and smile for me, tell me that you'll wait for me", ru: 'Поцелуй меня, улыбнись, скажи что будешь ждать' },
+            { line: "I'm leaving on a jet plane, don't know when I'll be back again", ru: "Улетаю на самолёте, не знаю когда вернусь" },
+          ],
+          notes: [
+            "bags are **packed** — сумки собраны (пассивная конструкция)",
+            "**on** a jet plane — предлог on с транспортом",
+            "**ready to** go — ready + TO + глагол",
+            "don't know **when** I'll be back — when как союз",
+          ]
+        },
+        exercises: [
+          { q: 'My flight ___ at 6 am tomorrow.', opts: ['leave','leaves','is leaving'], ans: 'is leaving', tip: 'Запланированное будущее → Continuous' },
+          { q: 'I ___ a room for two nights.', opts: ['book','booked','am booking'], ans: 'booked', tip: 'Уже забронировала → Past Simple' },
+          { q: 'Excuse me, where ___ the gate?', opts: ['is','are','am'], ans: 'is', tip: 'The gate → is' },
+          { q: 'Can I ___ a window seat?', opts: ['have','to have','having'], ans: 'have', tip: 'Can + инфинитив без TO' },
+          { q: "The flight ___ delayed by 2 hours.", opts: ['is','has','was'], ans: 'is', tip: 'Сейчас задерживается → is delayed' },
+        ],
+        prompt: 'Представь: ты в аэропорту, летишь в путешествие мечты. Напиши 5 предложений — куда, с кем, что планируешь.\nНапример: I am flying to Italy with my friend. We plan to visit Rome...'
+      },
+      {
+        n: 2, day: 'Четверг', title: 'Friends в Лондоне + закрепление',
+        dialogue: {
+          source: '📺 Friends — Season 4 (Лондон)',
+          intro: 'Росс летит в Лондон! Полно фраз о путешествиях.',
+          lines: [
+            { who: 'Ross', text: "I need to check in. I have a reservation under Geller.", ru: 'Мне нужно заселиться. Бронь на имя Геллер.' },
+            { who: 'Receptionist', text: "Welcome to London! How long will you be staying?", ru: 'Добро пожаловать в Лондон! Как долго планируете остаться?' },
+            { who: 'Ross', text: "Just three nights. And could I have a room with a view of the city?", ru: 'Всего три ночи. И можно номер с видом на город?' },
+            { who: 'Receptionist', text: "Of course. Breakfast is included. It's served from 7 to 10.", ru: 'Конечно. Завтрак включён. Подаётся с 7 до 10.' },
+          ],
+          notes: [
+            "**check in** — заселиться в гостиницу",
+            "reservation **under** — бронь на имя",
+            "How **long** will you be staying — как долго",
+            "**could** I have — вежливая просьба (could вместо can)",
+            "breakfast **is included** — завтрак включён",
+          ]
+        },
+        exercises: [
+          { q: "Excuse me, ___ is the nearest metro?", opts: ['where','when','how'], ans: 'where', tip: 'Место → Where' },
+          { q: "I'd like to ___ a taxi to the airport.", opts: ['book','to book','booking'], ans: 'book', tip: "I'd like + TO + глагол → to book" },
+          { q: "The hotel ___ a pool and a spa.", opts: ['has','have','is'], ans: 'has', tip: 'The hotel (it) → has' },
+          { q: "___ me, does this bus go to the centre?", opts: ['Sorry','Excuse','Pardon'], ans: 'Excuse', tip: 'Привлечь внимание → Excuse me' },
+          { q: "How ___ does it take to get there?", opts: ['long','much','many'], ans: 'long', tip: 'Время → How long' },
+        ],
+        prompt: 'Напиши диалог в гостинице — приехала, хочешь заселиться, спрашиваешь про завтрак, просишь номер с видом. 4-6 реплик.'
+      }
     ],
     vocab: [
-      {en:'dress',ru:'платье'},{en:'skirt',ru:'юбка'},{en:'jeans',ru:'джинсы'},
-      {en:'T-shirt',ru:'футболка'},{en:'jacket',ru:'куртка'},{en:'coat',ru:'пальто'},
-      {en:'shoes',ru:'туфли / обувь'},{en:'boots',ru:'ботинки / сапоги'},
-      {en:'bag',ru:'сумка'},{en:'hat',ru:'шапка / шляпа'},
-      {en:'glasses',ru:'очки'},{en:'size',ru:'размер'},
-      {en:'wear',ru:'носить (одежду)'},{en:'try on',ru:'примерить'},
-      {en:'colour / color',ru:'цвет'},{en:'style',ru:'стиль'},
-    ]
-  },
-  {
-    id: 'home', icon: '🏠', title: 'Мой дом',
-    subtitle: 'Комнаты, мебель, предлоги места',
-    rules: [
-      { heading: 'Комнаты в доме', examples: [
-        'living room — гостиная',
-        'bedroom — спальня',
-        'kitchen — кухня',
-        'bathroom — ванная',
-        'hallway — прихожая / коридор',
-        'balcony — балкон',
-      ]},
-      { heading: 'Предлоги места', examples: [
-        'in — в (in the box — в коробке)',
-        'on — на (on the table — на столе)',
-        'under — под (under the bed — под кроватью)',
-        'next to — рядом с (next to the window — рядом с окном)',
-        'between — между (between the chairs — между стульями)',
-        'behind — за (behind the door — за дверью)',
-        'in front of — перед (in front of the TV — перед телевизором)',
-      ]},
-      { heading: 'Описание дома', examples: [
-        'I live in a flat / apartment. — Я живу в квартире.',
-        'I have a small bedroom. — У меня маленькая спальня.',
-        'The kitchen is next to the bathroom. — Кухня рядом с ванной.',
-        'Where is the remote? It\'s on the sofa. — Пульт на диване.',
-      ]},
-    ],
-    vocab: [
-      {en:'flat / apartment',ru:'квартира'},{en:'house',ru:'дом'},
-      {en:'sofa',ru:'диван'},{en:'table',ru:'стол'},{en:'chair',ru:'стул'},
-      {en:'bed',ru:'кровать'},{en:'wardrobe',ru:'шкаф'},
-      {en:'window',ru:'окно'},{en:'door',ru:'дверь'},{en:'floor',ru:'пол / этаж'},
-      {en:'wall',ru:'стена'},{en:'lamp',ru:'лампа'},
-      {en:'fridge',ru:'холодильник'},{en:'mirror',ru:'зеркало'},
-      {en:'curtains',ru:'шторы'},{en:'clean',ru:'чистый / убирать'},
-    ]
-  },
-  {
-    id: 'city', icon: '🚌', title: 'Город и транспорт',
-    subtitle: 'Как добраться, спросить дорогу',
-    rules: [
-      { heading: 'Места в городе', examples: [
-        'supermarket — супермаркет',
-        'pharmacy — аптека',
-        'hospital — больница',
-        'café — кафе',
-        'park — парк',
-        'bank — банк',
-        'post office — почта',
-        'shopping mall — торговый центр',
-      ]},
-      { heading: 'Как спросить дорогу', examples: [
-        "Excuse me, where is the pharmacy? — Простите, где аптека?",
-        "How do I get to the park? — Как добраться до парка?",
-        "Is it far? — Это далеко?",
-        "Turn left / Turn right. — Поверните налево / направо.",
-        "Go straight ahead. — Идите прямо.",
-        "It's on the left / right. — Это слева / справа.",
-      ]},
-      { heading: 'Транспорт', examples: [
-        'I go by bus. — Я езжу на автобусе.',
-        'She takes the metro. — Она ездит на метро.',
-        'I walk to work. — Я хожу на работу пешком.',
-        "How long does it take? — Сколько времени это занимает?",
-        "It takes 20 minutes. — Это занимает 20 минут.",
-      ]},
-    ],
-    vocab: [
-      {en:'bus',ru:'автобус'},{en:'metro / subway',ru:'метро'},
-      {en:'taxi',ru:'такси'},{en:'walk',ru:'идти пешком / прогулка'},
-      {en:'street',ru:'улица'},{en:'road',ru:'дорога'},{en:'left',ru:'левый / слева'},
-      {en:'right',ru:'правый / справа'},{en:'straight',ru:'прямо'},
-      {en:'near',ru:'близко / рядом'},{en:'far',ru:'далеко'},
-      {en:'map',ru:'карта'},{en:'ticket',ru:'билет'},{en:'stop',ru:'остановка'},
-      {en:'station',ru:'станция / вокзал'},{en:'arrive',ru:'прибывать'},
-    ]
-  },
-  {
-    id: 'hobbies', icon: '🎨', title: 'Хобби',
-    subtitle: 'Что люблю делать — like/love + -ing',
-    rules: [
-      { heading: 'Like / Love / Enjoy + глагол-ing', examples: [
-        'I like reading. — Я люблю читать.',
-        'She loves dancing. — Она обожает танцевать.',
-        'He enjoys cooking. — Ему нравится готовить.',
-        "I don't like waking up early. — Я не люблю рано вставать.",
-        '⚠️ После like/love/enjoy всегда -ING!',
-      ]},
-      { heading: 'Вопросы о хобби', examples: [
-        "What do you like doing? — Что тебе нравится делать?",
-        "Do you like sport? — Ты любишь спорт?",
-        "What's your hobby? — Какое у тебя хобби?",
-        "How often do you...? — Как часто ты...?",
-        'Every day / Once a week / Twice a month — каждый день / раз в неделю / дважды в месяц',
-      ]},
-      { heading: 'Want to + глагол — хочу сделать', examples: [
-        "I want to learn English. — Я хочу выучить английский.",
-        "She wants to travel. — Она хочет путешествовать.",
-        "I'd like to try yoga. — Я бы хотела попробовать йогу.",
-      ]},
-    ],
-    vocab: [
-      {en:'read',ru:'читать'},{en:'draw',ru:'рисовать'},{en:'dance',ru:'танцевать'},
-      {en:'sing',ru:'петь'},{en:'cook',ru:'готовить'},{en:'travel',ru:'путешествовать'},
-      {en:'sport',ru:'спорт'},{en:'music',ru:'музыка'},{en:'film',ru:'фильм'},
-      {en:'game',ru:'игра'},{en:'walk',ru:'прогулка'},{en:'yoga',ru:'йога'},
-      {en:'gym',ru:'спортзал'},{en:'guitar',ru:'гитара'},{en:'piano',ru:'пианино'},
-      {en:'hobby',ru:'хобби'},{en:'free time',ru:'свободное время'},
-    ]
-  },
-  {
-    id: 'weather', icon: '☀️', title: 'Погода',
-    subtitle: 'Как говорить о погоде и временах года',
-    rules: [
-      { heading: 'Описание погоды — It is / It\'s', examples: [
-        "It's sunny. — Солнечно.",
-        "It's raining. — Идёт дождь.",
-        "It's snowing. — Идёт снег.",
-        "It's cold / hot / warm / windy / cloudy. — Холодно / жарко / тепло / ветрено / облачно.",
-        "What's the weather like today? — Какая сегодня погода?",
-      ]},
-      { heading: 'Времена года', examples: [
-        'spring — весна (March, April, May)',
-        'summer — лето (June, July, August)',
-        'autumn / fall — осень (September, October, November)',
-        'winter — зима (December, January, February)',
-        'I love summer! — Я люблю лето!',
-        "My favourite season is spring. — Моё любимое время года — весна.",
-      ]},
-      { heading: 'Месяцы и дни недели', examples: [
-        'Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday',
-        'January, February, March, April, May, June',
-        'July, August, September, October, November, December',
-        '⚠️ Месяцы и дни недели ВСЕГДА с большой буквы!',
-      ]},
-    ],
-    vocab: [
-      {en:'sun / sunny',ru:'солнце / солнечно'},{en:'rain / rainy',ru:'дождь / дождливо'},
-      {en:'snow / snowy',ru:'снег / снежно'},{en:'wind / windy',ru:'ветер / ветрено'},
-      {en:'cloud / cloudy',ru:'облако / облачно'},{en:'cold',ru:'холодный / холодно'},
-      {en:'hot',ru:'жаркий / жарко'},{en:'warm',ru:'тёплый / тепло'},
-      {en:'season',ru:'время года'},{en:'spring',ru:'весна'},
-      {en:'summer',ru:'лето'},{en:'autumn',ru:'осень'},{en:'winter',ru:'зима'},
-      {en:'temperature',ru:'температура'},{en:'weather',ru:'погода'},
-      {en:'forecast',ru:'прогноз (погоды)'},
+      { en: 'flight', ru: 'рейс / полёт', ex: 'My flight is at 6 am.' },
+      { en: 'boarding pass', ru: 'посадочный талон', ex: "Don't forget your boarding pass!" },
+      { en: 'luggage', ru: 'багаж', ex: 'How many bags can I take?' },
+      { en: 'reservation', ru: 'бронь', ex: 'I have a reservation for tonight.' },
+      { en: 'check in', ru: 'регистрироваться / заселяться', ex: 'Please check in online.' },
+      { en: 'check out', ru: 'выселяться', ex: 'Check-out is at 12 noon.' },
+      { en: 'gate', ru: 'выход на посадку', ex: 'Your gate is B12.' },
+      { en: 'delayed', ru: 'задержанный', ex: 'The flight is delayed by 1 hour.' },
+      { en: 'currency', ru: 'валюта', ex: "What's the local currency?" },
+      { en: 'recommend', ru: 'рекомендовать', ex: 'Can you recommend a good café?' },
     ]
   },
 ];
@@ -735,7 +995,7 @@ let tempShoppingCat = 'food';
 let tempIncomeCat = 'salary';
 let planMonthOffset = 0; // 0=current, 1=next, -1=prev
 let calendarMonthOffset = 0; // 0=current, -1=prev month, etc.
-let englishLessonId = null; // currently open lesson
+// englishLessonId removed — replaced by engView/engWeekNum/engSession
 let tempBookStatus = 'want';
 let tempMediaStatus = 'want';
 let tempMediaType = 'movie';
@@ -2694,118 +2954,240 @@ function renderShopping() {
 // PAGE: ENGLISH
 // ============================================================
 
-function renderEnglish() {
-  if (englishLessonId) return renderEnglishLesson(englishLessonId);
-  const { completedTopics = [], learnedWords = [] } = state.data.english || {};
-  const totalWords = ENGLISH_A1.reduce((s, t) => s + t.vocab.length, 0);
-  const progress = Math.round(completedTopics.length / ENGLISH_A1.length * 100);
+let engView = 'home';
+let engWeekNum = 0;
+let engSession = 0;
+let engExAnswers = {};
 
+function boldify(text) {
+  return text.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+}
+
+function renderEnglish() {
+  if (engView === 'session') return renderEngSession();
+  if (engView === 'week') return renderEngWeek();
+  const { completedTopics = [], learnedWords = [] } = state.data.english || {};
+  const totalWords = ENGLISH_PROGRAM.reduce((s,w) => s + w.vocab.length, 0);
+  const doneWeeks = ENGLISH_PROGRAM.filter(w => completedTopics.includes('w'+w.week)).length;
+  const progress = Math.round(doneWeeks / ENGLISH_PROGRAM.length * 100);
   return `
     <div class="page">
-      <div class="page-header">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div><h1>Английский 🇬🇧</h1><div class="subtitle">Уровень A1 — с нуля</div></div>
-        </div>
-      </div>
-
+      <div class="page-header"><h1>Английский 🇬🇧</h1><div class="subtitle">Программа A1 — специально для тебя</div></div>
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <div style="font-weight:700">Твой прогресс</div>
-          <div style="font-weight:700;color:var(--primary-dark)">${completedTopics.length}/${ENGLISH_A1.length} тем</div>
+          <div style="font-weight:700">Прогресс</div>
+          <div style="font-weight:700;color:var(--primary-dark)">${doneWeeks}/${ENGLISH_PROGRAM.length} недель</div>
         </div>
         <div class="progress-wrap"><div class="progress-bar" style="width:${progress}%"></div></div>
-        <div class="muted" style="font-size:12px;margin-top:8px">📚 Слов в словаре: ${totalWords} · Выучено: ${learnedWords.length}</div>
+        <div class="muted" style="font-size:12px;margin-top:8px">🔤 Слов в программе: ${totalWords} · Выучено: ${learnedWords.length}</div>
       </div>
-
-      <div style="margin-bottom:8px;font-weight:700;font-size:15px;padding:0 2px">📋 Темы программы</div>
-      ${ENGLISH_A1.map((topic, i) => {
-        const done = completedTopics.includes(topic.id);
-        const topicWords = topic.vocab.map((_, wi) => `${topic.id}_${wi}`);
-        const learnedCount = topicWords.filter(w => learnedWords.includes(w)).length;
-        return `
-          <div class="book-item" style="cursor:pointer;margin-bottom:8px" data-eng-topic="${topic.id}">
+      <div class="card" style="background:linear-gradient(135deg,#FFF0F5,#F0F0FF);border:none">
+        <div style="font-size:13px;color:var(--text-secondary)">📅 <b>Вторник и четверг</b> — занятия по 1 часу<br>🔤 <b>Каждый день</b> — 10 минут на слова<br>⏱ <b>Срок A1:</b> ~4 месяца</div>
+      </div>
+      <div style="font-weight:700;font-size:15px;margin:12px 0 8px">📋 Программа по неделям</div>
+      ${ENGLISH_PROGRAM.map(w => {
+        const wDone = completedTopics.includes('w'+w.week);
+        const s1done = completedTopics.includes('w'+w.week+'s1');
+        const s2done = completedTopics.includes('w'+w.week+'s2');
+        const wWords = w.vocab.map((_,i) => 'w'+w.week+'_v'+i).filter(k => learnedWords.includes(k)).length;
+        return `<div class="book-item" style="cursor:pointer;margin-bottom:8px" data-eng-week="${w.week}">
             <div class="book-item-top">
-              <div style="font-size:24px;margin-right:12px;flex-shrink:0">${topic.icon}</div>
+              <div style="font-size:26px;margin-right:12px;flex-shrink:0">${w.icon}</div>
               <div style="flex:1">
-                <div style="font-weight:700;font-size:15px">${i + 1}. ${topic.title}</div>
-                <div class="muted" style="font-size:12px">${topic.subtitle}</div>
-                <div style="font-size:11px;color:var(--text-muted);margin-top:3px">
-                  📖 ${topic.rules.length} правила · 🔤 ${learnedCount}/${topic.vocab.length} слов
+                <div style="font-weight:700;font-size:15px">Неделя ${w.week}: ${w.theme}</div>
+                <div class="muted" style="font-size:11px">${w.tip}</div>
+                <div style="font-size:11px;margin-top:4px;display:flex;gap:10px">
+                  <span style="color:${s1done?'var(--primary-dark)':'var(--text-muted)'}">${s1done?'✅':'○'} Вт</span>
+                  <span style="color:${s2done?'var(--primary-dark)':'var(--text-muted)'}">${s2done?'✅':'○'} Чт</span>
+                  <span class="muted">🔤 ${wWords}/${w.vocab.length} слов</span>
                 </div>
               </div>
-              <div style="flex-shrink:0;margin-left:8px">
-                ${done
-                  ? `<span style="color:var(--primary-dark);font-size:20px">✅</span>`
-                  : `<span style="color:var(--border);font-size:20px">○</span>`
-                }
-              </div>
+              <div style="font-size:20px;flex-shrink:0">${wDone?'🏆':'›'}</div>
             </div>
-          </div>
-        `;
+          </div>`;
       }).join('')}
     </div>
   `;
 }
 
-function renderEnglishLesson(topicId) {
-  const topic = ENGLISH_A1.find(t => t.id === topicId);
-  if (!topic) { englishLessonId = null; return renderEnglish(); }
-  const { completedTopics = [], learnedWords = [] } = state.data.english || {};
-  const isDone = completedTopics.includes(topicId);
+function renderEngWeek() {
+  const w = ENGLISH_PROGRAM.find(x => x.week === engWeekNum);
+  if (!w) { engView='home'; return renderEnglish(); }
+  const { completedTopics=[], learnedWords=[] } = state.data.english||{};
+  const wWords = w.vocab.map((_,i) => 'w'+w.week+'_v'+i).filter(k => learnedWords.includes(k)).length;
+  return `
+    <div class="page">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;gap:10px">
+          <button class="btn btn-secondary btn-sm" id="eng-back">← Назад</button>
+          <div><h1 style="font-size:20px">${w.icon} Неделя ${w.week}</h1><div class="subtitle">${w.theme}</div></div>
+        </div>
+      </div>
+      <div class="card" style="background:linear-gradient(135deg,#FFF0F5,#FFF8E0);border:none">
+        <div style="font-size:13px">💡 ${w.tip}</div>
+      </div>
+      ${w.sessions.map(s => {
+        const sDone = completedTopics.includes('w'+w.week+'s'+s.n);
+        return `<div class="book-item" style="cursor:pointer;margin-bottom:8px" data-eng-session="${s.n}">
+            <div class="book-item-top">
+              <div style="font-size:26px;margin-right:12px;flex-shrink:0">${s.n===1?'📖':'🎬'}</div>
+              <div style="flex:1">
+                <div style="font-weight:700;font-size:15px">${s.day} — ${s.title}</div>
+                <div class="muted" style="font-size:12px">Правило + ${s.song?'песня 🎵':'диалог 📺'} + упражнения ✏️</div>
+              </div>
+              <div style="font-size:20px">${sDone?'✅':'›'}</div>
+            </div>
+          </div>`;
+      }).join('')}
+      <div class="book-item" style="cursor:pointer;margin-bottom:8px" data-eng-vocab="1">
+        <div class="book-item-top">
+          <div style="font-size:26px;margin-right:12px">🔤</div>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:15px">Словарик недели</div>
+            <div class="muted" style="font-size:12px">${wWords}/${w.vocab.length} слов выучено · нажми каждое</div>
+          </div>
+          <div style="font-size:20px">›</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderEngSession() {
+  const w = ENGLISH_PROGRAM.find(x => x.week === engWeekNum);
+  if (!w) { engView='home'; return renderEnglish(); }
+
+  if (engSession === 0) {
+    const { learnedWords=[] } = state.data.english||{};
+    return `
+      <div class="page">
+        <div class="page-header">
+          <div style="display:flex;align-items:center;gap:10px">
+            <button class="btn btn-secondary btn-sm" id="eng-back">← Назад</button>
+            <div><h1 style="font-size:20px">🔤 Словарик</h1><div class="subtitle">Неделя ${w.week}: ${w.theme}</div></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${w.vocab.map((word,i) => {
+            const wKey = 'w'+w.week+'_v'+i;
+            const learned = learnedWords.includes(wKey);
+            return `<div class="recipe-item ${learned?'learned':''}" data-learn-word="${wKey}" style="display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:10px;cursor:pointer">
+                <div style="flex:1">
+                  <div style="font-weight:700;font-size:15px">${word.en}</div>
+                  <div class="muted" style="font-size:13px">${word.ru}</div>
+                  ${word.ex?'<div style="font-size:11px;color:var(--text-muted);margin-top:2px;font-style:italic">'+word.ex+'</div>':''}
+                </div>
+                <div style="font-size:22px;flex-shrink:0;margin-left:10px">${learned?'✅':'○'}</div>
+              </div>`;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  const s = w.sessions.find(x => x.n === engSession);
+  if (!s) { engView='week'; return renderEngWeek(); }
+  const { completedTopics=[], learnedWords=[] } = state.data.english||{};
+  const sDone = completedTopics.includes('w'+w.week+'s'+s.n);
+
+  const grammarHtml = s.grammar ? `
+    <div class="card">
+      <div class="card-title">📌 ${s.grammar.title}</div>
+      ${s.grammar.blocks.map(b => `
+        <div style="margin-bottom:14px">
+          <div style="font-weight:700;font-size:13px;color:var(--primary-dark);margin-bottom:6px">${b.heading}</div>
+          ${b.examples.map(ex => '<div style="background:var(--surface2);border-radius:8px;padding:8px 12px;font-size:13px;line-height:1.6;margin-bottom:4px">'+boldify(ex)+'</div>').join('')}
+          ${b.note?'<div style="font-size:12px;color:var(--text-muted);margin-top:4px;padding:6px 10px;background:#FFF3E0;border-radius:6px">'+boldify(b.note)+'</div>':''}
+        </div>
+      `).join('')}
+    </div>
+  ` : '';
+
+  const dialogueHtml = s.dialogue ? `
+    <div class="card">
+      <div class="card-title">${s.dialogue.source}</div>
+      <div class="muted" style="font-size:12px;margin-bottom:12px">${s.dialogue.intro}</div>
+      ${s.dialogue.lines.map(l => `
+        <div style="margin-bottom:10px">
+          <div style="font-size:11px;font-weight:700;color:var(--primary-dark);text-transform:uppercase">${l.who}</div>
+          <div style="font-size:14px;font-weight:600;line-height:1.5">${boldify(l.text)}</div>
+          <div style="font-size:12px;color:var(--text-muted);font-style:italic">${l.ru}</div>
+        </div>
+      `).join('')}
+      <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">
+        <div style="font-size:12px;font-weight:700;margin-bottom:6px">🔍 Разбор</div>
+        ${s.dialogue.notes.map(n => '<div style="font-size:12px;line-height:1.6;margin-bottom:3px">• '+boldify(n)+'</div>').join('')}
+      </div>
+    </div>
+  ` : '';
+
+  const songHtml = s.song ? `
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="font-size:28px">🎵</div>
+        <div><div style="font-weight:700;font-size:15px">${s.song.title}</div><div class="muted">${s.song.artist}</div></div>
+        <a href="${s.song.link}" target="_blank" rel="noopener" style="margin-left:auto;background:var(--primary);color:white;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;text-decoration:none">▶ Слушать</a>
+      </div>
+      <div class="muted" style="font-size:12px;margin-bottom:10px">${s.song.intro}</div>
+      ${s.song.lines.map(l => `
+        <div style="margin-bottom:8px">
+          <div style="font-size:14px;font-weight:600;font-style:italic;line-height:1.5">${boldify(l.line)}</div>
+          <div style="font-size:12px;color:var(--text-muted)">${l.ru}</div>
+        </div>
+      `).join('')}
+      <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">
+        <div style="font-size:12px;font-weight:700;margin-bottom:6px">🔍 Разбор</div>
+        ${s.song.notes.map(n => '<div style="font-size:12px;line-height:1.6;margin-bottom:3px">• '+boldify(n)+'</div>').join('')}
+      </div>
+    </div>
+  ` : '';
+
+  const exHtml = `
+    <div class="card">
+      <div class="card-title">✏️ Упражнения</div>
+      ${s.exercises.map((ex,i) => {
+        const picked = engExAnswers[i];
+        return `<div style="margin-bottom:16px;padding:12px;background:var(--surface2);border-radius:10px">
+            <div style="font-weight:600;font-size:14px;margin-bottom:10px">${i+1}. ${boldify(ex.q)}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              ${ex.opts.map(opt => {
+                let sty = 'border:2px solid var(--border);background:white';
+                if(picked){if(opt===ex.ans)sty='border:2px solid #4CAF50;background:#E8F5E9;font-weight:700';else if(opt===picked)sty='border:2px solid #FF6B6B;background:#FFE8E8';}
+                return '<button class="btn btn-sm" style="'+sty+';border-radius:20px;font-size:13px;padding:6px 14px" data-ex-pick="'+i+'" data-ex-opt="'+opt+'" '+(picked?'disabled':'')+'>'+opt+'</button>';
+              }).join('')}
+            </div>
+            ${picked?'<div style="font-size:12px;margin-top:8px;padding:6px 10px;background:'+(picked===ex.ans?'#E8F5E9':'#FFE8E8')+';border-radius:6px">'+(picked===ex.ans?'✅':'❌')+' '+boldify(ex.tip)+'</div>':''}
+          </div>`;
+      }).join('')}
+    </div>
+  `;
+
+  const promptHtml = `
+    <div class="card">
+      <div class="card-title">🗣️ Говорилка</div>
+      <div style="font-size:13px;line-height:1.7;white-space:pre-line;color:var(--text-secondary)">${s.prompt}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:8px">💬 Напиши ответ в чат — я проверю и объясню ошибки в Вт/Чт!</div>
+    </div>
+  `;
 
   return `
     <div class="page">
       <div class="page-header">
         <div style="display:flex;align-items:center;gap:10px">
-          <button class="btn btn-secondary btn-sm" id="eng-back" style="flex-shrink:0">← Назад</button>
-          <div>
-            <h1 style="font-size:20px">${topic.icon} ${topic.title}</h1>
-            <div class="subtitle">${topic.subtitle}</div>
-          </div>
+          <button class="btn btn-secondary btn-sm" id="eng-back">← Назад</button>
+          <div><h1 style="font-size:18px">${s.day} · Нед. ${w.week}</h1><div class="subtitle">${s.title}</div></div>
         </div>
       </div>
-
-      ${topic.rules.map(rule => `
-        <div class="card">
-          <div class="card-title">📌 ${rule.heading}</div>
-          <div style="display:flex;flex-direction:column;gap:7px">
-            ${rule.examples.map(ex => `
-              <div style="background:var(--surface2);border-radius:8px;padding:9px 12px;font-size:14px;line-height:1.5">${ex}</div>
-            `).join('')}
-          </div>
-        </div>
-      `).join('')}
-
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <div class="card-title" style="margin:0">🔤 Словарик</div>
-          <div class="muted" style="font-size:12px">${topic.vocab.filter((_, i) => learnedWords.includes(`${topicId}_${i}`)).length}/${topic.vocab.length} выучено</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px">
-          ${topic.vocab.map((w, i) => {
-            const wKey = `${topicId}_${i}`;
-            const learned = learnedWords.includes(wKey);
-            return `
-              <div class="recipe-item ${learned ? 'learned' : ''}" data-learn-word="${wKey}" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;cursor:pointer">
-                <div>
-                  <div style="font-weight:700;font-size:14px">${w.en}</div>
-                  <div class="muted" style="font-size:13px">${w.ru}</div>
-                </div>
-                <div style="font-size:20px">${learned ? '✅' : '○'}</div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      </div>
-
-      <div style="display:flex;gap:10px;margin-top:4px;padding-bottom:20px">
-        <button class="btn ${isDone ? 'btn-secondary' : 'btn-primary'} btn-full" id="eng-complete-topic">
-          ${isDone ? '✅ Тема пройдена' : '🎓 Отметить тему как пройденную'}
+      ${grammarHtml}${dialogueHtml}${songHtml}${exHtml}${promptHtml}
+      <div style="padding-bottom:20px">
+        <button class="btn ${sDone?'btn-secondary':'btn-primary'} btn-full" id="eng-complete-session">
+          ${sDone?'✅ Занятие пройдено':'🎓 Отметить как пройденное'}
         </button>
       </div>
     </div>
   `;
 }
+
 
 function renderMore() {
   const sections = [
@@ -2840,8 +3222,9 @@ function renderMore() {
           if (s.id === 'books' && readingBooks > 0) desc = `Читаю: ${readingBooks}`;
           if (s.id === 'garden') desc = `<img src="icons/coin.png" class="coin-img" alt=""> ${state.data.coins?.balance || 0} монет`;
           if (s.id === 'english') {
-            const done = (state.data.english?.completedTopics || []).length;
-            desc = `${done}/${ENGLISH_A1.length} тем пройдено`;
+            const ct = state.data.english?.completedTopics || [];
+            const done = ENGLISH_PROGRAM.filter(w => ct.includes('w'+w.week+'s1') || ct.includes('w'+w.week+'s2')).length;
+            desc = `${done}/${ENGLISH_PROGRAM.length} недель пройдено`;
           }
           return `
             <button class="hub-card" data-page="${s.id}">
@@ -3947,7 +4330,7 @@ function bindEvents() {
   // Hub navigation
   document.querySelectorAll('.hub-card[data-page]').forEach(card => {
     card.addEventListener('click', () => {
-      if (card.dataset.page === 'english') englishLessonId = null;
+      if (card.dataset.page === 'english') { engView='home'; engExAnswers={}; }
       state.page = card.dataset.page;
       window.scrollTo(0, 0);
       render();
@@ -3955,17 +4338,53 @@ function bindEvents() {
   });
 
   // English section
-  document.querySelectorAll('[data-eng-topic]').forEach(el => {
+  document.querySelectorAll('[data-eng-week]').forEach(el => {
     el.addEventListener('click', () => {
-      englishLessonId = el.dataset.engTopic;
+      engWeekNum = parseInt(el.dataset.engWeek);
+      engView = 'week';
+      engExAnswers = {};
+      window.scrollTo(0, 0);
+      render();
+    });
+  });
+  document.querySelectorAll('[data-eng-session]').forEach(el => {
+    el.addEventListener('click', () => {
+      engSession = parseInt(el.dataset.engSession);
+      engView = 'session';
+      engExAnswers = {};
+      window.scrollTo(0, 0);
+      render();
+    });
+  });
+  document.querySelectorAll('[data-eng-vocab]').forEach(el => {
+    el.addEventListener('click', () => {
+      engSession = 0;
+      engView = 'session';
       window.scrollTo(0, 0);
       render();
     });
   });
   document.getElementById('eng-back')?.addEventListener('click', () => {
-    englishLessonId = null;
+    if (engView === 'session') { engView = 'week'; } else { engView = 'home'; }
     window.scrollTo(0, 0);
     render();
+  });
+  document.querySelectorAll('[data-ex-pick]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.exPick);
+      const opt = btn.dataset.exOpt;
+      if (engExAnswers[idx]) return;
+      engExAnswers[idx] = opt;
+      render();
+    });
+  });
+  document.getElementById('eng-complete-session')?.addEventListener('click', () => {
+    const key = 'w' + engWeekNum + 's' + engSession;
+    if (!state.data.english) state.data.english = { completedTopics: [], learnedWords: [] };
+    const arr = state.data.english.completedTopics;
+    const idx = arr.indexOf(key);
+    if (idx >= 0) arr.splice(idx, 1); else arr.push(key);
+    save(); render();
   });
   document.querySelectorAll('[data-learn-word]').forEach(el => {
     el.addEventListener('click', () => {
@@ -3976,14 +4395,6 @@ function bindEvents() {
       if (idx >= 0) arr.splice(idx, 1); else arr.push(key);
       save(); render();
     });
-  });
-  document.getElementById('eng-complete-topic')?.addEventListener('click', () => {
-    if (!englishLessonId) return;
-    if (!state.data.english) state.data.english = { completedTopics: [], learnedWords: [] };
-    const arr = state.data.english.completedTopics;
-    const idx = arr.indexOf(englishLessonId);
-    if (idx >= 0) arr.splice(idx, 1); else arr.push(englishLessonId);
-    save(); render();
   });
 
   // Period selectors — sleep
