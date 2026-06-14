@@ -222,6 +222,459 @@ const INCOME_CATS = [
   { id: 'debt_in',  name: 'Долг (вернули)', icon: '🤝' },
 ];
 
+const ENGLISH_A1 = [
+  {
+    id: 'greetings', icon: '👋', title: 'Знакомство',
+    subtitle: 'Приветствия, прощания и как представиться',
+    rules: [
+      { heading: 'Приветствия по времени суток', examples: [
+        'Hello / Hi — Привет (всегда подходит)',
+        'Good morning — Доброе утро (до 12:00)',
+        'Good afternoon — Добрый день (12:00–18:00)',
+        'Good evening — Добрый вечер (после 18:00)',
+      ]},
+      { heading: 'Как представиться', examples: [
+        "My name is Anna. — Меня зовут Анна.",
+        "I'm Anna. — Я Анна. (сокращённо, разговорно)",
+        "What's your name? — Как тебя зовут?",
+      ]},
+      { heading: 'Полезные фразы', examples: [
+        'Nice to meet you! — Приятно познакомиться!',
+        'How are you? — Как дела?',
+        "I'm fine, thank you! — Всё хорошо, спасибо!",
+        'And you? — А у тебя?',
+        'Goodbye! / Bye! — Пока!',
+        'See you later! — До скорого!',
+        'See you tomorrow! — До завтра!',
+      ]},
+    ],
+    vocab: [
+      {en:'hello',ru:'привет'},{en:'goodbye',ru:'пока'},{en:'name',ru:'имя'},
+      {en:'nice',ru:'приятный / хорошо'},{en:'meet',ru:'встречать, знакомиться'},
+      {en:'fine',ru:'в порядке, хорошо'},{en:'thank you',ru:'спасибо'},
+      {en:'please',ru:'пожалуйста'},{en:'sorry',ru:'извините / прости'},
+      {en:'excuse me',ru:'простите (чтобы привлечь внимание)'},{en:'yes',ru:'да'},
+      {en:'no',ru:'нет'},{en:'morning',ru:'утро'},{en:'afternoon',ru:'день'},
+      {en:'evening',ru:'вечер'},{en:'night',ru:'ночь'},
+    ]
+  },
+  {
+    id: 'alphabet', icon: '🔤', title: 'Алфавит',
+    subtitle: 'Буквы и их произношение',
+    rules: [
+      { heading: 'Английский алфавит — 26 букв', examples: [
+        'A [эй]   B [би]   C [си]   D [ди]   E [и]   F [эф]',
+        'G [джи]  H [эйч]  I [ай]   J [джей] K [кей] L [эл]',
+        'M [эм]   N [эн]   O [оу]   P [пи]   Q [кью] R [ар]',
+        'S [эс]   T [ти]   U [ю]    V [ви]   W [дабл-ю] X [экс]',
+        'Y [уай]  Z [зи / зэд]',
+      ]},
+      { heading: 'Гласные звуки — запомни!', examples: [
+        'A, E, I, O, U — гласные буквы',
+        'cat [кэт] — краткое А',
+        'cake [кейк] — долгое А (звук "эй")',
+        'bed [бэд] — краткое Е',
+        'see [си] — долгое Е (звук "и")',
+        'hit [хит] — краткое I',
+        'bike [байк] — долгое I (звук "ай")',
+      ]},
+      { heading: 'Как читать — основные правила', examples: [
+        'ch = [ч]: chair, chocolate, cheese',
+        'sh = [ш]: she, shop, fish',
+        'th = [з/с]: the [зэ], think [синк]',
+        'ck = [к]: back, black, clock',
+        'wh = [в/х]: what [вот], who [ху]',
+      ]},
+    ],
+    vocab: [
+      {en:'letter',ru:'буква'},{en:'word',ru:'слово'},{en:'sound',ru:'звук'},
+      {en:'vowel',ru:'гласная'},{en:'consonant',ru:'согласная'},
+      {en:'alphabet',ru:'алфавит'},{en:'spell',ru:'произносить по буквам'},
+      {en:'pronounce',ru:'произносить'},{en:'read',ru:'читать'},
+      {en:'write',ru:'писать'},{en:'listen',ru:'слушать'},{en:'speak',ru:'говорить'},
+    ]
+  },
+  {
+    id: 'tobe', icon: '✅', title: 'Глагол "to be"',
+    subtitle: 'am / is / are — главный глагол английского',
+    rules: [
+      { heading: 'Таблица глагола to be', examples: [
+        'I am — я есть / я (I am = I\'m)',
+        'You are — ты есть / ты (You are = You\'re)',
+        'He is — он есть / он (He is = He\'s)',
+        'She is — она есть / она (She is = She\'s)',
+        'It is — это есть / оно (It is = It\'s)',
+        'We are — мы есть / мы (We are = We\'re)',
+        'They are — они есть / они (They are = They\'re)',
+      ]},
+      { heading: 'Утвердительные предложения', examples: [
+        "I'm happy. — Я счастлива.",
+        "She's a doctor. — Она врач.",
+        "We're friends. — Мы друзья.",
+        "It's cold today. — Сегодня холодно.",
+      ]},
+      { heading: 'Отрицание — добавь NOT', examples: [
+        "I'm not tired. — Я не устала.",
+        "He isn't here. — Его здесь нет. (is not = isn't)",
+        "They aren't ready. — Они не готовы. (are not = aren't)",
+      ]},
+      { heading: 'Вопросы — поставь to be ВПЕРЁД', examples: [
+        "Are you okay? — Ты в порядке?",
+        "Is she a student? — Она студентка?",
+        "Am I late? — Я опоздала?",
+        "Yes, I am. / No, I'm not. — Да / Нет.",
+      ]},
+    ],
+    vocab: [
+      {en:'happy',ru:'счастливый / счастлива'},{en:'sad',ru:'грустный'},
+      {en:'tired',ru:'уставший'},{en:'hungry',ru:'голодный'},
+      {en:'ready',ru:'готовый'},{en:'busy',ru:'занятой'},
+      {en:'young',ru:'молодой'},{en:'old',ru:'старый'},
+      {en:'big',ru:'большой'},{en:'small',ru:'маленький'},
+      {en:'beautiful',ru:'красивый'},{en:'tall',ru:'высокий'},
+      {en:'student',ru:'студент'},{en:'doctor',ru:'врач'},
+      {en:'friend',ru:'друг / подруга'},{en:'here',ru:'здесь'},
+    ]
+  },
+  {
+    id: 'numbers', icon: '🔢', title: 'Числа и время',
+    subtitle: 'Числа 1–100, возраст, который час',
+    rules: [
+      { heading: 'Числа 1–20', examples: [
+        '1 one, 2 two, 3 three, 4 four, 5 five',
+        '6 six, 7 seven, 8 eight, 9 nine, 10 ten',
+        '11 eleven, 12 twelve, 13 thirteen, 14 fourteen, 15 fifteen',
+        '16 sixteen, 17 seventeen, 18 eighteen, 19 nineteen, 20 twenty',
+      ]},
+      { heading: 'Числа 21–100', examples: [
+        '21 twenty-one, 22 twenty-two... 30 thirty',
+        '40 forty, 50 fifty, 60 sixty',
+        '70 seventy, 80 eighty, 90 ninety, 100 one hundred',
+      ]},
+      { heading: 'Возраст — How old are you?', examples: [
+        'How old are you? — Сколько тебе лет?',
+        "I'm 25 (years old). — Мне 25 лет.",
+        'She is 30 years old. — Ей 30 лет.',
+      ]},
+      { heading: 'Который час — What time is it?', examples: [
+        "What time is it? — Который час?",
+        "It's 3 o'clock. — Три часа.",
+        "It's 3:30 / half past three. — Половина четвёртого.",
+        "It's 3:15 / quarter past three. — Четверть четвёртого.",
+        "It's 3:45 / quarter to four. — Без четверти четыре.",
+      ]},
+    ],
+    vocab: [
+      {en:'number',ru:'число, цифра'},{en:'time',ru:'время'},
+      {en:'hour',ru:'час'},{en:'minute',ru:'минута'},
+      {en:'o\'clock',ru:'ровно (в ... часов)'},{en:'half past',ru:'половина'},
+      {en:'quarter past',ru:'четверть (после часа)'},{en:'quarter to',ru:'без четверти'},
+      {en:'age',ru:'возраст'},{en:'year',ru:'год'},{en:'day',ru:'день'},
+      {en:'week',ru:'неделя'},{en:'month',ru:'месяц'},{en:'today',ru:'сегодня'},
+      {en:'tomorrow',ru:'завтра'},{en:'yesterday',ru:'вчера'},
+    ]
+  },
+  {
+    id: 'family', icon: '👨‍👩‍👧', title: 'Семья',
+    subtitle: 'Члены семьи, have/has, мой / моя / мои',
+    rules: [
+      { heading: 'Члены семьи', examples: [
+        'mother / mom — мама',
+        'father / dad — папа',
+        'sister — сестра',
+        'brother — брат',
+        'grandmother / grandma — бабушка',
+        'grandfather / grandpa — дедушка',
+        'daughter — дочь',
+        'son — сын',
+        'husband — муж',
+        'wife — жена',
+        'aunt — тётя',
+        'uncle — дядя',
+      ]},
+      { heading: 'Глагол HAVE / HAS — иметь', examples: [
+        'I / You / We / They → have',
+        'He / She / It → has',
+        'I have a sister. — У меня есть сестра.',
+        'She has two brothers. — У неё два брата.',
+        "I don't have a pet. — У меня нет питомца.",
+      ]},
+      { heading: 'Притяжательные местоимения', examples: [
+        'my — мой/моя (my sister — моя сестра)',
+        'your — твой/ваш',
+        'his — его (his name — его имя)',
+        'her — её (her mother — её мама)',
+        'our — наш',
+        'their — их',
+      ]},
+    ],
+    vocab: [
+      {en:'family',ru:'семья'},{en:'mother',ru:'мама'},{en:'father',ru:'папа'},
+      {en:'sister',ru:'сестра'},{en:'brother',ru:'брат'},
+      {en:'grandmother',ru:'бабушка'},{en:'grandfather',ru:'дедушка'},
+      {en:'daughter',ru:'дочь'},{en:'son',ru:'сын'},
+      {en:'husband',ru:'муж'},{en:'wife',ru:'жена'},
+      {en:'aunt',ru:'тётя'},{en:'uncle',ru:'дядя'},
+      {en:'cousin',ru:'двоюродный брат/сестра'},{en:'pet',ru:'питомец'},
+      {en:'dog',ru:'собака'},{en:'cat',ru:'кошка'},
+    ]
+  },
+  {
+    id: 'myday', icon: '🌅', title: 'Мой день',
+    subtitle: 'Распорядок дня — Present Simple',
+    rules: [
+      { heading: 'Present Simple — что делаю каждый день', examples: [
+        'Используется для привычек, расписания, фактов.',
+        'I wake up at 7. — Я просыпаюсь в 7.',
+        'She works every day. — Она работает каждый день.',
+        'We eat dinner at 7 pm. — Мы ужинаем в 7 вечера.',
+      ]},
+      { heading: 'Правило: он/она/оно → добавь -S', examples: [
+        'I eat → She eats',
+        'I go → He goes',
+        'I have → She has (исключение!)',
+        'I do → He does (исключение!)',
+        'I watch → She watches (-ch, -sh, -s → +es)',
+      ]},
+      { heading: 'Отрицание — DON\'T / DOESN\'T', examples: [
+        "I don't like coffee. — Я не люблю кофе.",
+        "She doesn't eat meat. — Она не ест мясо.",
+        "They don't work on Sunday. — Они не работают в воскресенье.",
+      ]},
+      { heading: 'Вопросы — DO / DOES', examples: [
+        'Do you like pizza? — Ты любишь пиццу? Yes, I do. / No, I don\'t.',
+        'Does she speak English? — Она говорит по-английски?',
+        'What do you do? — Чем ты занимаешься? (работа/профессия)',
+        'Where do you live? — Где ты живёшь?',
+      ]},
+    ],
+    vocab: [
+      {en:'wake up',ru:'просыпаться'},{en:'get up',ru:'вставать'},
+      {en:'shower',ru:'душ / принимать душ'},{en:'breakfast',ru:'завтрак'},
+      {en:'lunch',ru:'обед'},{en:'dinner',ru:'ужин'},
+      {en:'work',ru:'работать / работа'},{en:'study',ru:'учиться / изучать'},
+      {en:'go to bed',ru:'ложиться спать'},{en:'sleep',ru:'спать'},
+      {en:'always',ru:'всегда'},{en:'usually',ru:'обычно'},
+      {en:'sometimes',ru:'иногда'},{en:'never',ru:'никогда'},
+      {en:'every day',ru:'каждый день'},{en:'weekend',ru:'выходные'},
+    ]
+  },
+  {
+    id: 'food', icon: '🍕', title: 'Еда и напитки',
+    subtitle: 'Что люблю есть — I like / I don\'t like',
+    rules: [
+      { heading: 'I like / I don\'t like', examples: [
+        'I like pizza. — Мне нравится пицца.',
+        "I don't like onions. — Я не люблю лук.",
+        'She loves chocolate! — Она обожает шоколад!',
+        'He hates fish. — Он терпеть не может рыбу.',
+        'I prefer tea to coffee. — Я предпочитаю чай кофе.',
+      ]},
+      { heading: 'В кафе / ресторане', examples: [
+        "Can I have a coffee, please? — Можно мне кофе?",
+        "I'd like a glass of water. — Я бы хотела стакан воды.",
+        "What do you recommend? — Что вы рекомендуете?",
+        "The bill, please. — Счёт, пожалуйста.",
+        "It's delicious! — Это вкусно!",
+      ]},
+      { heading: 'Исчисляемое и неисчисляемое — A / SOME', examples: [
+        'a coffee, a sandwich — (можно посчитать)',
+        'some water, some bread — (нельзя посчитать)',
+        'some apples — (несколько яблок)',
+        "I don't have any milk. — У меня нет молока. (any в отриц.)",
+      ]},
+    ],
+    vocab: [
+      {en:'apple',ru:'яблоко'},{en:'bread',ru:'хлеб'},{en:'meat',ru:'мясо'},
+      {en:'fish',ru:'рыба'},{en:'chicken',ru:'курица'},{en:'rice',ru:'рис'},
+      {en:'pasta',ru:'паста'},{en:'salad',ru:'салат'},{en:'soup',ru:'суп'},
+      {en:'coffee',ru:'кофе'},{en:'tea',ru:'чай'},{en:'water',ru:'вода'},
+      {en:'juice',ru:'сок'},{en:'milk',ru:'молоко'},{en:'sugar',ru:'сахар'},
+      {en:'delicious',ru:'вкусный'},{en:'hungry',ru:'голодный'},{en:'thirsty',ru:'хочу пить'},
+    ]
+  },
+  {
+    id: 'clothes', icon: '👗', title: 'Цвета и одежда',
+    subtitle: 'Описание внешности и того, что на тебе',
+    rules: [
+      { heading: 'Цвета', examples: [
+        'red — красный, blue — синий, green — зелёный',
+        'yellow — жёлтый, orange — оранжевый, pink — розовый',
+        'purple — фиолетовый, white — белый, black — чёрный',
+        'grey — серый, brown — коричневый, beige — бежевый',
+      ]},
+      { heading: 'Прилагательное ПЕРЕД существительным', examples: [
+        'a red dress — красное платье',
+        'black shoes — чёрные туфли',
+        'a beautiful pink bag — красивая розовая сумка',
+        '⚠️ Прилагательное не меняется: red dress / red shoes (не reds!)',
+      ]},
+      { heading: 'Что на тебе сейчас — Present Continuous', examples: [
+        "I'm wearing a white T-shirt. — На мне белая футболка.",
+        "She's wearing jeans and a jacket. — На ней джинсы и куртка.",
+        "What are you wearing? — Что на тебе надето?",
+      ]},
+    ],
+    vocab: [
+      {en:'dress',ru:'платье'},{en:'skirt',ru:'юбка'},{en:'jeans',ru:'джинсы'},
+      {en:'T-shirt',ru:'футболка'},{en:'jacket',ru:'куртка'},{en:'coat',ru:'пальто'},
+      {en:'shoes',ru:'туфли / обувь'},{en:'boots',ru:'ботинки / сапоги'},
+      {en:'bag',ru:'сумка'},{en:'hat',ru:'шапка / шляпа'},
+      {en:'glasses',ru:'очки'},{en:'size',ru:'размер'},
+      {en:'wear',ru:'носить (одежду)'},{en:'try on',ru:'примерить'},
+      {en:'colour / color',ru:'цвет'},{en:'style',ru:'стиль'},
+    ]
+  },
+  {
+    id: 'home', icon: '🏠', title: 'Мой дом',
+    subtitle: 'Комнаты, мебель, предлоги места',
+    rules: [
+      { heading: 'Комнаты в доме', examples: [
+        'living room — гостиная',
+        'bedroom — спальня',
+        'kitchen — кухня',
+        'bathroom — ванная',
+        'hallway — прихожая / коридор',
+        'balcony — балкон',
+      ]},
+      { heading: 'Предлоги места', examples: [
+        'in — в (in the box — в коробке)',
+        'on — на (on the table — на столе)',
+        'under — под (under the bed — под кроватью)',
+        'next to — рядом с (next to the window — рядом с окном)',
+        'between — между (between the chairs — между стульями)',
+        'behind — за (behind the door — за дверью)',
+        'in front of — перед (in front of the TV — перед телевизором)',
+      ]},
+      { heading: 'Описание дома', examples: [
+        'I live in a flat / apartment. — Я живу в квартире.',
+        'I have a small bedroom. — У меня маленькая спальня.',
+        'The kitchen is next to the bathroom. — Кухня рядом с ванной.',
+        'Where is the remote? It\'s on the sofa. — Пульт на диване.',
+      ]},
+    ],
+    vocab: [
+      {en:'flat / apartment',ru:'квартира'},{en:'house',ru:'дом'},
+      {en:'sofa',ru:'диван'},{en:'table',ru:'стол'},{en:'chair',ru:'стул'},
+      {en:'bed',ru:'кровать'},{en:'wardrobe',ru:'шкаф'},
+      {en:'window',ru:'окно'},{en:'door',ru:'дверь'},{en:'floor',ru:'пол / этаж'},
+      {en:'wall',ru:'стена'},{en:'lamp',ru:'лампа'},
+      {en:'fridge',ru:'холодильник'},{en:'mirror',ru:'зеркало'},
+      {en:'curtains',ru:'шторы'},{en:'clean',ru:'чистый / убирать'},
+    ]
+  },
+  {
+    id: 'city', icon: '🚌', title: 'Город и транспорт',
+    subtitle: 'Как добраться, спросить дорогу',
+    rules: [
+      { heading: 'Места в городе', examples: [
+        'supermarket — супермаркет',
+        'pharmacy — аптека',
+        'hospital — больница',
+        'café — кафе',
+        'park — парк',
+        'bank — банк',
+        'post office — почта',
+        'shopping mall — торговый центр',
+      ]},
+      { heading: 'Как спросить дорогу', examples: [
+        "Excuse me, where is the pharmacy? — Простите, где аптека?",
+        "How do I get to the park? — Как добраться до парка?",
+        "Is it far? — Это далеко?",
+        "Turn left / Turn right. — Поверните налево / направо.",
+        "Go straight ahead. — Идите прямо.",
+        "It's on the left / right. — Это слева / справа.",
+      ]},
+      { heading: 'Транспорт', examples: [
+        'I go by bus. — Я езжу на автобусе.',
+        'She takes the metro. — Она ездит на метро.',
+        'I walk to work. — Я хожу на работу пешком.',
+        "How long does it take? — Сколько времени это занимает?",
+        "It takes 20 minutes. — Это занимает 20 минут.",
+      ]},
+    ],
+    vocab: [
+      {en:'bus',ru:'автобус'},{en:'metro / subway',ru:'метро'},
+      {en:'taxi',ru:'такси'},{en:'walk',ru:'идти пешком / прогулка'},
+      {en:'street',ru:'улица'},{en:'road',ru:'дорога'},{en:'left',ru:'левый / слева'},
+      {en:'right',ru:'правый / справа'},{en:'straight',ru:'прямо'},
+      {en:'near',ru:'близко / рядом'},{en:'far',ru:'далеко'},
+      {en:'map',ru:'карта'},{en:'ticket',ru:'билет'},{en:'stop',ru:'остановка'},
+      {en:'station',ru:'станция / вокзал'},{en:'arrive',ru:'прибывать'},
+    ]
+  },
+  {
+    id: 'hobbies', icon: '🎨', title: 'Хобби',
+    subtitle: 'Что люблю делать — like/love + -ing',
+    rules: [
+      { heading: 'Like / Love / Enjoy + глагол-ing', examples: [
+        'I like reading. — Я люблю читать.',
+        'She loves dancing. — Она обожает танцевать.',
+        'He enjoys cooking. — Ему нравится готовить.',
+        "I don't like waking up early. — Я не люблю рано вставать.",
+        '⚠️ После like/love/enjoy всегда -ING!',
+      ]},
+      { heading: 'Вопросы о хобби', examples: [
+        "What do you like doing? — Что тебе нравится делать?",
+        "Do you like sport? — Ты любишь спорт?",
+        "What's your hobby? — Какое у тебя хобби?",
+        "How often do you...? — Как часто ты...?",
+        'Every day / Once a week / Twice a month — каждый день / раз в неделю / дважды в месяц',
+      ]},
+      { heading: 'Want to + глагол — хочу сделать', examples: [
+        "I want to learn English. — Я хочу выучить английский.",
+        "She wants to travel. — Она хочет путешествовать.",
+        "I'd like to try yoga. — Я бы хотела попробовать йогу.",
+      ]},
+    ],
+    vocab: [
+      {en:'read',ru:'читать'},{en:'draw',ru:'рисовать'},{en:'dance',ru:'танцевать'},
+      {en:'sing',ru:'петь'},{en:'cook',ru:'готовить'},{en:'travel',ru:'путешествовать'},
+      {en:'sport',ru:'спорт'},{en:'music',ru:'музыка'},{en:'film',ru:'фильм'},
+      {en:'game',ru:'игра'},{en:'walk',ru:'прогулка'},{en:'yoga',ru:'йога'},
+      {en:'gym',ru:'спортзал'},{en:'guitar',ru:'гитара'},{en:'piano',ru:'пианино'},
+      {en:'hobby',ru:'хобби'},{en:'free time',ru:'свободное время'},
+    ]
+  },
+  {
+    id: 'weather', icon: '☀️', title: 'Погода',
+    subtitle: 'Как говорить о погоде и временах года',
+    rules: [
+      { heading: 'Описание погоды — It is / It\'s', examples: [
+        "It's sunny. — Солнечно.",
+        "It's raining. — Идёт дождь.",
+        "It's snowing. — Идёт снег.",
+        "It's cold / hot / warm / windy / cloudy. — Холодно / жарко / тепло / ветрено / облачно.",
+        "What's the weather like today? — Какая сегодня погода?",
+      ]},
+      { heading: 'Времена года', examples: [
+        'spring — весна (March, April, May)',
+        'summer — лето (June, July, August)',
+        'autumn / fall — осень (September, October, November)',
+        'winter — зима (December, January, February)',
+        'I love summer! — Я люблю лето!',
+        "My favourite season is spring. — Моё любимое время года — весна.",
+      ]},
+      { heading: 'Месяцы и дни недели', examples: [
+        'Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday',
+        'January, February, March, April, May, June',
+        'July, August, September, October, November, December',
+        '⚠️ Месяцы и дни недели ВСЕГДА с большой буквы!',
+      ]},
+    ],
+    vocab: [
+      {en:'sun / sunny',ru:'солнце / солнечно'},{en:'rain / rainy',ru:'дождь / дождливо'},
+      {en:'snow / snowy',ru:'снег / снежно'},{en:'wind / windy',ru:'ветер / ветрено'},
+      {en:'cloud / cloudy',ru:'облако / облачно'},{en:'cold',ru:'холодный / холодно'},
+      {en:'hot',ru:'жаркий / жарко'},{en:'warm',ru:'тёплый / тепло'},
+      {en:'season',ru:'время года'},{en:'spring',ru:'весна'},
+      {en:'summer',ru:'лето'},{en:'autumn',ru:'осень'},{en:'winter',ru:'зима'},
+      {en:'temperature',ru:'температура'},{en:'weather',ru:'погода'},
+      {en:'forecast',ru:'прогноз (погоды)'},
+    ]
+  },
+];
+
 const SHOPPING_CATS = [
   { id: 'food',     name: 'Продукты',  icon: '🛒' },
   { id: 'home',     name: 'Дом',       icon: '🏠' },
@@ -282,6 +735,7 @@ let tempShoppingCat = 'food';
 let tempIncomeCat = 'salary';
 let planMonthOffset = 0; // 0=current, 1=next, -1=prev
 let calendarMonthOffset = 0; // 0=current, -1=prev month, etc.
+let englishLessonId = null; // currently open lesson
 let tempBookStatus = 'want';
 let tempMediaStatus = 'want';
 let tempMediaType = 'movie';
@@ -339,6 +793,7 @@ function defaultData() {
     books: [],
     media: [],
     shopping: { items: [] },
+    english: { completedTopics: [], learnedWords: [] },
   };
 }
 
@@ -360,6 +815,8 @@ function loadData() {
       if (!d.shopping) d.shopping = { items: [] };
       if (!d.shopping.items) d.shopping.items = [];
       if (!d.health.visits) d.health.visits = [];
+      if (!d.english) d.english = { completedTopics: [], learnedWords: [] };
+      if (!d.english.learnedWords) d.english.learnedWords = [];
       if (!d.cooking) d.cooking = { learned: [], myRecipes: [], customDishes: [] };
       if (!d.cooking.myRecipes)   d.cooking.myRecipes = [];
       if (!d.cooking.customDishes) d.cooking.customDishes = [];
@@ -721,7 +1178,7 @@ function checkAchievements() {
 
 function render() {
   document.getElementById('app').innerHTML = renderPage();
-  const morePages = ['goals','health','garden','planner','cooking','achievements','books','media','shopping'];
+  const morePages = ['goals','health','garden','planner','cooking','achievements','books','media','shopping','english'];
   const activeNav = morePages.includes(state.page) ? 'more' : state.page;
   document.querySelectorAll('.nav-btn').forEach(btn =>
     btn.classList.toggle('active', btn.dataset.page === activeNav)
@@ -735,7 +1192,7 @@ function renderPage() {
     workout: renderWorkout, goals: renderGoals, garden: renderGarden,
     more: renderMore, health: renderHealth, planner: renderPlanner,
     cooking: renderCooking, achievements: renderAchievements,
-    books: renderBooks, media: renderMedia, shopping: renderShopping,
+    books: renderBooks, media: renderMedia, shopping: renderShopping, english: renderEnglish,
   };
   return (pages[state.page] || renderToday)();
 }
@@ -2233,6 +2690,123 @@ function renderShopping() {
 // PAGE: MORE (hub)
 // ============================================================
 
+// ============================================================
+// PAGE: ENGLISH
+// ============================================================
+
+function renderEnglish() {
+  if (englishLessonId) return renderEnglishLesson(englishLessonId);
+  const { completedTopics = [], learnedWords = [] } = state.data.english || {};
+  const totalWords = ENGLISH_A1.reduce((s, t) => s + t.vocab.length, 0);
+  const progress = Math.round(completedTopics.length / ENGLISH_A1.length * 100);
+
+  return `
+    <div class="page">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div><h1>Английский 🇬🇧</h1><div class="subtitle">Уровень A1 — с нуля</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-weight:700">Твой прогресс</div>
+          <div style="font-weight:700;color:var(--primary-dark)">${completedTopics.length}/${ENGLISH_A1.length} тем</div>
+        </div>
+        <div class="progress-wrap"><div class="progress-bar" style="width:${progress}%"></div></div>
+        <div class="muted" style="font-size:12px;margin-top:8px">📚 Слов в словаре: ${totalWords} · Выучено: ${learnedWords.length}</div>
+      </div>
+
+      <div style="margin-bottom:8px;font-weight:700;font-size:15px;padding:0 2px">📋 Темы программы</div>
+      ${ENGLISH_A1.map((topic, i) => {
+        const done = completedTopics.includes(topic.id);
+        const topicWords = topic.vocab.map((_, wi) => `${topic.id}_${wi}`);
+        const learnedCount = topicWords.filter(w => learnedWords.includes(w)).length;
+        return `
+          <div class="book-item" style="cursor:pointer;margin-bottom:8px" data-eng-topic="${topic.id}">
+            <div class="book-item-top">
+              <div style="font-size:24px;margin-right:12px;flex-shrink:0">${topic.icon}</div>
+              <div style="flex:1">
+                <div style="font-weight:700;font-size:15px">${i + 1}. ${topic.title}</div>
+                <div class="muted" style="font-size:12px">${topic.subtitle}</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:3px">
+                  📖 ${topic.rules.length} правила · 🔤 ${learnedCount}/${topic.vocab.length} слов
+                </div>
+              </div>
+              <div style="flex-shrink:0;margin-left:8px">
+                ${done
+                  ? `<span style="color:var(--primary-dark);font-size:20px">✅</span>`
+                  : `<span style="color:var(--border);font-size:20px">○</span>`
+                }
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderEnglishLesson(topicId) {
+  const topic = ENGLISH_A1.find(t => t.id === topicId);
+  if (!topic) { englishLessonId = null; return renderEnglish(); }
+  const { completedTopics = [], learnedWords = [] } = state.data.english || {};
+  const isDone = completedTopics.includes(topicId);
+
+  return `
+    <div class="page">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;gap:10px">
+          <button class="btn btn-secondary btn-sm" id="eng-back" style="flex-shrink:0">← Назад</button>
+          <div>
+            <h1 style="font-size:20px">${topic.icon} ${topic.title}</h1>
+            <div class="subtitle">${topic.subtitle}</div>
+          </div>
+        </div>
+      </div>
+
+      ${topic.rules.map(rule => `
+        <div class="card">
+          <div class="card-title">📌 ${rule.heading}</div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            ${rule.examples.map(ex => `
+              <div style="background:var(--surface2);border-radius:8px;padding:9px 12px;font-size:14px;line-height:1.5">${ex}</div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('')}
+
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div class="card-title" style="margin:0">🔤 Словарик</div>
+          <div class="muted" style="font-size:12px">${topic.vocab.filter((_, i) => learnedWords.includes(`${topicId}_${i}`)).length}/${topic.vocab.length} выучено</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${topic.vocab.map((w, i) => {
+            const wKey = `${topicId}_${i}`;
+            const learned = learnedWords.includes(wKey);
+            return `
+              <div class="recipe-item ${learned ? 'learned' : ''}" data-learn-word="${wKey}" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;cursor:pointer">
+                <div>
+                  <div style="font-weight:700;font-size:14px">${w.en}</div>
+                  <div class="muted" style="font-size:13px">${w.ru}</div>
+                </div>
+                <div style="font-size:20px">${learned ? '✅' : '○'}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:4px;padding-bottom:20px">
+        <button class="btn ${isDone ? 'btn-secondary' : 'btn-primary'} btn-full" id="eng-complete-topic">
+          ${isDone ? '✅ Тема пройдена' : '🎓 Отметить тему как пройденную'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
 function renderMore() {
   const sections = [
     { id: 'goals',        img: 'music.png',              title: 'Музыка',          desc: 'Песни и прогресс' },
@@ -2244,6 +2818,7 @@ function renderMore() {
     { id: 'planner',      img: 'writing-tool.png',       title: 'Планер',          desc: '' },
     { id: 'garden',       img: 'flowers.png',            title: 'Сад',             desc: 'Растения' },
     { id: 'achievements', img: 'award.png',              title: 'Достижения',      desc: 'Коллекция ачивок' },
+    { id: 'english',      img: null, emoji: '🇬🇧',        title: 'Английский',       desc: 'A1 — с нуля' },
   ];
   const tasks = state.data.tasks || [];
   const activeTasks = tasks.filter(t => !t.done).length;
@@ -2264,9 +2839,13 @@ function renderMore() {
           if (s.id === 'shopping' && shopItems > 0) desc = `${shopItems} не куплено`;
           if (s.id === 'books' && readingBooks > 0) desc = `Читаю: ${readingBooks}`;
           if (s.id === 'garden') desc = `<img src="icons/coin.png" class="coin-img" alt=""> ${state.data.coins?.balance || 0} монет`;
+          if (s.id === 'english') {
+            const done = (state.data.english?.completedTopics || []).length;
+            desc = `${done}/${ENGLISH_A1.length} тем пройдено`;
+          }
           return `
             <button class="hub-card" data-page="${s.id}">
-              <div class="hub-card-icon"><img src="icons/${s.img}" class="hub-custom-icon" alt=""></div>
+              <div class="hub-card-icon">${s.emoji ? `<span style="font-size:40px;line-height:1">${s.emoji}</span>` : `<img src="icons/${s.img}" class="hub-custom-icon" alt="">`}</div>
               <div class="hub-card-title">${s.title}</div>
               ${desc ? `<div class="hub-card-desc">${desc}</div>` : ''}
             </button>
@@ -3368,10 +3947,43 @@ function bindEvents() {
   // Hub navigation
   document.querySelectorAll('.hub-card[data-page]').forEach(card => {
     card.addEventListener('click', () => {
+      if (card.dataset.page === 'english') englishLessonId = null;
       state.page = card.dataset.page;
       window.scrollTo(0, 0);
       render();
     });
+  });
+
+  // English section
+  document.querySelectorAll('[data-eng-topic]').forEach(el => {
+    el.addEventListener('click', () => {
+      englishLessonId = el.dataset.engTopic;
+      window.scrollTo(0, 0);
+      render();
+    });
+  });
+  document.getElementById('eng-back')?.addEventListener('click', () => {
+    englishLessonId = null;
+    window.scrollTo(0, 0);
+    render();
+  });
+  document.querySelectorAll('[data-learn-word]').forEach(el => {
+    el.addEventListener('click', () => {
+      const key = el.dataset.learnWord;
+      if (!state.data.english) state.data.english = { completedTopics: [], learnedWords: [] };
+      const arr = state.data.english.learnedWords;
+      const idx = arr.indexOf(key);
+      if (idx >= 0) arr.splice(idx, 1); else arr.push(key);
+      save(); render();
+    });
+  });
+  document.getElementById('eng-complete-topic')?.addEventListener('click', () => {
+    if (!englishLessonId) return;
+    if (!state.data.english) state.data.english = { completedTopics: [], learnedWords: [] };
+    const arr = state.data.english.completedTopics;
+    const idx = arr.indexOf(englishLessonId);
+    if (idx >= 0) arr.splice(idx, 1); else arr.push(englishLessonId);
+    save(); render();
   });
 
   // Period selectors — sleep
