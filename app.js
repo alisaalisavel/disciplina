@@ -215,6 +215,12 @@ const ACHIEVEMENTS = [
 const TIME_HABITS = ['guitar', 'piano'];
 // habit that is a counter
 const COUNTER_HABIT = 'sugar';
+// habits restricted to specific days of week (0=Sun..6=Sat)
+const HABIT_DAYS = { uborka: [0, 6], english: [2, 4] };
+function isHabitDayOk(habitId, dow) {
+  const days = HABIT_DAYS[habitId];
+  return !days || days.includes(dow);
+}
 
 const INCOME_CATS = [
   { id: 'salary',   name: 'Зарплата',       icon: '💼' },
@@ -1017,9 +1023,9 @@ function defaultData() {
         { id: 'sport',      name: 'Тренировки',       icon: '💪' },
         { id: 'uborka',     name: 'Уборка',           icon: '🧹' },
         { id: 'guitar',     name: 'Гитара 30+ мин',   icon: '🎸', startDate: tomorrowKey() },
+        { id: 'english',    name: 'Английский',       icon: '🇬🇧' },
       ],
       queue: [
-        { id: 'english', name: 'Английский', icon: '🇬🇧' },
         { id: 'solfege', name: 'Сольфеджио', icon: '🎵' },
         { id: 'singing', name: 'Вокал',       icon: '🎤' },
         { id: 'reading', name: 'Чтение',      icon: '📚' },
@@ -1083,6 +1089,13 @@ function loadData() {
       // Migrate: add uborka habit if missing
       if (!d.habits.active.find(h => h.id === 'uborka')) {
         d.habits.active.push({ id: 'uborka', name: 'Уборка', icon: '🧹' });
+      }
+
+      // Migrate: move english habit from queue to active (Tue/Thu only)
+      if (!d.habits.active.find(h => h.id === 'english')) {
+        const qIdx = d.habits.queue.findIndex(h => h.id === 'english');
+        const h = qIdx >= 0 ? d.habits.queue.splice(qIdx, 1)[0] : { id: 'english', name: 'Английский', icon: '🇬🇧' };
+        d.habits.active.push(h);
       }
 
       // Migrate: add sleep_good habit if missing
@@ -1197,14 +1210,13 @@ function calcStreak(habitId) {
   let streak = 0;
   const d = new Date();
   const today = todayKey();
-  const isUborka = habitId === 'uborka';
   let pastFirstRelevant = false;
   for (let i = 0; i < 400; i++) {
     const dow = d.getDay();
     const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     d.setDate(d.getDate() - 1);
-    // Uborka only counts on weekends
-    if (isUborka && dow !== 0 && dow !== 6) continue;
+    // Some habits only count on specific days (e.g. uborka on weekends, english on Tue/Thu)
+    if (!isHabitDayOk(habitId, dow)) continue;
     const day = state.data.daily[key];
     const done = day?.dayOff === true
       || day?.skippedHabits?.includes(habitId)
@@ -1356,16 +1368,15 @@ function checkAchievements() {
   // song_done
   if (state.data.goals.some(g => g.steps.every(s => s.done))) unlock('song_done');
 
-  // full_day (exclude uborka on weekdays)
+  // full_day (exclude habits not relevant on this weekday)
   if (Object.entries(all).some(([key, d]) => {
     const dow = new Date(key + 'T12:00:00').getDay();
-    const isWknd = dow === 0 || dow === 6;
-    const dayHabits = habits.filter(h => h.id !== 'uborka' || isWknd);
+    const dayHabits = habits.filter(h => isHabitDayOk(h.id, dow));
     return dayHabits.every(h => d.habits?.[h.id]);
   })) unlock('full_day');
 
-  // garden_bloom: all non-uborka habits streak >= 7
-  if (habits.filter(h => h.id !== 'uborka').every(h => calcStreak(h.id) >= 7)) unlock('garden_bloom');
+  // garden_bloom: all day-unrestricted habits streak >= 7
+  if (habits.filter(h => !HABIT_DAYS[h.id]).every(h => calcStreak(h.id) >= 7)) unlock('garden_bloom');
 
   // sleep_week: 7 consecutive nights 6+ hours
   let sleepStreak = 0, sleepD = new Date();
@@ -1478,9 +1489,8 @@ function renderMonthCalendar() {
     const isToday = isCurrentMonth && d === now.getDate();
     const isFuture = new Date(year, month, d) > now;
     const dow = new Date(year, month, d).getDay();
-    const isWeekendDay = dow === 0 || dow === 6;
     const dayHabits = habits.filter(h =>
-      (h.id !== 'uborka' || isWeekendDay) && (!h.startDate || h.startDate <= key)
+      isHabitDayOk(h.id, dow) && (!h.startDate || h.startDate <= key)
     );
     let level = 'empty';
     if (!isFuture && dayData) {
@@ -1510,8 +1520,7 @@ function renderMonthCalendar() {
     for (const key of pastDays) {
       const dayData = state.data.daily[key];
       const dow = new Date(key).getDay();
-      const isWeekendDay = dow === 0 || dow === 6;
-      const dayHabits = habits.filter(h => (h.id !== 'uborka' || isWeekendDay) && (!h.startDate || h.startDate <= key));
+      const dayHabits = habits.filter(h => isHabitDayOk(h.id, dow) && (!h.startDate || h.startDate <= key));
       if (!dayHabits.length) continue;
       if (dayData?.dayOff) { dayOffCount++; perfectDays++; continue; }
       const done = dayHabits.filter(h => dayData?.habits?.[h.id] || dayData?.skippedHabits?.includes(h.id)).length;
@@ -1551,10 +1560,9 @@ function renderMonthCalendar() {
 function renderToday() {
   const td = getTodayData();
   const dow = new Date().getDay();
-  const isWeekend = dow === 0 || dow === 6;
   const today = todayKey();
   const habits = state.data.habits.active.filter(h =>
-    (h.id !== 'uborka' || isWeekend) && (!h.startDate || h.startDate <= today)
+    isHabitDayOk(h.id, dow) && (!h.startDate || h.startDate <= today)
   );
   const queue  = state.data.habits.queue;
   const dayOff = !!td.dayOff;
@@ -3608,8 +3616,7 @@ function openDayEditModal(key) {
   const [y, m, d] = key.split('-').map(Number);
   const date = new Date(y, m - 1, d);
   const dow = date.getDay();
-  const isWeekendDay = dow === 0 || dow === 6;
-  const habits = state.data.habits.active.filter(h => h.id !== 'uborka' || isWeekendDay);
+  const habits = state.data.habits.active.filter(h => isHabitDayOk(h.id, dow));
   if (!state.data.daily[key]) {
     state.data.daily[key] = { habits: {}, times: {}, sweets: 0, wakeTime: null, bedTime: null };
   }
@@ -3792,10 +3799,9 @@ function openEditMyRecipe(id) {
 function openSkipHabitShop() {
   const today = todayKey();
   const dow = new Date().getDay();
-  const isWeekend = dow === 0 || dow === 6;
   const td = getTodayData();
   const habits = state.data.habits.active.filter(h =>
-    (h.id !== 'uborka' || isWeekend) &&
+    isHabitDayOk(h.id, dow) &&
     (!h.startDate || h.startDate <= today) &&
     !td.habits[h.id] &&
     !td.skippedHabits?.includes(h.id)
@@ -3838,10 +3844,9 @@ function openYesterdayHabitShop() {
   const yday = yesterdayKey();
   const ydDate = new Date(); ydDate.setDate(ydDate.getDate() - 1);
   const dow = ydDate.getDay();
-  const isWeekend = dow === 0 || dow === 6;
   const yd = state.data.daily[yday] || {};
   const habits = state.data.habits.active.filter(h =>
-    (h.id !== 'uborka' || isWeekend) &&
+    isHabitDayOk(h.id, dow) &&
     (!h.startDate || h.startDate <= yday) &&
     !yd.habits?.[h.id] &&
     !yd.skippedHabits?.includes(h.id) &&
