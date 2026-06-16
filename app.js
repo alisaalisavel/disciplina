@@ -305,16 +305,16 @@ const ENGLISH_PROGRAM = [
       }
     ],
     vocab: [
-      { en: 'article', ru: 'артикль', ex: 'Use "the" before specific nouns.' },
-      { en: 'specific', ru: 'конкретный', ex: 'I want the specific book you mentioned.' },
-      { en: 'general', ru: 'в общем / общий', ex: 'I love music in general.' },
-      { en: 'mention', ru: 'упоминать', ex: 'She mentioned a great café.' },
-      { en: 'instrument', ru: 'музыкальный инструмент', ex: 'She plays the violin.' },
-      { en: 'unique', ru: 'уникальный', ex: 'The sun is unique.' },
-      { en: 'introduce', ru: 'представлять', ex: "Let me introduce a new topic." },
-      { en: 'band', ru: 'группа (музыкальная)', ex: 'She plays guitar in a band.' },
-      { en: 'truth', ru: 'правда / истина', ex: 'Happiness is the truth.' },
-      { en: 'certain', ru: 'определённый / уверенный', ex: "I'm certain about this." },
+      { en: 'article', ipa: 'ˈɑːrtɪkl', ru: 'артикль', ex: 'Use "the" before specific nouns.' },
+      { en: 'specific', ipa: 'spəˈsɪfɪk', ru: 'конкретный', ex: 'I want the specific book you mentioned.' },
+      { en: 'general', ipa: 'ˈdʒenrəl', ru: 'в общем / общий', ex: 'I love music in general.' },
+      { en: 'mention', ipa: 'ˈmenʃn', ru: 'упоминать', ex: 'She mentioned a great café.' },
+      { en: 'instrument', ipa: 'ˈɪnstrəmənt', ru: 'музыкальный инструмент', ex: 'She plays the violin.' },
+      { en: 'unique', ipa: 'juːˈniːk', ru: 'уникальный', ex: 'The sun is unique.' },
+      { en: 'introduce', ipa: 'ˌɪntrəˈduːs', ru: 'представлять', ex: "Let me introduce a new topic." },
+      { en: 'band', ipa: 'bænd', ru: 'группа (музыкальная)', ex: 'She plays guitar in a band.' },
+      { en: 'truth', ipa: 'truːθ', ru: 'правда / истина', ex: 'Happiness is the truth.' },
+      { en: 'certain', ipa: 'ˈsɜːrtn', ru: 'определённый / уверенный', ex: "I'm certain about this." },
     ]
   },
 
@@ -392,16 +392,16 @@ const ENGLISH_PROGRAM = [
       }
     ],
     vocab: [
-      { en: 'want', ru: 'хотеть', ex: 'I want to learn English.' },
-      { en: 'need', ru: 'нуждаться / нужно', ex: 'I need to sleep more.' },
-      { en: 'plan', ru: 'планировать / план', ex: 'She plans to visit Rome.' },
-      { en: 'decide', ru: 'решать', ex: 'He decided to change his job.' },
-      { en: 'forget', ru: 'забывать', ex: "Don't forget to call me!" },
-      { en: 'travel', ru: 'путешествовать', ex: 'I love to travel.' },
-      { en: 'improve', ru: 'улучшать', ex: 'I want to improve my English.' },
-      { en: 'achieve', ru: 'достигать', ex: 'She plans to achieve her goals.' },
-      { en: 'dream', ru: 'мечтать / мечта', ex: 'I dream of travelling the world.' },
-      { en: 'goal', ru: 'цель', ex: 'My goal is to speak English fluently.' },
+      { en: 'want', ipa: 'wɑːnt', ru: 'хотеть', ex: 'I want to learn English.' },
+      { en: 'need', ipa: 'niːd', ru: 'нуждаться / нужно', ex: 'I need to sleep more.' },
+      { en: 'plan', ipa: 'plæn', ru: 'планировать / план', ex: 'She plans to visit Rome.' },
+      { en: 'decide', ipa: 'dɪˈsaɪd', ru: 'решать', ex: 'He decided to change his job.' },
+      { en: 'forget', ipa: 'fərˈɡet', ru: 'забывать', ex: "Don't forget to call me!" },
+      { en: 'travel', ipa: 'ˈtrævl', ru: 'путешествовать', ex: 'I love to travel.' },
+      { en: 'improve', ipa: 'ɪmˈpruːv', ru: 'улучшать', ex: 'I want to improve my English.' },
+      { en: 'achieve', ipa: 'əˈtʃiːv', ru: 'достигать', ex: 'She plans to achieve her goals.' },
+      { en: 'dream', ipa: 'driːm', ru: 'мечтать / мечта', ex: 'I dream of travelling the world.' },
+      { en: 'goal', ipa: 'ɡoʊl', ru: 'цель', ex: 'My goal is to speak English fluently.' },
     ]
   },
 
@@ -483,16 +483,16 @@ const ENGLISH_PROGRAM = [
       }
     ],
     vocab: [
-      { en: 'every day', ru: 'каждый день', ex: 'I exercise every day.' },
-      { en: 'usually', ru: 'обычно', ex: 'I usually wake up at 7.' },
-      { en: 'always', ru: 'всегда', ex: 'She always drinks coffee in the morning.' },
-      { en: 'never', ru: 'никогда', ex: "I never eat junk food." },
-      { en: 'sometimes', ru: 'иногда', ex: 'I sometimes work late.' },
-      { en: 'often', ru: 'часто', ex: 'He often visits his parents.' },
-      { en: 'rarely', ru: 'редко', ex: 'She rarely watches TV.' },
-      { en: 'habit', ru: 'привычка', ex: 'Exercise is a good habit.' },
-      { en: 'schedule', ru: 'расписание', ex: 'What is your daily schedule?' },
-      { en: 'routine', ru: 'распорядок / рутина', ex: 'My morning routine takes an hour.' },
+      { en: 'every day', ipa: 'ˈevri deɪ', ru: 'каждый день', ex: 'I exercise every day.' },
+      { en: 'usually', ipa: 'ˈjuːʒuəli', ru: 'обычно', ex: 'I usually wake up at 7.' },
+      { en: 'always', ipa: 'ˈɔːlweɪz', ru: 'всегда', ex: 'She always drinks coffee in the morning.' },
+      { en: 'never', ipa: 'ˈnevər', ru: 'никогда', ex: "I never eat junk food." },
+      { en: 'sometimes', ipa: 'ˈsʌmtaɪmz', ru: 'иногда', ex: 'I sometimes work late.' },
+      { en: 'often', ipa: 'ˈɒfn', ru: 'часто', ex: 'He often visits his parents.' },
+      { en: 'rarely', ipa: 'ˈrerli', ru: 'редко', ex: 'She rarely watches TV.' },
+      { en: 'habit', ipa: 'ˈhæbɪt', ru: 'привычка', ex: 'Exercise is a good habit.' },
+      { en: 'schedule', ipa: 'ˈskedʒuːl', ru: 'расписание', ex: 'What is your daily schedule?' },
+      { en: 'routine', ipa: 'ruːˈtiːn', ru: 'распорядок / рутина', ex: 'My morning routine takes an hour.' },
     ]
   },
 
@@ -573,16 +573,16 @@ const ENGLISH_PROGRAM = [
       }
     ],
     vocab: [
-      { en: 'right now', ru: 'прямо сейчас', ex: "I'm studying right now." },
-      { en: 'at the moment', ru: 'в данный момент', ex: "She's working at the moment." },
-      { en: 'temporary', ru: 'временный', ex: "It's a temporary situation." },
-      { en: 'permanent', ru: 'постоянный', ex: "This is my permanent address." },
-      { en: 'currently', ru: 'в настоящее время', ex: "I'm currently learning French." },
-      { en: 'action', ru: 'действие', ex: "The action happens now." },
-      { en: 'state', ru: 'состояние', ex: "Love is a state, not an action." },
-      { en: 'process', ru: 'процесс', ex: "Learning is a long process." },
-      { en: 'concentrate', ru: 'концентрироваться', ex: "I can't concentrate when it's noisy." },
-      { en: 'interrupt', ru: 'перебивать', ex: "Please don't interrupt me." },
+      { en: 'right now', ipa: 'raɪt naʊ', ru: 'прямо сейчас', ex: "I'm studying right now." },
+      { en: 'at the moment', ipa: 'ət ðə ˈmoʊmənt', ru: 'в данный момент', ex: "She's working at the moment." },
+      { en: 'temporary', ipa: 'ˈtempəreri', ru: 'временный', ex: "It's a temporary situation." },
+      { en: 'permanent', ipa: 'ˈpɜːrmənənt', ru: 'постоянный', ex: "This is my permanent address." },
+      { en: 'currently', ipa: 'ˈkɜːrəntli', ru: 'в настоящее время', ex: "I'm currently learning French." },
+      { en: 'action', ipa: 'ˈækʃn', ru: 'действие', ex: "The action happens now." },
+      { en: 'state', ipa: 'steɪt', ru: 'состояние', ex: "Love is a state, not an action." },
+      { en: 'process', ipa: 'ˈprɑːses', ru: 'процесс', ex: "Learning is a long process." },
+      { en: 'concentrate', ipa: 'ˈkɑːnsntreɪt', ru: 'концентрироваться', ex: "I can't concentrate when it's noisy." },
+      { en: 'interrupt', ipa: 'ˌɪntəˈrʌpt', ru: 'перебивать', ex: "Please don't interrupt me." },
     ]
   },
 
@@ -662,16 +662,16 @@ const ENGLISH_PROGRAM = [
       }
     ],
     vocab: [
-      { en: 'airport', ru: 'аэропорт', ex: 'I arrive at the airport at 10.' },
-      { en: 'station', ru: 'вокзал / станция', ex: 'Meet me at the station.' },
-      { en: 'midnight', ru: 'полночь', ex: 'The party starts at midnight.' },
-      { en: 'noon', ru: 'полдень', ex: "Let's meet at noon." },
-      { en: 'surface', ru: 'поверхность', ex: 'Put it on the surface.' },
-      { en: 'direction', ru: 'направление', ex: 'Which direction should I go?' },
-      { en: 'location', ru: 'местонахождение', ex: "What's your location?" },
-      { en: 'neighborhood', ru: 'район', ex: 'I live in a quiet neighborhood.' },
-      { en: 'downtown', ru: 'центр города', ex: 'She works downtown.' },
-      { en: 'border', ru: 'граница', ex: 'We crossed the border at midnight.' },
+      { en: 'airport', ipa: 'ˈerpɔːrt', ru: 'аэропорт', ex: 'I arrive at the airport at 10.' },
+      { en: 'station', ipa: 'ˈsteɪʃn', ru: 'вокзал / станция', ex: 'Meet me at the station.' },
+      { en: 'midnight', ipa: 'ˈmɪdnaɪt', ru: 'полночь', ex: 'The party starts at midnight.' },
+      { en: 'noon', ipa: 'nuːn', ru: 'полдень', ex: "Let's meet at noon." },
+      { en: 'surface', ipa: 'ˈsɜːrfɪs', ru: 'поверхность', ex: 'Put it on the surface.' },
+      { en: 'direction', ipa: 'dəˈrekʃn', ru: 'направление', ex: 'Which direction should I go?' },
+      { en: 'location', ipa: 'loʊˈkeɪʃn', ru: 'местонахождение', ex: "What's your location?" },
+      { en: 'neighborhood', ipa: 'ˈneɪbərhʊd', ru: 'район', ex: 'I live in a quiet neighborhood.' },
+      { en: 'downtown', ipa: 'ˌdaʊnˈtaʊn', ru: 'центр города', ex: 'She works downtown.' },
+      { en: 'border', ipa: 'ˈbɔːrdər', ru: 'граница', ex: 'We crossed the border at midnight.' },
     ]
   },
 
@@ -750,16 +750,16 @@ const ENGLISH_PROGRAM = [
       }
     ],
     vocab: [
-      { en: 'question', ru: 'вопрос', ex: 'Do you have any questions?' },
-      { en: 'answer', ru: 'ответ / отвечать', ex: 'Please answer my question.' },
-      { en: 'reason', ru: 'причина', ex: "What's the reason for your choice?" },
-      { en: 'choice', ru: 'выбор', ex: 'It was a difficult choice.' },
-      { en: 'prefer', ru: 'предпочитать', ex: 'I prefer tea to coffee.' },
-      { en: 'wonder', ru: 'интересоваться', ex: 'I wonder where she is.' },
-      { en: 'curious', ru: 'любопытный', ex: "I'm curious about your plans." },
-      { en: 'opinion', ru: 'мнение', ex: "What's your opinion?" },
-      { en: 'explain', ru: 'объяснять', ex: 'Can you explain this rule?' },
-      { en: 'describe', ru: 'описывать', ex: 'Describe your city in 3 words.' },
+      { en: 'question', ipa: 'ˈkwestʃən', ru: 'вопрос', ex: 'Do you have any questions?' },
+      { en: 'answer', ipa: 'ˈænsər', ru: 'ответ / отвечать', ex: 'Please answer my question.' },
+      { en: 'reason', ipa: 'ˈriːzn', ru: 'причина', ex: "What's the reason for your choice?" },
+      { en: 'choice', ipa: 'tʃɔɪs', ru: 'выбор', ex: 'It was a difficult choice.' },
+      { en: 'prefer', ipa: 'prɪˈfɜːr', ru: 'предпочитать', ex: 'I prefer tea to coffee.' },
+      { en: 'wonder', ipa: 'ˈwʌndər', ru: 'интересоваться', ex: 'I wonder where she is.' },
+      { en: 'curious', ipa: 'ˈkjʊriəs', ru: 'любопытный', ex: "I'm curious about your plans." },
+      { en: 'opinion', ipa: 'əˈpɪnjən', ru: 'мнение', ex: "What's your opinion?" },
+      { en: 'explain', ipa: 'ɪkˈspleɪn', ru: 'объяснять', ex: 'Can you explain this rule?' },
+      { en: 'describe', ipa: 'dɪˈskraɪb', ru: 'описывать', ex: 'Describe your city in 3 words.' },
     ]
   },
 
@@ -840,16 +840,16 @@ const ENGLISH_PROGRAM = [
       }
     ],
     vocab: [
-      { en: 'yesterday', ru: 'вчера', ex: 'I went to the gym yesterday.' },
-      { en: 'last week', ru: 'на прошлой неделе', ex: 'She called me last week.' },
-      { en: 'ago', ru: 'назад', ex: 'I met him two years ago.' },
-      { en: 'suddenly', ru: 'внезапно', ex: 'She suddenly started to cry.' },
-      { en: 'immediately', ru: 'немедленно / сразу', ex: 'Call me immediately!' },
-      { en: 'already', ru: 'уже', ex: 'I already ate breakfast.' },
-      { en: 'finally', ru: 'наконец', ex: 'We finally arrived.' },
-      { en: 'unfortunately', ru: 'к сожалению', ex: 'Unfortunately, I missed the train.' },
-      { en: 'luckily', ru: 'к счастью', ex: 'Luckily, I found my keys.' },
-      { en: 'amazing', ru: 'потрясающий', ex: 'We had an amazing trip!' },
+      { en: 'yesterday', ipa: 'ˈjestərdeɪ', ru: 'вчера', ex: 'I went to the gym yesterday.' },
+      { en: 'last week', ipa: 'læst wiːk', ru: 'на прошлой неделе', ex: 'She called me last week.' },
+      { en: 'ago', ipa: 'əˈɡoʊ', ru: 'назад', ex: 'I met him two years ago.' },
+      { en: 'suddenly', ipa: 'ˈsʌdənli', ru: 'внезапно', ex: 'She suddenly started to cry.' },
+      { en: 'immediately', ipa: 'ɪˈmiːdiətli', ru: 'немедленно / сразу', ex: 'Call me immediately!' },
+      { en: 'already', ipa: 'ɔːlˈredi', ru: 'уже', ex: 'I already ate breakfast.' },
+      { en: 'finally', ipa: 'ˈfaɪnəli', ru: 'наконец', ex: 'We finally arrived.' },
+      { en: 'unfortunately', ipa: 'ʌnˈfɔːrtʃənətli', ru: 'к сожалению', ex: 'Unfortunately, I missed the train.' },
+      { en: 'luckily', ipa: 'ˈlʌkɪli', ru: 'к счастью', ex: 'Luckily, I found my keys.' },
+      { en: 'amazing', ipa: 'əˈmeɪzɪŋ', ru: 'потрясающий', ex: 'We had an amazing trip!' },
     ]
   },
 
@@ -927,16 +927,16 @@ const ENGLISH_PROGRAM = [
       }
     ],
     vocab: [
-      { en: 'flight', ru: 'рейс / полёт', ex: 'My flight is at 6 am.' },
-      { en: 'boarding pass', ru: 'посадочный талон', ex: "Don't forget your boarding pass!" },
-      { en: 'luggage', ru: 'багаж', ex: 'How many bags can I take?' },
-      { en: 'reservation', ru: 'бронь', ex: 'I have a reservation for tonight.' },
-      { en: 'check in', ru: 'регистрироваться / заселяться', ex: 'Please check in online.' },
-      { en: 'check out', ru: 'выселяться', ex: 'Check-out is at 12 noon.' },
-      { en: 'gate', ru: 'выход на посадку', ex: 'Your gate is B12.' },
-      { en: 'delayed', ru: 'задержанный', ex: 'The flight is delayed by 1 hour.' },
-      { en: 'currency', ru: 'валюта', ex: "What's the local currency?" },
-      { en: 'recommend', ru: 'рекомендовать', ex: 'Can you recommend a good café?' },
+      { en: 'flight', ipa: 'flaɪt', ru: 'рейс / полёт', ex: 'My flight is at 6 am.' },
+      { en: 'boarding pass', ipa: 'ˈbɔːrdɪŋ pæs', ru: 'посадочный талон', ex: "Don't forget your boarding pass!" },
+      { en: 'luggage', ipa: 'ˈlʌɡɪdʒ', ru: 'багаж', ex: 'How many bags can I take?' },
+      { en: 'reservation', ipa: 'ˌrezərˈveɪʃn', ru: 'бронь', ex: 'I have a reservation for tonight.' },
+      { en: 'check in', ipa: 'tʃek ɪn', ru: 'регистрироваться / заселяться', ex: 'Please check in online.' },
+      { en: 'check out', ipa: 'tʃek aʊt', ru: 'выселяться', ex: 'Check-out is at 12 noon.' },
+      { en: 'gate', ipa: 'ɡeɪt', ru: 'выход на посадку', ex: 'Your gate is B12.' },
+      { en: 'delayed', ipa: 'dɪˈleɪd', ru: 'задержанный', ex: 'The flight is delayed by 1 hour.' },
+      { en: 'currency', ipa: 'ˈkɜːrənsi', ru: 'валюта', ex: "What's the local currency?" },
+      { en: 'recommend', ipa: 'ˌrekəˈmend', ru: 'рекомендовать', ex: 'Can you recommend a good café?' },
     ]
   },
 ];
@@ -2971,6 +2971,15 @@ function boldify(text) {
   return text.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
 }
 
+function speakEnglish(text) {
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.9;
+  speechSynthesis.speak(u);
+}
+
 function renderEnglish() {
   if (engView === 'session') return renderEngSession();
   if (engView === 'week') return renderEngWeek();
@@ -3081,7 +3090,11 @@ function renderEngSession() {
             const learned = learnedWords.includes(wKey);
             return `<div class="recipe-item ${learned?'learned':''}" data-learn-word="${wKey}" style="display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:10px;cursor:pointer">
                 <div style="flex:1">
-                  <div style="font-weight:700;font-size:15px">${word.en}</div>
+                  <div style="font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px">
+                    ${word.en}
+                    ${word.ipa?'<span class="muted" style="font-size:12px;font-weight:400">/'+word.ipa+'/</span>':''}
+                    <button data-speak-word="${word.en}" style="border:none;background:none;font-size:16px;cursor:pointer;padding:2px 4px;line-height:1">🔊</button>
+                  </div>
                   <div class="muted" style="font-size:13px">${word.ru}</div>
                   ${word.ex?'<div style="font-size:11px;color:var(--text-muted);margin-top:2px;font-style:italic">'+word.ex+'</div>':''}
                 </div>
@@ -4399,6 +4412,12 @@ function bindEvents() {
       const idx = arr.indexOf(key);
       if (idx >= 0) arr.splice(idx, 1); else arr.push(key);
       save(); render();
+    });
+  });
+  document.querySelectorAll('[data-speak-word]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      speakEnglish(el.dataset.speakWord);
     });
   });
 
