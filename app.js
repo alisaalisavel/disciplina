@@ -1060,6 +1060,7 @@ function defaultData() {
     media: [],
     shopping: { items: [] },
     english: { completedTopics: [], learnedWords: [] },
+    principles: { list: [] },
   };
 }
 
@@ -1083,6 +1084,7 @@ function loadData() {
       if (!d.health.visits) d.health.visits = [];
       if (!d.english) d.english = { completedTopics: [], learnedWords: [] };
       if (!d.english.learnedWords) d.english.learnedWords = [];
+      if (!d.principles) d.principles = { list: [] };
       if (!d.cooking) d.cooking = { learned: [], myRecipes: [], customDishes: [] };
       if (!d.cooking.myRecipes)   d.cooking.myRecipes = [];
       if (!d.cooking.customDishes) d.cooking.customDishes = [];
@@ -1449,7 +1451,7 @@ function checkAchievements() {
 
 function render() {
   document.getElementById('app').innerHTML = renderPage();
-  const morePages = ['goals','health','garden','planner','cooking','achievements','books','media','shopping','english'];
+  const morePages = ['goals','health','garden','planner','cooking','achievements','books','media','shopping','english','principles'];
   const activeNav = morePages.includes(state.page) ? 'more' : state.page;
   document.querySelectorAll('.nav-btn').forEach(btn =>
     btn.classList.toggle('active', btn.dataset.page === activeNav)
@@ -1464,6 +1466,7 @@ function renderPage() {
     more: renderMore, health: renderHealth, planner: renderPlanner,
     cooking: renderCooking, achievements: renderAchievements,
     books: renderBooks, media: renderMedia, shopping: renderShopping, english: renderEnglish,
+    principles: renderPrinciples,
   };
   return (pages[state.page] || renderToday)();
 }
@@ -3210,6 +3213,84 @@ function renderEngSession() {
 }
 
 
+function calcPrincipleStreak(id) {
+  let streak = 0;
+  const d = new Date();
+  const today = todayKey();
+  for (let i = 0; i < 400; i++) {
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    d.setDate(d.getDate() - 1);
+    const day = state.data.daily[key];
+    if (day?.dayOff) { streak++; continue; }
+    const val = day?.principles?.[id];
+    if (val === 'ok') { streak++; }
+    else if (key === today && !val) { continue; } // today not checked yet — skip
+    else { break; }
+  }
+  return streak;
+}
+
+function renderPrinciples() {
+  const list = state.data.principles?.list || [];
+  const today = todayKey();
+  const tp = (state.data.daily[today] = state.data.daily[today] || { habits: {}, times: {}, sweets: 0, wakeTime: null, bedTime: null });
+  if (!tp.principles) tp.principles = {};
+  const checkedToday = list.filter(p => tp.principles[p.id] === 'ok' || tp.principles[p.id] === 'broke').length;
+
+  const checkinHtml = list.length === 0 ? '' : `
+    <div class="card">
+      <div class="card-title">🌙 Проверка дня</div>
+      <div class="muted" style="font-size:12px;margin-bottom:14px">Отметь каждый принцип — соблюла или нет</div>
+      <div style="font-size:12px;font-weight:600;color:var(--primary-dark);margin-bottom:12px">${checkedToday}/${list.length} отмечено</div>
+      ${list.map(p => {
+        const val = tp.principles[p.id];
+        const streak = calcPrincipleStreak(p.id);
+        return `<div style="margin-bottom:12px;padding:12px;background:var(--surface2);border-radius:12px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+            <div style="font-size:14px;font-weight:600;flex:1;line-height:1.4">${p.text}</div>
+            ${streak > 0 ? `<div style="font-size:11px;color:var(--primary-dark);font-weight:700;flex-shrink:0;margin-left:8px">🔥 ${streak}</div>` : ''}
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-sm" data-principle-check="${p.id}" data-principle-val="ok"
+              style="flex:1;border-radius:20px;${val==='ok'?'background:#4CAF50;color:white;border:2px solid #4CAF50':'background:white;border:2px solid var(--border)'}">
+              ✅ Соблюла
+            </button>
+            <button class="btn btn-sm" data-principle-check="${p.id}" data-principle-val="broke"
+              style="flex:1;border-radius:20px;${val==='broke'?'background:#FF6B6B;color:white;border:2px solid #FF6B6B':'background:white;border:2px solid var(--border)'}">
+              ❌ Нарушила
+            </button>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+
+  const listHtml = `
+    <div class="card">
+      <div class="card-title">📋 Мои принципы</div>
+      ${list.length === 0 ? '<div class="muted" style="font-size:13px;margin-bottom:14px">Ещё нет принципов — добавь первый!</div>' : ''}
+      ${list.map(p => `
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">
+          <div style="flex:1;font-size:14px">${p.text}</div>
+          <button class="btn btn-sm" data-delete-principle="${p.id}" style="background:none;border:none;font-size:18px;color:var(--text-muted);padding:4px">×</button>
+        </div>
+      `).join('')}
+      <div style="margin-top:14px;display:flex;gap:8px">
+        <input class="form-input" id="new-principle-input" placeholder="Новый принцип..." style="flex:1;font-size:14px">
+        <button class="btn btn-primary btn-sm" id="add-principle" style="flex-shrink:0">Добавить</button>
+      </div>
+    </div>
+  `;
+
+  return `
+    <div class="page">
+      <div class="page-header"><h1>Принципы ⚖️</h1><div class="subtitle">Правила которым я следую</div></div>
+      ${checkinHtml}
+      ${listHtml}
+    </div>
+  `;
+}
+
 function renderMore() {
   const sections = [
     { id: 'goals',        img: 'music.png',              title: 'Музыка',          desc: 'Песни и прогресс' },
@@ -3222,6 +3303,7 @@ function renderMore() {
     { id: 'garden',       img: 'flowers.png',            title: 'Сад',             desc: 'Растения' },
     { id: 'achievements', img: 'award.png',              title: 'Достижения',      desc: 'Коллекция ачивок' },
     { id: 'english',      img: null, emoji: '🇬🇧',        title: 'Английский',       desc: 'A1 — с нуля' },
+    { id: 'principles',   img: null, emoji: '⚖️',         title: 'Принципы',         desc: 'Мои правила жизни' },
   ];
   const tasks = state.data.tasks || [];
   const activeTasks = tasks.filter(t => !t.done).length;
@@ -3246,6 +3328,13 @@ function renderMore() {
             const ct = state.data.english?.completedTopics || [];
             const done = ENGLISH_PROGRAM.filter(w => ct.includes('w'+w.week+'s1') || ct.includes('w'+w.week+'s2')).length;
             desc = `${done}/${ENGLISH_PROGRAM.length} недель пройдено`;
+          }
+          if (s.id === 'principles') {
+            const list = state.data.principles?.list || [];
+            const today = todayKey();
+            const tp = state.data.daily[today]?.principles || {};
+            const checked = list.filter(p => tp[p.id] === 'ok' || tp[p.id] === 'broke').length;
+            desc = list.length ? `${checked}/${list.length} отмечено сегодня` : 'Добавь свои правила';
           }
           return `
             <button class="hub-card" data-page="${s.id}">
@@ -4418,6 +4507,39 @@ function bindEvents() {
     el.addEventListener('click', (e) => {
       e.stopPropagation();
       speakEnglish(el.dataset.speakWord);
+    });
+  });
+
+  // Principles
+  document.querySelectorAll('[data-principle-check]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.principleCheck;
+      const val = btn.dataset.principleVal;
+      const today = todayKey();
+      if (!state.data.daily[today]) state.data.daily[today] = { habits: {}, times: {}, sweets: 0, wakeTime: null, bedTime: null };
+      if (!state.data.daily[today].principles) state.data.daily[today].principles = {};
+      const cur = state.data.daily[today].principles[id];
+      state.data.daily[today].principles[id] = cur === val ? undefined : val;
+      if (state.data.daily[today].principles[id] === undefined) delete state.data.daily[today].principles[id];
+      save(); render();
+    });
+  });
+  document.getElementById('add-principle')?.addEventListener('click', () => {
+    const input = document.getElementById('new-principle-input');
+    const text = input?.value?.trim();
+    if (!text) return;
+    if (!state.data.principles) state.data.principles = { list: [] };
+    state.data.principles.list.push({ id: 'p' + Date.now(), text });
+    save(); render();
+  });
+  document.getElementById('new-principle-input')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('add-principle')?.click();
+  });
+  document.querySelectorAll('[data-delete-principle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.deletePrinciple;
+      state.data.principles.list = state.data.principles.list.filter(p => p.id !== id);
+      save(); render();
     });
   });
 
