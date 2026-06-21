@@ -216,7 +216,7 @@ const TIME_HABITS = ['guitar', 'piano'];
 // habit that is a counter
 const COUNTER_HABIT = 'sugar';
 // habits restricted to specific days of week (0=Sun..6=Sat)
-const HABIT_DAYS = { uborka: [0, 6], english: [2, 4] };
+const HABIT_DAYS = { uborka: [0, 6], english: [1, 3], sport: [2, 4] };
 function isHabitDayOk(habitId, dow) {
   const days = HABIT_DAYS[habitId];
   return !days || days.includes(dow);
@@ -235,7 +235,7 @@ const ENGLISH_PROGRAM = [
     tip: 'Твоя главная ошибка из теста. Разберём раз и навсегда!',
     sessions: [
       {
-        n: 1, day: 'Вторник', title: 'Правило + Happy (Pharrell Williams)',
+        n: 1, day: 'Понедельник', title: 'Правило + Happy (Pharrell Williams)',
         grammar: {
           title: 'Артикли: A / THE / ∅',
           blocks: [
@@ -278,7 +278,7 @@ const ENGLISH_PROGRAM = [
         prompt: 'Напиши 3 предложения о себе используя a / the / без артикля.\nНапример: I have a cat. The cat is grey. I love music.'
       },
       {
-        n: 2, day: 'Четверг', title: 'Friends + закрепление',
+        n: 2, day: 'Среда', title: 'Friends + закрепление',
         dialogue: {
           source: '📺 Friends — Season 1, Episode 1',
           intro: 'Лучший сериал для учёбы. Речь живая, разговорная. Следи за артиклями!',
@@ -324,7 +324,7 @@ const ENGLISH_PROGRAM = [
     tip: 'В тесте написала "I want drink water" — не хватило TO. Чиним!',
     sessions: [
       {
-        n: 1, day: 'Вторник', title: 'Правило + Perfect (Ed Sheeran)',
+        n: 1, day: 'Понедельник', title: 'Правило + Perfect (Ed Sheeran)',
         grammar: {
           title: 'Глагол + TO + инфинитив',
           blocks: [
@@ -365,7 +365,7 @@ const ENGLISH_PROGRAM = [
         prompt: 'Напиши 3 вещи которые хочешь сделать этим летом.\nНапример: I want to travel to Turkey. I would like to learn to swim.'
       },
       {
-        n: 2, day: 'Четверг', title: 'Friends + закрепление',
+        n: 2, day: 'Среда', title: 'Friends + закрепление',
         dialogue: {
           source: '📺 Friends — Season 1, Episode 1',
           intro: 'Ищи глаголы с TO и без. Обрати внимание на сокращения!',
@@ -411,7 +411,7 @@ const ENGLISH_PROGRAM = [
     tip: 'Каждый день, привычки, факты. Самое важное время для разговора!',
     sessions: [
       {
-        n: 1, day: 'Вторник', title: 'Правило + Here Comes The Sun',
+        n: 1, day: 'Понедельник', title: 'Правило + Here Comes The Sun',
         grammar: {
           title: 'Present Simple — настоящее простое',
           blocks: [
@@ -455,7 +455,7 @@ const ENGLISH_PROGRAM = [
         prompt: 'Расскажи о своём обычном дне. 4-5 предложений.\nНапример: I wake up at 8. I don\'t eat breakfast. I work from home...'
       },
       {
-        n: 2, day: 'Четверг', title: 'Friends + закрепление',
+        n: 2, day: 'Среда', title: 'Friends + закрепление',
         dialogue: {
           source: '📺 Friends — Season 1, Episode 1',
           intro: 'Present Simple везде! Обрати внимание на do/does в вопросах.',
@@ -502,7 +502,7 @@ const ENGLISH_PROGRAM = [
     tip: 'В тесте написала "listening" вместо "listen". Сейчас поймёшь разницу!',
     sessions: [
       {
-        n: 1, day: 'Вторник', title: 'Правило + Shape of You',
+        n: 1, day: 'Понедельник', title: 'Правило + Shape of You',
         grammar: {
           title: 'Simple vs Continuous — когда что?',
           blocks: [
@@ -545,7 +545,7 @@ const ENGLISH_PROGRAM = [
         prompt: 'Опиши что делаешь ПРЯМО СЕЙЧАС и что делаешь КАЖДЫЙ ДЕНЬ.\nНапример: Right now I am sitting at home and studying English. Every day I wake up at 8...'
       },
       {
-        n: 2, day: 'Четверг', title: 'Friends + закрепление',
+        n: 2, day: 'Среда', title: 'Friends + закрепление',
         dialogue: {
           source: '📺 Friends — Season 2, Episode 5',
           intro: 'Continuous в разговоре. Следи за am/is/are + -ing!',
@@ -592,7 +592,7 @@ const ENGLISH_PROGRAM = [
     tip: '"Playing IN piano" → должно быть "playing THE piano". Предлоги — особая история!',
     sessions: [
       {
-        n: 1, day: 'Вторник', title: 'Правило + Stand By Me',
+        n: 1, day: 'Понедельник', title: 'Правило + Stand By Me',
         grammar: {
           title: 'Предлоги места и времени',
           blocks: [
@@ -634,7 +634,7 @@ const ENGLISH_PROGRAM = [
         prompt: 'Расскажи о себе используя предлоги. Когда родилась? Где живёшь? Где работаешь?\nНапример: I was born in 2004. I live in Almaty. I wake up at 8 in the morning.'
       },
       {
-        n: 2, day: 'Четверг', title: 'Friends + закрепление',
+        n: 2, day: 'Среда', title: 'Friends + закрепление',
         dialogue: {
           source: '📺 Friends — Season 1, Episode 4',
           intro: 'Предлоги встречаются в каждом предложении. Отмечай их!',
@@ -681,7 +681,7 @@ const ENGLISH_PROGRAM = [
     tip: 'Умение задавать вопросы = умение разговаривать!',
     sessions: [
       {
-        n: 1, day: 'Вторник', title: 'Правило + Someone Like You',
+        n: 1, day: 'Понедельник', title: 'Правило + Someone Like You',
         grammar: {
           title: 'Вопросительные слова',
           blocks: [
@@ -722,7 +722,7 @@ const ENGLISH_PROGRAM = [
         prompt: 'Придумай 5 вопросов которые ты бы задала иностранцу при знакомстве.\nНапример: Where are you from? What do you do? How old are you?'
       },
       {
-        n: 2, day: 'Четверг', title: 'Friends + закрепление',
+        n: 2, day: 'Среда', title: 'Friends + закрепление',
         dialogue: {
           source: '📺 Friends — Season 3, Episode 2',
           intro: 'Обрати внимание на порядок слов в вопросах!',
@@ -769,7 +769,7 @@ const ENGLISH_PROGRAM = [
     tip: 'Ты уже знаешь "ate"! Это Past Simple. Учим всю систему.',
     sessions: [
       {
-        n: 1, day: 'Вторник', title: 'Правило + Yesterday (Beatles)',
+        n: 1, day: 'Понедельник', title: 'Правило + Yesterday (Beatles)',
         grammar: {
           title: 'Past Simple — что было вчера',
           blocks: [
@@ -812,7 +812,7 @@ const ENGLISH_PROGRAM = [
         prompt: 'Расскажи о прошлых выходных. Что делала, куда ходила, что ела?\nНапример: Last weekend I went to a café with my friend. We had lunch and talked for hours...'
       },
       {
-        n: 2, day: 'Четверг', title: 'Friends + неправильные глаголы',
+        n: 2, day: 'Среда', title: 'Friends + неправильные глаголы',
         dialogue: {
           source: '📺 Friends — Season 1, Episode 2',
           intro: 'Прошлое в разговоре. Ищи глаголы с -ed и неправильные!',
@@ -859,7 +859,7 @@ const ENGLISH_PROGRAM = [
     tip: 'Твоя цель — путешествия! Аэропорт, гостиница, ресторан.',
     sessions: [
       {
-        n: 1, day: 'Вторник', title: 'Фразы + Leaving on a Jet Plane',
+        n: 1, day: 'Понедельник', title: 'Фразы + Leaving on a Jet Plane',
         grammar: {
           title: 'Путешествия: фразы и лексика',
           blocks: [
@@ -898,7 +898,7 @@ const ENGLISH_PROGRAM = [
         prompt: 'Представь: ты в аэропорту, летишь в путешествие мечты. Напиши 5 предложений — куда, с кем, что планируешь.\nНапример: I am flying to Italy with my friend. We plan to visit Rome...'
       },
       {
-        n: 2, day: 'Четверг', title: 'Friends в Лондоне + закрепление',
+        n: 2, day: 'Среда', title: 'Friends в Лондоне + закрепление',
         dialogue: {
           source: '📺 Friends — Season 4 (Лондон)',
           intro: 'Росс летит в Лондон! Полно фраз о путешествиях.',
@@ -2999,7 +2999,7 @@ function renderEnglish() {
         <div class="muted" style="font-size:12px;margin-top:8px">🔤 Слов в программе: ${totalWords} · Выучено: ${learnedWords.length}</div>
       </div>
       <div class="card" style="background:linear-gradient(135deg,#FFF0F5,#F0F0FF);border:none">
-        <div style="font-size:13px;color:var(--text-secondary)">📅 <b>Вторник и четверг</b> — занятия по 1 часу<br>🔤 <b>Каждый день</b> — 10 минут на слова<br>⏱ <b>Срок A1:</b> ~4 месяца</div>
+        <div style="font-size:13px;color:var(--text-secondary)">📅 <b>Понедельник и среда</b> — занятия по 1 часу<br>🔤 <b>Каждый день</b> — 10 минут на слова<br>⏱ <b>Срок A1:</b> ~4 месяца</div>
       </div>
       <div style="font-weight:700;font-size:15px;margin:12px 0 8px">📋 Программа по неделям</div>
       ${ENGLISH_PROGRAM.map(w => {
