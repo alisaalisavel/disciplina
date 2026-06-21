@@ -3302,8 +3302,8 @@ function renderMore() {
     { id: 'planner',      img: 'writing-tool.png',       title: 'Планер',          desc: '' },
     { id: 'garden',       img: 'flowers.png',            title: 'Сад',             desc: 'Растения' },
     { id: 'achievements', img: 'award.png',              title: 'Достижения',      desc: 'Коллекция ачивок' },
-    { id: 'english',      img: null, emoji: '🇬🇧',        title: 'Английский',       desc: 'A1 — с нуля' },
-    { id: 'principles',   img: null, emoji: '⚖️',         title: 'Принципы',         desc: 'Мои правила жизни' },
+    { id: 'english',      img: 'eng.png',               title: 'Английский',       desc: 'A1 — с нуля' },
+    { id: 'principles',   img: 'roman-scale.png',       title: 'Принципы',         desc: 'Мои правила жизни' },
   ];
   const tasks = state.data.tasks || [];
   const activeTasks = tasks.filter(t => !t.done).length;
